@@ -1,0 +1,11 @@
+Patient Name,Skip
+Age,
+Gender,Skip
+Surgeon,Skip
+Surgery Name,Pilonidal Sinus*
+Surgery ID,1778591705425
+
+Protocol,Power980,Power1470,Power650,EnergyPerPedal,TotalEnergy,Stored1,Stored2,Stored3,Stored4,Stored5,Stored6,Stored7,Stored8,Date
+Pilonidal Sinus*,10,10,3,45.54454040527344,45.54454040527344,0,0,0,0,0,0,0,0,2026-05-12 18:45:35
+Pilonidal Sinus*,10,10,3,30.910903930664062,76.4554443359375,45.54454040527344,0,0,0,0,0,0,0,2026-05-12 18:45:39
+Pilonidal Sinus*,10,10,3,31.960365295410156,108.41580963134766,45.54454040527344,0,0,0,0,0,0,0,2026-05-12 18:45:45

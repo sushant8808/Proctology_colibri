@@ -1,0 +1,978 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>changevalue</class>
+ <widget class="QWidget" name="changevalue">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>761</width>
+    <height>312</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QTabWidget" name="T2_home">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>761</width>
+     <height>312</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LayoutDirection::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="tabPosition">
+    <enum>QTabWidget::TabPosition::North</enum>
+   </property>
+   <property name="tabShape">
+    <enum>QTabWidget::TabShape::Rounded</enum>
+   </property>
+   <property name="currentIndex">
+    <number>0</number>
+   </property>
+   <property name="tabsClosable">
+    <bool>false</bool>
+   </property>
+   <property name="movable">
+    <bool>false</bool>
+   </property>
+   <property name="tabBarAutoHide">
+    <bool>false</bool>
+   </property>
+   <widget class="QWidget" name="T2_basic">
+    <attribute name="title">
+     <string>Basic</string>
+    </attribute>
+    <widget class="QFrame" name="homeframe_1">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>760</width>
+       <height>280</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Shape::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Shadow::Raised</enum>
+     </property>
+     <widget class="QFrame" name="homeframe_2">
+      <property name="geometry">
+       <rect>
+        <x>5</x>
+        <y>5</y>
+        <width>372</width>
+        <height>270</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Shape::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Shadow::Raised</enum>
+      </property>
+      <widget class="QLabel" name="L2_power">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>15</y>
+         <width>90</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Roboto</family>
+         <pointsize>22</pointsize>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font-size: 22pt;</string>
+       </property>
+       <property name="text">
+        <string>Power</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="L2_watts">
+       <property name="geometry">
+        <rect>
+         <x>146</x>
+         <y>120</y>
+         <width>31</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font-size: 20pt;</string>
+       </property>
+       <property name="text">
+        <string>W</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="L2_980nm">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>60</y>
+         <width>80</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font-size: 16pt;</string>
+       </property>
+       <property name="text">
+        <string>980 nm</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="L2_1470nm">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>170</y>
+         <width>95</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font-size: 18pt;</string>
+       </property>
+       <property name="text">
+        <string>1470 nm</string>
+       </property>
+      </widget>
+      <widget class="home_button" name="B2_980sub">
+       <property name="geometry">
+        <rect>
+         <x>220</x>
+         <y>100</y>
+         <width>50</width>
+         <height>50</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">image: url(:/icons/negative.svg);</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="home_button" name="B2_980add">
+       <property name="geometry">
+        <rect>
+         <x>300</x>
+         <y>100</y>
+         <width>50</width>
+         <height>50</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>22</pointsize>
+        </font>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::LayoutDirection::LeftToRight</enum>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">image: url(:/icons/plus.svg);</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="home_button" name="B2_1470sub">
+       <property name="geometry">
+        <rect>
+         <x>220</x>
+         <y>205</y>
+         <width>50</width>
+         <height>50</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">image: url(:/icons/negative.svg);</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="home_button" name="B2_1470add">
+       <property name="geometry">
+        <rect>
+         <x>300</x>
+         <y>205</y>
+         <width>50</width>
+         <height>50</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">image: url(:/icons/plus.svg);</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="L2_980_show">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>90</y>
+         <width>121</width>
+         <height>60</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Roboto</family>
+         <pointsize>48</pointsize>
+         <italic>false</italic>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: rgb(50, 155, 255);
+font-size: 48pt;</string>
+       </property>
+       <property name="text">
+        <string>15.0</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+      </widget>
+      <widget class="QLabel" name="L2_1470_show">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>200</y>
+         <width>121</width>
+         <height>60</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Roboto</family>
+         <pointsize>48</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: rgb(50, 155, 255);
+font-size: 48pt;</string>
+       </property>
+       <property name="text">
+        <string>15.0</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+      </widget>
+      <widget class="QLabel" name="L2_watts_2">
+       <property name="geometry">
+        <rect>
+         <x>146</x>
+         <y>230</y>
+         <width>31</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font-size: 20pt;</string>
+       </property>
+       <property name="text">
+        <string>W</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QFrame" name="homeframe_3">
+      <property name="geometry">
+       <rect>
+        <x>383</x>
+        <y>5</y>
+        <width>372</width>
+        <height>270</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Shape::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Shadow::Raised</enum>
+      </property>
+      <widget class="QLabel" name="L2_timer">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>15</y>
+         <width>80</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Roboto</family>
+         <pointsize>22</pointsize>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font-size: 22pt;</string>
+       </property>
+       <property name="text">
+        <string>Timer</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="L2_seconds">
+       <property name="geometry">
+        <rect>
+         <x>149</x>
+         <y>145</y>
+         <width>31</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font-size: 20pt;</string>
+       </property>
+       <property name="text">
+        <string>S</string>
+       </property>
+      </widget>
+      <widget class="home_button" name="B2_timer_add">
+       <property name="geometry">
+        <rect>
+         <x>300</x>
+         <y>125</y>
+         <width>50</width>
+         <height>50</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">image: url(:/icons/plus.svg);</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="home_button" name="B2_timer_sub">
+       <property name="geometry">
+        <rect>
+         <x>220</x>
+         <y>125</y>
+         <width>50</width>
+         <height>50</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">image: url(:/icons/negative.svg);</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="B2_timer_on">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>140</y>
+         <width>90</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font-size: 16pt;</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="B2_timer_off">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>70</y>
+         <width>90</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font-size: 16pt;</string>
+       </property>
+       <property name="text">
+        <string>Off</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="L2_timer_show">
+       <property name="geometry">
+        <rect>
+         <x>36</x>
+         <y>120</y>
+         <width>111</width>
+         <height>60</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Roboto</family>
+         <pointsize>48</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: rgb(50, 155, 255);
+font-size: 48pt;</string>
+       </property>
+       <property name="text">
+        <string>120</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignCenter</set>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="B2_timer_reset">
+       <property name="geometry">
+        <rect>
+         <x>18</x>
+         <y>200</y>
+         <width>130</width>
+         <height>50</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border: 0px solid;
+border-top-left-radius: 25px;
+border-bottom-left-radius: 25px;
+font-size: 14pt;</string>
+       </property>
+       <property name="text">
+        <string>Reset</string>
+       </property>
+       <property name="autoExclusive">
+        <bool>false</bool>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="B2_timer_noreset">
+       <property name="geometry">
+        <rect>
+         <x>150</x>
+         <y>200</y>
+         <width>130</width>
+         <height>50</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border: 0px solid;
+border-top-right-radius: 25px;
+border-bottom-right-radius: 25px;
+font-size: 14pt;</string>
+       </property>
+       <property name="text">
+        <string>No Reset</string>
+       </property>
+       <property name="autoExclusive">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="T2_advanced">
+    <attribute name="title">
+     <string>Advanced</string>
+    </attribute>
+    <widget class="QFrame" name="homeframe_4">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>760</width>
+       <height>280</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Shape::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Shadow::Raised</enum>
+     </property>
+     <widget class="QFrame" name="homeframe_5">
+      <property name="geometry">
+       <rect>
+        <x>5</x>
+        <y>5</y>
+        <width>372</width>
+        <height>270</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Shape::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Shadow::Raised</enum>
+      </property>
+      <widget class="QLabel" name="label_2">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>60</y>
+         <width>131</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font-size: 18pt;</string>
+       </property>
+       <property name="text">
+        <string>ON time</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>170</y>
+         <width>151</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font-size: 18pt;</string>
+       </property>
+       <property name="text">
+        <string>OFF time</string>
+       </property>
+      </widget>
+      <widget class="home_button" name="B2_on_time_sub">
+       <property name="geometry">
+        <rect>
+         <x>220</x>
+         <y>100</y>
+         <width>50</width>
+         <height>50</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">image: url(:/icons/negative.svg);</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="home_button" name="B2_on_time_add">
+       <property name="geometry">
+        <rect>
+         <x>300</x>
+         <y>100</y>
+         <width>50</width>
+         <height>50</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>22</pointsize>
+        </font>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::LayoutDirection::LeftToRight</enum>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">image: url(:/icons/plus.svg);</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="home_button" name="B2_off_time_sub">
+       <property name="geometry">
+        <rect>
+         <x>220</x>
+         <y>205</y>
+         <width>50</width>
+         <height>50</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">image: url(:/icons/negative.svg);</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="home_button" name="B2_off_time_add">
+       <property name="geometry">
+        <rect>
+         <x>300</x>
+         <y>205</y>
+         <width>50</width>
+         <height>50</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">image: url(:/icons/plus.svg);</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="L2_on_pulse_show">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>90</y>
+         <width>131</width>
+         <height>60</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Roboto</family>
+         <pointsize>48</pointsize>
+         <italic>false</italic>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: rgb(50, 155, 255);
+font-size: 48pt;</string>
+       </property>
+       <property name="text">
+        <string>11.5</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignCenter</set>
+       </property>
+      </widget>
+      <widget class="QLabel" name="L2_off_pulse_show">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>200</y>
+         <width>131</width>
+         <height>60</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Roboto</family>
+         <pointsize>48</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: rgb(50, 155, 255);
+font-size: 48pt;</string>
+       </property>
+       <property name="text">
+        <string>11.5</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignCenter</set>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="B2_pulsemode">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>15</y>
+         <width>141</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="mouseTracking">
+        <bool>false</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font-size: 16pt;</string>
+       </property>
+       <property name="text">
+        <string>Pulse Mode</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="L2_on_pulse_unit">
+       <property name="geometry">
+        <rect>
+         <x>150</x>
+         <y>120</y>
+         <width>31</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font-size:20px;</string>
+       </property>
+       <property name="text">
+        <string>ms</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="L2_off_pulse_unit">
+       <property name="geometry">
+        <rect>
+         <x>150</x>
+         <y>230</y>
+         <width>31</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font-size:20px;</string>
+       </property>
+       <property name="text">
+        <string>ms</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QFrame" name="homeframe_6">
+      <property name="geometry">
+       <rect>
+        <x>383</x>
+        <y>5</y>
+        <width>372</width>
+        <height>270</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Shape::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Shadow::Raised</enum>
+      </property>
+      <widget class="home_button" name="B2_alarm_sec_add">
+       <property name="geometry">
+        <rect>
+         <x>300</x>
+         <y>100</y>
+         <width>50</width>
+         <height>50</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">image: url(:/icons/plus.svg);</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="home_button" name="B2_alarm_sec_sub">
+       <property name="geometry">
+        <rect>
+         <x>220</x>
+         <y>100</y>
+         <width>50</width>
+         <height>50</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">image: url(:/icons/negative.svg);</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="B2_audioalarm">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>15</y>
+         <width>141</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font-size: 16pt;</string>
+       </property>
+       <property name="text">
+        <string>Audio Alarm</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="B2_sec_alarm">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>60</y>
+         <width>121</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="mouseTracking">
+        <bool>false</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font-size: 18pt;</string>
+       </property>
+       <property name="text">
+        <string>Seconds</string>
+       </property>
+       <property name="autoExclusive">
+        <bool>false</bool>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="B2_joule_alarm">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>170</y>
+         <width>91</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="mouseTracking">
+        <bool>false</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font-size: 16pt;</string>
+       </property>
+       <property name="text">
+        <string>Joules</string>
+       </property>
+       <property name="autoExclusive">
+        <bool>false</bool>
+       </property>
+      </widget>
+      <widget class="QLabel" name="L2_alarm_sec_show">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>90</y>
+         <width>201</width>
+         <height>60</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Roboto</family>
+         <pointsize>48</pointsize>
+         <italic>false</italic>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: rgb(50, 155, 255);
+font-size: 48pt;</string>
+       </property>
+       <property name="text">
+        <string>0.0</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+      </widget>
+      <widget class="QLabel" name="L2_alarm_joule_show">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>200</y>
+         <width>201</width>
+         <height>60</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Roboto</family>
+         <pointsize>48</pointsize>
+         <italic>false</italic>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: rgb(50, 155, 255);
+font-size: 48pt;</string>
+       </property>
+       <property name="text">
+        <string>0.0</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+      </widget>
+      <widget class="home_button" name="B2_alarm_joule_add">
+       <property name="geometry">
+        <rect>
+         <x>300</x>
+         <y>205</y>
+         <width>50</width>
+         <height>50</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">image: url(:/icons/plus.svg);</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="home_button" name="B2_alarm_joule_sub">
+       <property name="geometry">
+        <rect>
+         <x>220</x>
+         <y>205</y>
+         <width>50</width>
+         <height>50</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">image: url(:/icons/negative.svg);</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QLabel" name="L2_tab_hide">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>381</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>home_button</class>
+   <extends>QPushButton</extends>
+   <header location="global">home_button.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

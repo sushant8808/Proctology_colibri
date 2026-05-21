@@ -1,0 +1,9 @@
+Patient Name,Skip
+Age,
+Gender,Skip
+Surgeon,Skip
+Surgery Name,Hemorrhoids Grade 2
+Surgery ID,1778494919042
+
+Protocol,Power980,Power1470,Power650,EnergyPerPedal,TotalEnergy,Stored1,Stored2,Stored3,Stored4,Stored5,Stored6,Stored7,Stored8,Date
+Hemorrhoids Grade 2,10,10,3,2.0066680908203125,33.79999923706055,0,0,0,0,0,0,0,0,2026-05-11 15:52:00

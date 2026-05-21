@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>protocolselect</class>
+ <widget class="QWidget" name="protocolselect">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>480</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QFrame" name="tabframe">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>60</y>
+     <width>760</width>
+     <height>400</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::Shape::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Shadow::Raised</enum>
+   </property>
+   <widget class="QTabWidget" name="Main_Tab">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>760</width>
+      <height>400</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="currentIndex">
+     <number>2</number>
+    </property>
+    <widget class="QWidget" name="tabFavourite">
+     <attribute name="title">
+      <string>Favourite</string>
+     </attribute>
+    </widget>
+    <widget class="QWidget" name="tabPreset">
+     <attribute name="title">
+      <string>Preset</string>
+     </attribute>
+     <widget class="QTabWidget" name="Sub_Tab">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>756</width>
+        <height>350</height>
+       </rect>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="tabGeneral">
+       <attribute name="title">
+        <string>General</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="tabENT">
+       <attribute name="title">
+        <string>ENT</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="tabGynaecology">
+       <attribute name="title">
+        <string>Gynaecology</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="tabNeurology">
+       <attribute name="title">
+        <string>Neurology</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="tabTherapy">
+       <attribute name="title">
+        <string>Therapy</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="tabUrology">
+       <attribute name="title">
+        <string>Urology</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="tabVascular">
+       <attribute name="title">
+        <string>Vascular</string>
+       </attribute>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tabCustom">
+     <attribute name="title">
+      <string>Custom</string>
+     </attribute>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QPushButton" name="B3_back_to_home">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>10</y>
+     <width>51</width>
+     <height>40</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>22</pointsize>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LayoutDirection::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-size: 22pt;</string>
+   </property>
+   <property name="text">
+    <string>🡐</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="select_protocol_level">
+   <property name="geometry">
+    <rect>
+     <x>210</x>
+     <y>10</y>
+     <width>380</width>
+     <height>40</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-size: 22pt;</string>
+   </property>
+   <property name="text">
+    <string>Select Protocol</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignmentFlag::AlignCenter</set>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
