@@ -10,6 +10,11 @@
     <height>480</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <family>Roboto</family>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
@@ -23,10 +28,7 @@
     </rect>
    </property>
    <property name="frameShape">
-    <enum>QFrame::Shape::StyledPanel</enum>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Shadow::Raised</enum>
+    <enum>QFrame::NoFrame</enum>
    </property>
    <widget class="QFrame" name="settingframe_2">
     <property name="geometry">
@@ -41,10 +43,7 @@
      <string notr="true"/>
     </property>
     <property name="frameShape">
-     <enum>QFrame::Shape::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Shadow::Raised</enum>
+     <enum>QFrame::NoFrame</enum>
     </property>
     <widget class="QLabel" name="label_5">
      <property name="geometry">
@@ -78,9 +77,6 @@ font-size: 52pt;</string>
      <property name="text">
       <string>00.0</string>
      </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignCenter</set>
-     </property>
     </widget>
     <widget class="QLabel" name="DAC_change_1470">
      <property name="geometry">
@@ -97,9 +93,6 @@ font-size: 32pt;</string>
      </property>
      <property name="text">
       <string>00000</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignCenter</set>
      </property>
     </widget>
     <widget class="home_button" name="pre_power_1470">
@@ -171,7 +164,7 @@ font-size: 32pt;</string>
       </font>
      </property>
      <property name="layoutDirection">
-      <enum>Qt::LayoutDirection::LeftToRight</enum>
+      <enum>Qt::LeftToRight</enum>
      </property>
      <property name="styleSheet">
       <string notr="true">image: url(:/icons/plus.svg);</string>
@@ -227,10 +220,7 @@ border-radius: 25px;</string>
      </rect>
     </property>
     <property name="frameShape">
-     <enum>QFrame::Shape::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Shadow::Raised</enum>
+     <enum>QFrame::NoFrame</enum>
     </property>
     <widget class="QLabel" name="label_7">
      <property name="geometry">
@@ -264,9 +254,6 @@ font-size: 52pt;</string>
      <property name="text">
       <string>00.0</string>
      </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignCenter</set>
-     </property>
     </widget>
     <widget class="QLabel" name="DAC_change_980">
      <property name="geometry">
@@ -283,9 +270,6 @@ font-size: 32pt;</string>
      </property>
      <property name="text">
       <string>00000</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignCenter</set>
      </property>
     </widget>
     <widget class="home_button" name="pre_power_980">
@@ -357,7 +341,7 @@ font-size: 32pt;</string>
       </font>
      </property>
      <property name="layoutDirection">
-      <enum>Qt::LayoutDirection::LeftToRight</enum>
+      <enum>Qt::LeftToRight</enum>
      </property>
      <property name="styleSheet">
       <string notr="true">image: url(:/icons/plus.svg);</string>
@@ -416,11 +400,12 @@ border-radius: 25px;</string>
    <property name="font">
     <font>
      <pointsize>22</pointsize>
+     <weight>50</weight>
      <bold>false</bold>
     </font>
    </property>
    <property name="layoutDirection">
-    <enum>Qt::LayoutDirection::LeftToRight</enum>
+    <enum>Qt::LeftToRight</enum>
    </property>
    <property name="styleSheet">
     <string notr="true">font-size: 22pt;</string>
@@ -443,9 +428,6 @@ border-radius: 25px;</string>
    </property>
    <property name="text">
     <string>Calibration</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignmentFlag::AlignCenter</set>
    </property>
   </widget>
   <widget class="home_button" name="back_to_home">

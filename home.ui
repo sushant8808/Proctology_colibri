@@ -39,7 +39,7 @@
    <property name="geometry">
     <rect>
      <x>45</x>
-     <y>378</y>
+     <y>381</y>
      <width>100</width>
      <height>40</height>
     </rect>
@@ -47,6 +47,7 @@
    <property name="font">
     <font>
      <pointsize>22</pointsize>
+     <weight>50</weight>
      <bold>false</bold>
      <kerning>false</kerning>
     </font>
@@ -62,7 +63,7 @@
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>445</y>
+     <y>448</y>
      <width>30</width>
      <height>20</height>
     </rect>
@@ -86,6 +87,7 @@
    <property name="font">
     <font>
      <pointsize>14</pointsize>
+     <weight>75</weight>
      <bold>true</bold>
     </font>
    </property>
@@ -103,7 +105,7 @@ font-size: 14pt;</string>
    <property name="geometry">
     <rect>
      <x>45</x>
-     <y>412</y>
+     <y>415</y>
      <width>195</width>
      <height>60</height>
     </rect>
@@ -121,9 +123,6 @@ font-size: 48pt;</string>
    <property name="text">
     <string>3600.0</string>
    </property>
-   <property name="alignment">
-    <set>Qt::AlignmentFlag::AlignJustify|Qt::AlignmentFlag::AlignVCenter</set>
-   </property>
   </widget>
   <widget class="QTabWidget" name="T2_home">
    <property name="geometry">
@@ -135,16 +134,16 @@ font-size: 48pt;</string>
     </rect>
    </property>
    <property name="layoutDirection">
-    <enum>Qt::LayoutDirection::LeftToRight</enum>
+    <enum>Qt::LeftToRight</enum>
    </property>
    <property name="styleSheet">
     <string notr="true"/>
    </property>
    <property name="tabPosition">
-    <enum>QTabWidget::TabPosition::North</enum>
+    <enum>QTabWidget::North</enum>
    </property>
    <property name="tabShape">
-    <enum>QTabWidget::TabShape::Rounded</enum>
+    <enum>QTabWidget::Rounded</enum>
    </property>
    <property name="currentIndex">
     <number>0</number>
@@ -172,10 +171,7 @@ font-size: 48pt;</string>
       </rect>
      </property>
      <property name="frameShape">
-      <enum>QFrame::Shape::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Shadow::Raised</enum>
+      <enum>QFrame::NoFrame</enum>
      </property>
      <widget class="QFrame" name="homeframe_2">
       <property name="geometry">
@@ -190,10 +186,7 @@ font-size: 48pt;</string>
        <string notr="true"/>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Shape::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Shadow::Raised</enum>
+       <enum>QFrame::NoFrame</enum>
       </property>
       <widget class="QLabel" name="L2_power">
        <property name="geometry">
@@ -208,6 +201,7 @@ font-size: 48pt;</string>
         <font>
          <family>Roboto</family>
          <pointsize>22</pointsize>
+         <weight>50</weight>
          <italic>false</italic>
          <bold>false</bold>
         </font>
@@ -233,9 +227,6 @@ font-size: 48pt;</string>
        </property>
        <property name="text">
         <string>W</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft</set>
        </property>
       </widget>
       <widget class="QLabel" name="L2_980nm">
@@ -307,7 +298,7 @@ font-size: 48pt;</string>
         </font>
        </property>
        <property name="layoutDirection">
-        <enum>Qt::LayoutDirection::LeftToRight</enum>
+        <enum>Qt::LeftToRight</enum>
        </property>
        <property name="styleSheet">
         <string notr="true">image: url(:/icons/plus.svg);</string>
@@ -371,9 +362,6 @@ font-size: 48pt;</string>
        <property name="text">
         <string>15.0</string>
        </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-       </property>
       </widget>
       <widget class="QLabel" name="L2_1470_show">
        <property name="geometry">
@@ -397,9 +385,6 @@ font-size: 48pt;</string>
        <property name="text">
         <string>15.0</string>
        </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-       </property>
       </widget>
       <widget class="QLabel" name="L2_watts_2">
        <property name="geometry">
@@ -416,9 +401,6 @@ font-size: 48pt;</string>
        <property name="text">
         <string>W</string>
        </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft</set>
-       </property>
       </widget>
      </widget>
      <widget class="QFrame" name="homeframe_3">
@@ -434,10 +416,7 @@ font-size: 48pt;</string>
        <string notr="true"/>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Shape::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Shadow::Raised</enum>
+       <enum>QFrame::NoFrame</enum>
       </property>
       <widget class="QLabel" name="L2_timer">
        <property name="geometry">
@@ -452,6 +431,7 @@ font-size: 48pt;</string>
         <font>
          <family>Roboto</family>
          <pointsize>22</pointsize>
+         <weight>50</weight>
          <bold>false</bold>
         </font>
        </property>
@@ -564,9 +544,6 @@ font-size: 48pt;</string>
        <property name="text">
         <string>000</string>
        </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignCenter</set>
-       </property>
       </widget>
       <widget class="QPushButton" name="B2_timer_reset">
        <property name="geometry">
@@ -623,10 +600,7 @@ font-size: 48pt;</string>
       </rect>
      </property>
      <property name="frameShape">
-      <enum>QFrame::Shape::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Shadow::Raised</enum>
+      <enum>QFrame::NoFrame</enum>
      </property>
      <widget class="QFrame" name="homeframe_5">
       <property name="geometry">
@@ -641,10 +615,7 @@ font-size: 48pt;</string>
        <string notr="true"/>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Shape::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Shadow::Raised</enum>
+       <enum>QFrame::NoFrame</enum>
       </property>
       <widget class="QLabel" name="label_2">
        <property name="geometry">
@@ -715,7 +686,7 @@ font-size: 48pt;</string>
         </font>
        </property>
        <property name="layoutDirection">
-        <enum>Qt::LayoutDirection::LeftToRight</enum>
+        <enum>Qt::LeftToRight</enum>
        </property>
        <property name="styleSheet">
         <string notr="true">image: url(:/icons/plus.svg);</string>
@@ -779,9 +750,6 @@ font-size: 48pt;</string>
        <property name="text">
         <string>11.5</string>
        </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignCenter</set>
-       </property>
       </widget>
       <widget class="QLabel" name="L2_off_pulse_show">
        <property name="geometry">
@@ -804,9 +772,6 @@ font-size: 48pt;</string>
        </property>
        <property name="text">
         <string>11.5</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignCenter</set>
        </property>
       </widget>
       <widget class="QCheckBox" name="B2_pulsemode">
@@ -874,10 +839,7 @@ font-size: 48pt;</string>
        <string notr="true"/>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Shape::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Shadow::Raised</enum>
+       <enum>QFrame::NoFrame</enum>
       </property>
       <widget class="home_button" name="B2_alarm_sec_add">
        <property name="geometry">
@@ -994,9 +956,6 @@ font-size: 48pt;</string>
        <property name="text">
         <string>0.0</string>
        </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-       </property>
       </widget>
       <widget class="QLabel" name="L2_alarm_joule_show">
        <property name="geometry">
@@ -1020,9 +979,6 @@ font-size: 48pt;</string>
        </property>
        <property name="text">
         <string>0.0</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
       </widget>
       <widget class="home_button" name="B2_alarm_joule_add">
@@ -1094,7 +1050,7 @@ font-size: 48pt;</string>
    <property name="geometry">
     <rect>
      <x>45</x>
-     <y>378</y>
+     <y>381</y>
      <width>145</width>
      <height>40</height>
     </rect>
@@ -1102,6 +1058,7 @@ font-size: 48pt;</string>
    <property name="font">
     <font>
      <pointsize>22</pointsize>
+     <weight>50</weight>
      <bold>false</bold>
      <kerning>false</kerning>
     </font>
@@ -1117,7 +1074,7 @@ font-size: 48pt;</string>
    <property name="geometry">
     <rect>
      <x>180</x>
-     <y>445</y>
+     <y>448</y>
      <width>31</width>
      <height>20</height>
     </rect>
@@ -1133,7 +1090,7 @@ font-size: 48pt;</string>
    <property name="geometry">
     <rect>
      <x>45</x>
-     <y>412</y>
+     <y>415</y>
      <width>130</width>
      <height>60</height>
     </rect>
@@ -1150,9 +1107,6 @@ font-size: 48pt;</string>
    </property>
    <property name="text">
     <string>30.0</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignmentFlag::AlignCenter</set>
    </property>
   </widget>
   <widget class="QLabel" name="labelDateTime">
@@ -1178,10 +1132,7 @@ font-size: 48pt;</string>
     </rect>
    </property>
    <property name="frameShape">
-    <enum>QFrame::Shape::StyledPanel</enum>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Shadow::Raised</enum>
+    <enum>QFrame::NoFrame</enum>
    </property>
    <widget class="home_button" name="B2_brightness">
     <property name="geometry">
@@ -1236,10 +1187,7 @@ font-size: 48pt;</string>
     </rect>
    </property>
    <property name="frameShape">
-    <enum>QFrame::Shape::StyledPanel</enum>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Shadow::Raised</enum>
+    <enum>QFrame::NoFrame</enum>
    </property>
    <widget class="home_button" name="B2_setting">
     <property name="geometry">
@@ -1278,10 +1226,7 @@ font-size: 48pt;</string>
     </rect>
    </property>
    <property name="frameShape">
-    <enum>QFrame::Shape::StyledPanel</enum>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Shadow::Raised</enum>
+    <enum>QFrame::NoFrame</enum>
    </property>
    <widget class="home_button" name="Interlock_key">
     <property name="geometry">

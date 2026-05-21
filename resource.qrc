@@ -128,4 +128,7 @@
         <file>Audio/1400.mp3</file>
         <file>Audio/1500.mp3</file>
     </qresource>
+    <qresource prefix="/fonts">
+        <file>Roboto-VariableFont_wdth,wght.ttf</file>
+    </qresource>
 </RCC>
