@@ -300,7 +300,15 @@ void Home::updateTimerLabel()
 void Home::updateJouleLabel()
 {
     currentJoule= TimerSec * (power980+power1470);
-    ui->L2_energy_show->setText(QString::number(currentJoule,'f', 1));
+//    ui->L2_energy_show->setText(QString::number(currentJoule,'f', 1));
+    QString formattedJoule = QString::number(currentJoule, 'f', 1);
+
+    // 2. Combine it into the HTML string with different sizes
+    ui->L2_energy_show->setText(
+        QString("<span style='font-size: 42px; color: #00FF00;'>%1</span>"
+                "<span style='font-size: 20px; color: #FFFFFF;'> J</span>")
+        .arg(formattedJoule)
+    );
 }
 
 void Home::on_B2_pulsemode_stateChanged(int arg1)

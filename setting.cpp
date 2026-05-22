@@ -170,6 +170,8 @@ void Setting::toggle_pass_enable(void)
 
     DatabaseInitializer dbinit;
 
+    password_enable = !password_enable;
+
     if (password_enable) {
         //qDebug() << "Enable";
         dbinit.updateSingleColumn("device_setting","password_enable",password_enable,1);
@@ -179,7 +181,7 @@ void Setting::toggle_pass_enable(void)
         dbinit.updateSingleColumn("device_setting","password_enable",password_enable,1);
         ui->B3_pass_enable->setText("Enable");
     }
-    password_enable = !password_enable;
+
 }
 
 
@@ -199,6 +201,8 @@ void Setting::toggle_interlockkey_enable(void)
 {
     DatabaseInitializer dbinit;
 
+    interlock_key = !interlock_key;
+
     if (interlock_key) {
         //qDebug() << "Enable";
         dbinit.updateSingleColumn("device_setting","interlock_key",interlock_key,1);
@@ -208,7 +212,7 @@ void Setting::toggle_interlockkey_enable(void)
         dbinit.updateSingleColumn("device_setting","interlock_key",interlock_key,1);
         ui->B3_interlockkey_enable->setText("Enable");
     }
-    interlock_key = !interlock_key;
+
 }
 
 
@@ -276,6 +280,8 @@ void Setting::toggle_patientdata_enable()
 {
     DatabaseInitializer dbinit;
 
+    patient_data = !patient_data;
+
     if (patient_data) {
         //qDebug() << "Enable";
         dbinit.updateSingleColumn("device_setting","patient_data",patient_data,1);
@@ -285,7 +291,7 @@ void Setting::toggle_patientdata_enable()
         dbinit.updateSingleColumn("device_setting","patient_data",patient_data,1);
         ui->B3_patientdata_enable->setText("Enable");
     }
-    patient_data = !patient_data;
+
 }
 
 

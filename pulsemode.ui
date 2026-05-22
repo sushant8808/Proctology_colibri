@@ -10,6 +10,11 @@
     <height>480</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <family>Roboto</family>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
@@ -23,10 +28,7 @@
     </rect>
    </property>
    <property name="frameShape">
-    <enum>QFrame::Shape::StyledPanel</enum>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Shadow::Raised</enum>
+    <enum>QFrame::NoFrame</enum>
    </property>
    <widget class="QFrame" name="F3_pulsemode">
     <property name="geometry">
@@ -38,10 +40,7 @@
      </rect>
     </property>
     <property name="frameShape">
-     <enum>QFrame::Shape::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Shadow::Raised</enum>
+     <enum>QFrame::NoFrame</enum>
     </property>
     <widget class="QLabel" name="change_low_value">
      <property name="geometry">
@@ -52,6 +51,12 @@
        <height>60</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <family>Roboto</family>
+       <pointsize>52</pointsize>
+      </font>
+     </property>
      <property name="styleSheet">
       <string notr="true">color: rgb(50, 155, 255);
 font-size: 52pt;</string>
@@ -60,7 +65,7 @@ font-size: 52pt;</string>
       <string>11.5</string>
      </property>
      <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignCenter</set>
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
     <widget class="home_button" name="inc_low_value">
@@ -84,7 +89,7 @@ font-size: 52pt;</string>
       </font>
      </property>
      <property name="layoutDirection">
-      <enum>Qt::LayoutDirection::LeftToRight</enum>
+      <enum>Qt::LeftToRight</enum>
      </property>
      <property name="styleSheet">
       <string notr="true">image: url(:/icons/plus.svg);</string>
@@ -114,7 +119,7 @@ font-size: 52pt;</string>
       <rect>
        <x>440</x>
        <y>60</y>
-       <width>31</width>
+       <width>41</width>
        <height>25</height>
       </rect>
      </property>
@@ -146,7 +151,7 @@ font-size: 52pt;</string>
       </font>
      </property>
      <property name="layoutDirection">
-      <enum>Qt::LayoutDirection::LeftToRight</enum>
+      <enum>Qt::LeftToRight</enum>
      </property>
      <property name="styleSheet">
       <string notr="true">image: url(:/icons/plus.svg);</string>
@@ -164,6 +169,12 @@ font-size: 52pt;</string>
        <height>60</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <family>Roboto</family>
+       <pointsize>52</pointsize>
+      </font>
+     </property>
      <property name="styleSheet">
       <string notr="true">color: rgb(50, 155, 255);
 font-size: 52pt;</string>
@@ -172,7 +183,7 @@ font-size: 52pt;</string>
       <string>11.5</string>
      </property>
      <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignCenter</set>
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
     <widget class="QLabel" name="L2_max_pulse_unit">
@@ -180,7 +191,7 @@ font-size: 52pt;</string>
       <rect>
        <x>440</x>
        <y>160</y>
-       <width>31</width>
+       <width>41</width>
        <height>25</height>
       </rect>
      </property>
@@ -189,6 +200,9 @@ font-size: 52pt;</string>
      </property>
      <property name="text">
       <string>ms</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
     <widget class="home_button" name="dec_high_value">
@@ -223,7 +237,7 @@ font-size: 52pt;</string>
       <string>Min. Pulse Width</string>
      </property>
      <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignCenter</set>
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
     <widget class="QLabel" name="label_10">
@@ -242,7 +256,7 @@ font-size: 52pt;</string>
       <string>Max. Pulse Width</string>
      </property>
      <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignCenter</set>
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
    </widget>
@@ -259,11 +273,12 @@ font-size: 52pt;</string>
    <property name="font">
     <font>
      <pointsize>22</pointsize>
+     <weight>50</weight>
      <bold>false</bold>
     </font>
    </property>
    <property name="layoutDirection">
-    <enum>Qt::LayoutDirection::LeftToRight</enum>
+    <enum>Qt::LeftToRight</enum>
    </property>
    <property name="styleSheet">
     <string notr="true">font-size: 22pt;</string>
@@ -288,7 +303,7 @@ font-size: 52pt;</string>
     <string>Pulse Mode</string>
    </property>
    <property name="alignment">
-    <set>Qt::AlignmentFlag::AlignCenter</set>
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
  </widget>

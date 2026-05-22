@@ -29,9 +29,9 @@
   <widget class="QLabel" name="label_8">
    <property name="geometry">
     <rect>
-     <x>300</x>
+     <x>290</x>
      <y>10</y>
-     <width>221</width>
+     <width>220</width>
      <height>40</height>
     </rect>
    </property>
@@ -42,7 +42,7 @@
     <string>System Usages</string>
    </property>
    <property name="alignment">
-    <set>Qt::AlignmentFlag::AlignCenter</set>
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
   <widget class="QFrame" name="settingframe_1">
@@ -55,17 +55,14 @@
     </rect>
    </property>
    <property name="frameShape">
-    <enum>QFrame::Shape::StyledPanel</enum>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Shadow::Raised</enum>
+    <enum>QFrame::NoFrame</enum>
    </property>
    <widget class="QFrame" name="settingframe_2">
     <property name="geometry">
      <rect>
-      <x>180</x>
+      <x>200</x>
       <y>50</y>
-      <width>365</width>
+      <width>360</width>
       <height>300</height>
      </rect>
     </property>
@@ -73,10 +70,7 @@
      <string notr="true"/>
     </property>
     <property name="frameShape">
-     <enum>QFrame::Shape::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Shadow::Raised</enum>
+     <enum>QFrame::NoFrame</enum>
     </property>
     <widget class="QLabel" name="label_2">
      <property name="geometry">
@@ -143,16 +137,13 @@ font-size: 16pt;
      <property name="text">
       <string>0</string>
      </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-     </property>
     </widget>
     <widget class="QLabel" name="active_timer_1470">
      <property name="geometry">
       <rect>
        <x>180</x>
        <y>150</y>
-       <width>181</width>
+       <width>180</width>
        <height>41</height>
       </rect>
      </property>
@@ -184,9 +175,9 @@ font-size: 16pt;</string>
     <widget class="QLabel" name="label_5">
      <property name="geometry">
       <rect>
-       <x>20</x>
+       <x>0</x>
        <y>10</y>
-       <width>241</width>
+       <width>365</width>
        <height>51</height>
       </rect>
      </property>
@@ -195,6 +186,9 @@ font-size: 16pt;</string>
      </property>
      <property name="text">
       <string>System Usage</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
    </widget>
@@ -211,11 +205,12 @@ font-size: 16pt;</string>
    <property name="font">
     <font>
      <pointsize>22</pointsize>
+     <weight>50</weight>
      <bold>false</bold>
     </font>
    </property>
    <property name="layoutDirection">
-    <enum>Qt::LayoutDirection::LeftToRight</enum>
+    <enum>Qt::LeftToRight</enum>
    </property>
    <property name="styleSheet">
     <string notr="true">font-size: 22pt;</string>

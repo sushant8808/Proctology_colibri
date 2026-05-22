@@ -224,7 +224,7 @@ ReadyForSurgery::ReadyForSurgery(QWidget *parent, Home *home)
 
     // Qt5 handles volumes using integers from 0 to 100.
     // Scales intensity slider (1 to 5) smoothly up to a max volume of 100.
-    int qt5Volume = static_cast<int>((soundIntensity / 5.0) * 100);
+//    int qt5Volume = static_cast<int>((soundIntensity / 5.0) * 100);
 //    player->setVolume(qt5Volume);
 
 //    connect(player, &QMediaPlayer::mediaStatusChanged, this,

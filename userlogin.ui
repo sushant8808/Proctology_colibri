@@ -29,10 +29,7 @@
     <string notr="true"/>
    </property>
    <property name="frameShape">
-    <enum>QFrame::Shape::StyledPanel</enum>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Shadow::Raised</enum>
+    <enum>QFrame::NoFrame</enum>
    </property>
    <widget class="QPushButton" name="B1_pass_ok">
     <property name="geometry">
@@ -209,7 +206,7 @@
      <string/>
     </property>
     <property name="alignment">
-     <set>Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignTop</set>
+     <set>Qt::AlignCenter</set>
     </property>
     <property name="margin">
      <number>0</number>
@@ -226,9 +223,6 @@
     </property>
     <property name="text">
      <string/>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignmentFlag::AlignCenter</set>
     </property>
    </widget>
   </widget>
@@ -248,7 +242,7 @@
     <string>Enter Password</string>
    </property>
    <property name="alignment">
-    <set>Qt::AlignmentFlag::AlignCenter</set>
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
   <widget class="QPushButton" name="back_to_setting">
@@ -263,11 +257,12 @@
    <property name="font">
     <font>
      <pointsize>22</pointsize>
+     <weight>50</weight>
      <bold>false</bold>
     </font>
    </property>
    <property name="layoutDirection">
-    <enum>Qt::LayoutDirection::LeftToRight</enum>
+    <enum>Qt::LeftToRight</enum>
    </property>
    <property name="styleSheet">
     <string notr="true">font-size: 22pt;</string>
@@ -292,7 +287,7 @@
     <string/>
    </property>
    <property name="alignment">
-    <set>Qt::AlignmentFlag::AlignCenter</set>
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
  </widget>

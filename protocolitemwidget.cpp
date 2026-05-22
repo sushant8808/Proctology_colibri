@@ -3,12 +3,13 @@
 #include "global.h"
 
 ProtocolItemWidget::ProtocolItemWidget(int id,
+                                       int its_dummy,
                                        const QString &name,
                                        bool favourite,
                                        QWidget *parent)
     : QWidget(parent),
-    protocolId(id),
-    isFavourite(favourite)
+      protocolId(id),
+      isFavourite(favourite)
 {
     setObjectName("protocolItem");
 
@@ -19,19 +20,25 @@ ProtocolItemWidget::ProtocolItemWidget(int id,
     nameLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     nameLabel->setWordWrap(true);
 
-    starLabel = new QLabel();
-    starLabel->setFixedSize(22, 22);
-    starLabel->setCursor(Qt::PointingHandCursor);
-    starLabel->setAlignment(Qt::AlignCenter);
+    if(its_dummy == 0)
+    {
+        starLabel = new QLabel();
+        starLabel->setFixedSize(30, 30);
+        starLabel->setCursor(Qt::PointingHandCursor);
+        starLabel->setAlignment(Qt::AlignCenter);
 
-    updateStar();
+        updateStar();
+    }
+
+
 
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
 
     QHBoxLayout *contentLayout = new QHBoxLayout();
     contentLayout->addWidget(nameLabel);
     contentLayout->addStretch();
-    contentLayout->addWidget(starLabel);
+    if(its_dummy == 0)
+        contentLayout->addWidget(starLabel);
 
     mainLayout->addStretch();
     mainLayout->addLayout(contentLayout);
@@ -48,7 +55,7 @@ ProtocolItemWidget::ProtocolItemWidget(int id,
     if (dark == 0)
     {
         setStyleSheet(
-            "ProtocolItemWidget {"
+                    "ProtocolItemWidget {"
             "background-color: rgb(60,60,60);"
             "border-radius: 20px;"
             "border: 2px solid black;"
@@ -59,7 +66,7 @@ ProtocolItemWidget::ProtocolItemWidget(int id,
     else
     {
         setStyleSheet(
-            "ProtocolItemWidget {"
+                    "ProtocolItemWidget {"
             "background-color: rgb(220,220,220);"
             "border-radius: 20px;"
             "border: 2px solid white;"
@@ -86,10 +93,20 @@ void ProtocolItemWidget::mousePressEvent(QMouseEvent *event)
 
 void ProtocolItemWidget::updateStar()
 {
-    if (isFavourite)
-        starLabel->setPixmap(QPixmap(":/icons/star_filled.svg"));
-    else
-        starLabel->setPixmap(QPixmap(":/icons/star_outline.svg"));
+    if(dark == 0)
+    {
+        if (isFavourite)
+            starLabel->setPixmap(QPixmap(":/icons/star_filled_dark.png"));
+        else
+            starLabel->setPixmap(QPixmap(":/icons/star_outline_dark.png"));
+    }else
+    {
+        if (isFavourite)
+            starLabel->setPixmap(QPixmap(":/icons/star_filled_light.png"));
+        else
+            starLabel->setPixmap(QPixmap(":/icons/star_outline_light.png"));
+    }
+
 }
 
 

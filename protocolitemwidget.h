@@ -11,6 +11,7 @@ class ProtocolItemWidget : public QWidget
     Q_OBJECT
 public:
     explicit ProtocolItemWidget(int id,
+                                int its_dummy,
                                 const QString &name,
                                 bool favourite,
                                 QWidget *parent = nullptr);

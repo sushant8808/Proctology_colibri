@@ -59,22 +59,6 @@
     <string>Energy</string>
    </property>
   </widget>
-  <widget class="QLabel" name="L2_joules">
-   <property name="geometry">
-    <rect>
-     <x>240</x>
-     <y>448</y>
-     <width>30</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font-size: 20pt;</string>
-   </property>
-   <property name="text">
-    <string>J</string>
-   </property>
-  </widget>
   <widget class="QPushButton" name="B2_ready_for_surgery">
    <property name="geometry">
     <rect>
@@ -86,9 +70,10 @@
    </property>
    <property name="font">
     <font>
+     <family>Roboto</family>
      <pointsize>14</pointsize>
-     <weight>75</weight>
-     <bold>true</bold>
+     <weight>50</weight>
+     <bold>false</bold>
     </font>
    </property>
    <property name="styleSheet">
@@ -146,7 +131,7 @@ font-size: 48pt;</string>
     <enum>QTabWidget::Rounded</enum>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>1</number>
    </property>
    <property name="tabsClosable">
     <bool>false</bool>
@@ -271,7 +256,7 @@ font-size: 48pt;</string>
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">image: url(:/icons/negative.svg);</string>
+        <string notr="true"/>
        </property>
        <property name="text">
         <string/>
@@ -301,7 +286,7 @@ font-size: 48pt;</string>
         <enum>Qt::LeftToRight</enum>
        </property>
        <property name="styleSheet">
-        <string notr="true">image: url(:/icons/plus.svg);</string>
+        <string notr="true"/>
        </property>
        <property name="text">
         <string/>
@@ -317,7 +302,7 @@ font-size: 48pt;</string>
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">image: url(:/icons/negative.svg);</string>
+        <string notr="true"/>
        </property>
        <property name="text">
         <string/>
@@ -333,7 +318,7 @@ font-size: 48pt;</string>
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">image: url(:/icons/plus.svg);</string>
+        <string notr="true"/>
        </property>
        <property name="text">
         <string/>
@@ -362,6 +347,9 @@ font-size: 48pt;</string>
        <property name="text">
         <string>15.0</string>
        </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
       </widget>
       <widget class="QLabel" name="L2_1470_show">
        <property name="geometry">
@@ -384,6 +372,9 @@ font-size: 48pt;</string>
        </property>
        <property name="text">
         <string>15.0</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
        </property>
       </widget>
       <widget class="QLabel" name="L2_watts_2">
@@ -468,7 +459,7 @@ font-size: 48pt;</string>
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">image: url(:/icons/plus.svg);</string>
+        <string notr="true"/>
        </property>
        <property name="text">
         <string/>
@@ -484,7 +475,7 @@ font-size: 48pt;</string>
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">image: url(:/icons/negative.svg);</string>
+        <string notr="true"/>
        </property>
        <property name="text">
         <string/>
@@ -543,6 +534,9 @@ font-size: 48pt;</string>
        </property>
        <property name="text">
         <string>000</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
        </property>
       </widget>
       <widget class="QPushButton" name="B2_timer_reset">
@@ -659,7 +653,7 @@ font-size: 48pt;</string>
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">image: url(:/icons/negative.svg);</string>
+        <string notr="true"/>
        </property>
        <property name="text">
         <string/>
@@ -689,7 +683,7 @@ font-size: 48pt;</string>
         <enum>Qt::LeftToRight</enum>
        </property>
        <property name="styleSheet">
-        <string notr="true">image: url(:/icons/plus.svg);</string>
+        <string notr="true"/>
        </property>
        <property name="text">
         <string/>
@@ -705,7 +699,7 @@ font-size: 48pt;</string>
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">image: url(:/icons/negative.svg);</string>
+        <string notr="true"/>
        </property>
        <property name="text">
         <string/>
@@ -721,7 +715,7 @@ font-size: 48pt;</string>
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">image: url(:/icons/plus.svg);</string>
+        <string notr="true"/>
        </property>
        <property name="text">
         <string/>
@@ -732,7 +726,7 @@ font-size: 48pt;</string>
         <rect>
          <x>20</x>
          <y>90</y>
-         <width>121</width>
+         <width>125</width>
          <height>60</height>
         </rect>
        </property>
@@ -750,13 +744,16 @@ font-size: 48pt;</string>
        <property name="text">
         <string>11.5</string>
        </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
       </widget>
       <widget class="QLabel" name="L2_off_pulse_show">
        <property name="geometry">
         <rect>
          <x>20</x>
          <y>200</y>
-         <width>121</width>
+         <width>125</width>
          <height>60</height>
         </rect>
        </property>
@@ -772,6 +769,9 @@ font-size: 48pt;</string>
        </property>
        <property name="text">
         <string>11.5</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
        </property>
       </widget>
       <widget class="QCheckBox" name="B2_pulsemode">
@@ -851,7 +851,7 @@ font-size: 48pt;</string>
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">image: url(:/icons/plus.svg);</string>
+        <string notr="true"/>
        </property>
        <property name="text">
         <string/>
@@ -867,7 +867,7 @@ font-size: 48pt;</string>
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">image: url(:/icons/negative.svg);</string>
+        <string notr="true"/>
        </property>
        <property name="text">
         <string/>
@@ -991,7 +991,7 @@ font-size: 48pt;</string>
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">image: url(:/icons/plus.svg);</string>
+        <string notr="true"/>
        </property>
        <property name="text">
         <string/>
@@ -1007,7 +1007,7 @@ font-size: 48pt;</string>
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">image: url(:/icons/negative.svg);</string>
+        <string notr="true"/>
        </property>
        <property name="text">
         <string/>
@@ -1238,7 +1238,7 @@ font-size: 48pt;</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">image: url(:/icons/interlock_key_icon.svg);</string>
+     <string notr="true"/>
     </property>
     <property name="text">
      <string/>
@@ -1254,12 +1254,28 @@ font-size: 48pt;</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">image: url(:/icons/usb_icon.svg);</string>
+     <string notr="true"/>
     </property>
     <property name="text">
      <string/>
     </property>
    </widget>
+  </widget>
+  <widget class="QLabel" name="L2_joules">
+   <property name="geometry">
+    <rect>
+     <x>570</x>
+     <y>450</y>
+     <width>30</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-size: 20pt;</string>
+   </property>
+   <property name="text">
+    <string>J</string>
+   </property>
   </widget>
  </widget>
  <customwidgets>

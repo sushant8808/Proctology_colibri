@@ -40,8 +40,8 @@ void ThemeManager::applyDarkTheme()
 
     QString style =
 
-        // QPushButton
-        "QPushButton {"
+            // QPushButton
+            "QPushButton {"
         " border:0px;"
         " border-radius:30px;"
         " background-color:" + mainBg + ";"
@@ -52,7 +52,7 @@ void ThemeManager::applyDarkTheme()
                         "}"
 
                         // Frames
-                        "#Password_frame, #homeframe_1, #homeframe_4, #settingframe_1,#homeframe_7,#homeframe_8,#homeframe_9,"
+            "#Password_frame, #homeframe_1, #homeframe_4, #settingframe_1,#homeframe_7,#homeframe_8,#homeframe_9,"
                         "#surgerydata_1, #readysurgery_1, #change_pass_frame_1,"
                         "#confirm_new_pass, #current_pass, #new_pass, #F1_pulsemode {"
                         " background-color:" + primaryBg + ";"
@@ -68,7 +68,7 @@ void ThemeManager::applyDarkTheme()
                    "}"
 
                    // Labels
-                   "#L1_passprint {"
+            "#L1_passprint {"
                    " color:" + textColor + ";"
                       " background-color:" + mainBg + ";"
                    " border-radius:20px;"
@@ -96,7 +96,7 @@ void ThemeManager::applyDarkTheme()
                       "}"
 
                       // Home buttons (class based)
-                      "*[class=\"home_button\"] {"
+            "*[class=\"home_button\"] {"
                       " background-color:" + primaryBg + ";"
                       " border-radius:25px;"
                       "}"
@@ -105,7 +105,7 @@ void ThemeManager::applyDarkTheme()
                         "}"
 
                         // keyboard open buttons (class based)
-                        "*[class=\"keyboard_bt\"] {"
+            "*[class=\"keyboard_bt\"] {"
                         "background-image:url(:/icons/keyboard_drop_dark.png);"
                         " background-color:" + secondaryBg + ";"
                       " border-radius:15px;"
@@ -115,7 +115,7 @@ void ThemeManager::applyDarkTheme()
                         "}"
 
                         // Select profile button
-                        "#B2_SelPro {"
+            "#B2_SelPro {"
                         " background-color:" + mainBg + ";"
                    " border-radius:15px;"
                    " font-size:16pt;"
@@ -159,7 +159,7 @@ void ThemeManager::applyDarkTheme()
                         "}"
 
                         // QCheckBox
-                        "QCheckBox::indicator {"
+            "QCheckBox::indicator {"
                         "    width: 16px;"
                         "    height: 16px;"
                         "    border: 2px solid " + secondaryBg + ";"
@@ -168,7 +168,7 @@ void ThemeManager::applyDarkTheme()
 
                    "QCheckBox::indicator:checked {"
                    // "    background-color: " + accentColor + ";"
-                   "background-image:url(:/icons/check_dark.png);"
+            "background-image:url(:/icons/check_dark.png);"
                         "    border: 2px solid " + secondaryBg + ";"
                         "}"
 
@@ -178,12 +178,14 @@ void ThemeManager::applyDarkTheme()
                         "}"
 
                         // Tabs (T2_home)
-                        "#T2_home QTabBar::tab {"
-                        " padding:2px 10px;"
+            "#T2_home QTabBar::tab {"
+                        " padding:4px 5px 5px 5px;"
                         " font-size:20px;"
+                        "  max-width: 500px;"
+                        "  min-width: 120px;"
                         " color:" + textColor + ";"
-                      " background-color:" + mainBg + ";"
-                   " border:2px solid " + primaryBg + ";"
+                       " background-color:" + mainBg + ";"
+                       " border:2px solid " + primaryBg + ";"
                       " border-top-left-radius: 15px;"
                       " border-top-right-radius: 15px;"
                       "}"
@@ -191,6 +193,7 @@ void ThemeManager::applyDarkTheme()
                       "#T2_home QTabBar::tab:selected {"
                       " color:" + accentColor + ";"
                         " background-color:" + primaryBg + ";"
+                        " border:2px solid " + accentColor + ";"
                       "}"
 
                       "#T2_home::pane {"
@@ -200,9 +203,17 @@ void ThemeManager::applyDarkTheme()
 
                       // Main Tab
 
-                      "#Main_Tab QTabBar::tab { "
+            "#Main_Tab QTabBar::tab { "
                       "padding:10px 20px; "
                       "font-size:26px; "
+                        "  max-width: 500px;"
+                        "  min-width: 120px;"
+                        " color:" + textColor + ";"
+                       " background-color:" + mainBg + ";"
+                       " border:2px solid " + primaryBg + ";"
+                      " border-top-left-radius: 15px;"
+                      " border-top-right-radius: 15px;"
+                        "border-bottom: none;"
                       "}"
 
                       "#Main_Tab QTabBar::tab:selected {"
@@ -211,6 +222,7 @@ void ThemeManager::applyDarkTheme()
                       " border-radius:20px;"
                       " border-bottom-left-radius:0px;"
                       " border-bottom-right-radius:0px;"
+                      " border:2px solid " + accentColor + ";"
                       "}"
 
                       "#Main_Tab QTabBar::tab:!selected {"
@@ -226,15 +238,24 @@ void ThemeManager::applyDarkTheme()
                       "}"
 
                       // Sub Tab
-                      "#Sub_Tab QTabBar::tab { "
-                      "padding:10px 18px; "
+            "#Sub_Tab QTabBar::tab { "
+                      "padding:5px 0px 5px 0px; "
                       "font-size:19px; "
+                        "  max-width: 500px;"
+                        "  min-width: 108px;"
+                        " min-height: 30px;"
+                        " color:" + textColor + ";"
+                       " background-color:" + mainBg + ";"
+                       " border:0px solid " + primaryBg + ";"
+                      " border-top-left-radius: 0px;"
+                      " border-top-right-radius: 0px;"
                       "}"
 
                       "#Sub_Tab QTabBar::tab:selected {"
                       " color:" + accentColor + ";"
                         " border-radius:0px;"
                         " background-color:" + primaryBg + ";"
+                        " border:0px solid " + primaryBg + ";"
                       "}"
 
                       "#Sub_Tab QTabBar::tab:!selected {"
@@ -252,7 +273,7 @@ void ThemeManager::applyDarkTheme()
 
 
                       // RadioButton
-                      "QRadioButton::indicator {"
+            "QRadioButton::indicator {"
                       " width:12px; height:12px;"
                       " border:2px solid " + borderColor + ";"
                         " border-radius:6px;"
@@ -264,7 +285,7 @@ void ThemeManager::applyDarkTheme()
                         "}"
 
                         // Slider
-                        "QSlider::groove:horizontal {"
+            "QSlider::groove:horizontal {"
                         " height:6px;"
                         " background:white;"
                         " border-radius:3px;"
@@ -284,7 +305,7 @@ void ThemeManager::applyDarkTheme()
                         "}"
 
                         // LineEdit
-                        "QLineEdit {"
+            "QLineEdit {"
                         " border-radius:20px;"
                         " font-size:12pt;"
                         " padding:4px;"
@@ -293,7 +314,7 @@ void ThemeManager::applyDarkTheme()
                       "}"
 
                       // ComboBox
-                      "QComboBox {"
+            "QComboBox {"
                       " border-radius:20px;"
                       " font-size:12pt;"
                       " padding:4px;"
@@ -308,7 +329,7 @@ void ThemeManager::applyDarkTheme()
                       "}"
 
                       // Dialog
-                      "QDialog {"
+            "QDialog {"
                       " background-color:" + mainBg + ";"
                    " color:" + textColor + ";"
                       " border:4px solid " + primaryBg + ";"
@@ -317,13 +338,13 @@ void ThemeManager::applyDarkTheme()
 
                       // QTableWidget
 
-                      // Table Header
-                      "QHeaderView::section {"
+            // Table Header
+            "QHeaderView::section {"
                       " background-color:" + mainBg + ";"
                    " color:" + textColor + ";"
                       " border:none;"
                       " font: 10pt 'Roboto';"
-                      "border: 1px solid rgb(60,60,60);"
+                      "border: 1px solid " + primaryBg + ";"
                       "border-radius: 12px;"
                       "}"
 
@@ -331,6 +352,7 @@ void ThemeManager::applyDarkTheme()
                       " background-color:" + mainBg + ";"
                    " color:" + textColor + ";"
                       " font: 10pt 'Roboto';"
+                    "border: 1px solid " + mainBg + ";"
                       " outline:none;"
                       "}"
 
@@ -367,10 +389,10 @@ void ThemeManager::applyDarkTheme()
                       "}"
 
                       // ===============================
-                      // CUSTOM KEYBOARD
-                      // ===============================
+            // CUSTOM KEYBOARD
+            // ===============================
 
-                      "QDialog#CustomKeyboard {"
+            "QDialog#CustomKeyboard {"
                       " background-color: rgb(18,18,18);"
                       " border: 2px solid rgb(60,60,60);"
                       " border-radius: 18px;"
@@ -434,7 +456,7 @@ void ThemeManager::applyDarkTheme()
                       "}"
 
                       // Icons
-                      "#B3_dark_light { background-image:url(:/icons/sun.png); }"
+            "#B3_dark_light { background-image:url(:/icons/sun.png); }"
                       "#B2_modify_protocol { background-image:url(:/icons/save_dark.png); }"
                       "#B2_SelPro { background-image:url(:/icons/menu_dark.png); }"
                       "#B2_back_to_home,#back_to_home { background-image:url(:/icons/home_dark.png); }"
@@ -442,6 +464,16 @@ void ThemeManager::applyDarkTheme()
                       "#B2_sound,#B5_sound { background-image:url(:/icons/volume_dark.png); }"
                       "#B2_brightness,#B5_brightness { background-image:url(:/icons/brightness_dark.png); }"
                       "#B2_setting { background-image:url(:/icons/setting_dark.png); }"
+
+                      "#B2_980add, #B2_1470add, #B2_timer_add, #B2_on_time_add, #B2_off_time_add, "
+                        "#B2_alarm_sec_add, #B2_alarm_joule_add, #inc_low_value, #inc_high_value, "
+                        "#next_power_1470, #next_power_980, #DAC_add_1470, #DAC_add_980"
+                       " { background-image:url(:/icons/positive_dark_active.png); }"
+
+                      "#B2_980sub, #B2_1470sub, #B2_timer_sub, #B2_on_time_sub, #B2_off_time_sub, "
+                        "#B2_alarm_sec_sub, #B2_alarm_joule_sub, #dec_low_value, #dec_high_value, "
+                        "#pre_power_1470, #pre_power_980, #DAC_sub_1470, #DAC_sub_980"
+                      "{ background-image:url(:/icons/negative_dark_active.png); }"
 
         ;
 
@@ -484,8 +516,8 @@ void ThemeManager::applyLightTheme()
 
     QString style =
 
-        // QPushButton
-        "QPushButton {"
+            // QPushButton
+            "QPushButton {"
         " border:0px;"
         " border-radius:30px;"
         " background-color:" + mainBg + ";"
@@ -496,7 +528,7 @@ void ThemeManager::applyLightTheme()
                         "}"
 
                         // Frames
-                        "#Password_frame, #homeframe_1, #homeframe_4, #settingframe_1,#homeframe_7,#homeframe_8,#homeframe_9,"
+            "#Password_frame, #homeframe_1, #homeframe_4, #settingframe_1,#homeframe_7,#homeframe_8,#homeframe_9,"
                         "#surgerydata_1, #readysurgery_1, #change_pass_frame_1,"
                         "#confirm_new_pass, #current_pass, #new_pass, #F1_pulsemode {"
                         " background-color:" + primaryBg + ";"
@@ -512,7 +544,7 @@ void ThemeManager::applyLightTheme()
                    "}"
 
                    // Labels
-                   "#L1_passprint {"
+            "#L1_passprint {"
                    " color:" + textColor + ";"
                       " background-color:" + mainBg + ";"
                    " border-radius:20px;"
@@ -540,7 +572,7 @@ void ThemeManager::applyLightTheme()
                       "}"
 
                       // Home Buttons
-                      "*[class=\"home_button\"] {"
+            "*[class=\"home_button\"] {"
                       " background-color:" + primaryBg + ";"
                       " border-radius:25px;"
                       "}"
@@ -549,7 +581,7 @@ void ThemeManager::applyLightTheme()
                         "}"
 
                         // keyboard open buttons (class based)
-                        "*[class=\"keyboard_bt\"] {"
+            "*[class=\"keyboard_bt\"] {"
                         "background-image:url(:/icons/keyboard_drop_light.png);"
                         " background-color:" + secondaryBg + ";"
                         " border-radius:15px;"
@@ -559,7 +591,7 @@ void ThemeManager::applyLightTheme()
                       "}"
 
                         // Select Profile Button
-                        "#B2_SelPro {"
+            "#B2_SelPro {"
                         " background-color:" + mainBg + ";"
                    " border-radius:15px;"
                    " font-size:16pt;"
@@ -604,7 +636,7 @@ void ThemeManager::applyLightTheme()
                         "}"
 
                         // QCheckBox
-                        "QCheckBox::indicator {"
+            "QCheckBox::indicator {"
                         "    width: 16px;"
                         "    height: 16px;"
                         "    border: 2px solid " + secondaryBg + ";"
@@ -613,7 +645,7 @@ void ThemeManager::applyLightTheme()
 
                    "QCheckBox::indicator:checked {"
                    // "    background-color: " + accentColor + ";"
-                   "background-image:url(:/icons/check_light.png);"
+            "background-image:url(:/icons/check_light.png);"
                         "    border: 2px solid " + secondaryBg + ";"
                         "}"
 
@@ -623,12 +655,14 @@ void ThemeManager::applyLightTheme()
                         "}"
 
                         // Tabs (T2_home)
-                        "#T2_home QTabBar::tab {"
-                        " padding:2px 10px;"
+            "#T2_home QTabBar::tab {"
+                        " padding:4px 5px 5px 5px;"
                         " font-size:20px;"
+                        "  max-width: 500px;"
+                        "  min-width: 120px;"
                         " color:" + textColor + ";"
-                      " background-color:" + mainBg + ";"
-                   " border:2px solid " + primaryBg + ";"
+                       " background-color:" + mainBg + ";"
+                       " border:2px solid " + primaryBg + ";"
                       " border-top-left-radius: 15px;"
                       " border-top-right-radius: 15px;"
                       "}"
@@ -636,6 +670,7 @@ void ThemeManager::applyLightTheme()
                       "#T2_home QTabBar::tab:selected {"
                       " color:" + accentColor + ";"
                         " background-color:" + primaryBg + ";"
+                        " border:2px solid " + accentColor + ";"
                       "}"
 
                       "#T2_home::pane {"
@@ -644,9 +679,17 @@ void ThemeManager::applyLightTheme()
                       "}"
 
                       // Main Tab
-                      "#Main_Tab QTabBar::tab { "
+            "#Main_Tab QTabBar::tab { "
                       "padding:10px 20px; "
                       "font-size:26px; "
+                        "  max-width: 500px;"
+                        "  min-width: 120px;"
+                        " color:" + textColor + ";"
+                       " background-color:" + mainBg + ";"
+                       " border:2px solid " + primaryBg + ";"
+                      " border-top-left-radius: 15px;"
+                      " border-top-right-radius: 15px;"
+                        "border-bottom: none;"
                       "}"
 
                       "#Main_Tab QTabBar::tab:selected {"
@@ -655,6 +698,7 @@ void ThemeManager::applyLightTheme()
                       " border-radius:20px;"
                       " border-bottom-left-radius:0px;"
                       " border-bottom-right-radius:0px;"
+                        " border:2px solid " + accentColor + ";"
                       "}"
 
                       "#Main_Tab QTabBar::tab:!selected {"
@@ -670,15 +714,24 @@ void ThemeManager::applyLightTheme()
                       "}"
 
                       // Sub Tab
-                      "#Sub_Tab QTabBar::tab { "
-                      "padding:10px 18px; "
+            "#Sub_Tab QTabBar::tab { "
+                      "padding:5px 0px 5px 0px; "
                       "font-size:19px; "
+                        "  max-width: 500px;"
+                        "  min-width: 108px;"
+                        " min-height: 30px;"
+                        " color:" + textColor + ";"
+                       " background-color:" + mainBg + ";"
+                       " border:0px solid " + primaryBg + ";"
+                      " border-top-left-radius: 0px;"
+                      " border-top-right-radius: 0px;"
                       "}"
 
                       "#Sub_Tab QTabBar::tab:selected {"
                       " color:" + accentColor + ";"
                         " border-radius:0px;"
                         " background-color:" + primaryBg + ";"
+                        " border:0px solid " + primaryBg + ";"
                       "}"
 
                       "#Sub_Tab QTabBar::tab:!selected {"
@@ -695,7 +748,7 @@ void ThemeManager::applyLightTheme()
                       "}"
 
                       // RadioButton
-                      "QRadioButton::indicator {"
+            "QRadioButton::indicator {"
                       " width:12px; height:12px;"
                       " border:2px solid " + borderColor + ";"
                         " border-radius:6px;"
@@ -707,7 +760,7 @@ void ThemeManager::applyLightTheme()
                         "}"
 
                         // Slider
-                        "QSlider::groove:horizontal {"
+            "QSlider::groove:horizontal {"
                         " height:6px;"
                         " background:black;"
                         " border-radius:3px;"
@@ -727,7 +780,7 @@ void ThemeManager::applyLightTheme()
                         "}"
 
                         // LineEdit
-                        "QLineEdit {"
+            "QLineEdit {"
                         " border-radius:20px;"
                         " font-size:12pt;"
                         " padding:4px;"
@@ -736,7 +789,7 @@ void ThemeManager::applyLightTheme()
                       "}"
 
                       // ComboBox
-                      "QComboBox {"
+            "QComboBox {"
                       " border-radius:20px;"
                       " font-size:12pt;"
                       " padding:4px;"
@@ -751,7 +804,7 @@ void ThemeManager::applyLightTheme()
                       "}"
 
                       // Dialog
-                      "QDialog {"
+            "QDialog {"
                       " background-color:" + mainBg + ";"
                    " color:" + textColor + ";"
                       " border:4px solid " + primaryBg + ";"
@@ -760,21 +813,22 @@ void ThemeManager::applyLightTheme()
 
                       // QTableWidget
 
-                      // Table Header
-                      "QHeaderView::section {"
+            // Table Header
+            "QHeaderView::section {"
                       " background-color:" + mainBg + ";"
                    " color:" + textColor + ";"
                       " border:none;"
                       " font: 10pt 'Roboto';"
+                      "border: 1px solid " + primaryBg + ";"
+                      "border-radius: 12px;"
                       "}"
 
                       "QTableWidget {"
                       " background-color:" + mainBg + ";"
                    " color:" + textColor + ";"
                       " font: 10pt 'Roboto';"
+                        "border: 1px solid " + mainBg + ";"
                       " outline:none;"
-                      "border: 1px solid rgb(60,60,60);"
-                      "border-radius: 12px;"
                       "}"
 
                       "QTableWidget::item:hover {"
@@ -793,8 +847,8 @@ void ThemeManager::applyLightTheme()
                       "}"
 
                       "QTableWidget::indicator {"
-                      " width:10px;"
-                      " height:10px;"
+                      " width:14px;"
+                      " height:14px;"
                       " border:2px solid " + textColor + ";"
                       " background-color:" + mainBg + ";"
                    "}"
@@ -810,10 +864,10 @@ void ThemeManager::applyLightTheme()
                       "}"
 
                       // ===============================
-                      // CUSTOM KEYBOARD
-                      // ===============================
+            // CUSTOM KEYBOARD
+            // ===============================
 
-                      "QDialog#CustomKeyboard {"
+            "QDialog#CustomKeyboard {"
                       " background-color: rgb(245,245,245);"
                       " border: 2px solid rgb(180,180,180);"
                       " border-radius: 18px;"
@@ -877,7 +931,7 @@ void ThemeManager::applyLightTheme()
                       "}"
 
                       // Icons
-                      "#B3_dark_light { background-image:url(:/icons/moon.png); }"
+            "#B3_dark_light { background-image:url(:/icons/moon.png); }"
                       "#B2_modify_protocol { background-image:url(:/icons/save_light.png); }"
                       "#B2_SelPro { background-image:url(:/icons/menu_light.png); }"
                       "#B2_back_to_home,#back_to_home { background-image:url(:/icons/home_light.png); }"
@@ -885,6 +939,16 @@ void ThemeManager::applyLightTheme()
                       "#B2_sound,#B5_sound { background-image:url(:/icons/volume_light.png); }"
                       "#B2_brightness,#B5_brightness { background-image:url(:/icons/brightness_light.png); }"
                       "#B2_setting { background-image:url(:/icons/setting_light.png); }"
+
+                      "#B2_980add, #B2_1470add, #B2_timer_add, #B2_on_time_add, #B2_off_time_add, "
+                        "#B2_alarm_sec_add, #B2_alarm_joule_add, #inc_low_value, #inc_high_value, "
+                        "#next_power_1470, #next_power_980, #DAC_add_1470, #DAC_add_980"
+                       " { background-image:url(:/icons/positive_light_active.png); }"
+
+                      "#B2_980sub, #B2_1470sub, #B2_timer_sub, #B2_on_time_sub, #B2_off_time_sub, "
+                        "#B2_alarm_sec_sub, #B2_alarm_joule_sub, #dec_low_value, #dec_high_value, "
+                        "#pre_power_1470, #pre_power_980, #DAC_sub_1470, #DAC_sub_980"
+                      "{ background-image:url(:/icons/negative_light_active.png); }"
 
         ;
 

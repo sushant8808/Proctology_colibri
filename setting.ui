@@ -60,6 +60,9 @@
      <property name="text">
       <string>Protocols</string>
      </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
     </widget>
     <widget class="QPushButton" name="B3_pulse_mode">
      <property name="geometry">
@@ -157,6 +160,9 @@ border-radius: 25px;</string>
      <property name="text">
       <string>Password</string>
      </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
     </widget>
     <widget class="QPushButton" name="B3_pass_enable">
      <property name="geometry">
@@ -224,6 +230,9 @@ border-radius: 25px;</string>
      </property>
      <property name="text">
       <string>Interlock</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
     <widget class="QPushButton" name="B3_interlockkey_enable">
@@ -328,6 +337,9 @@ border-radius: 25px;</string>
      <property name="text">
       <string>Patient Data</string>
      </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
     </widget>
     <widget class="QPushButton" name="B3_clear_data">
      <property name="geometry">
@@ -396,6 +408,7 @@ border-radius: 25px;</string>
    </property>
    <property name="font">
     <font>
+     <family>Roboto</family>
      <pointsize>22</pointsize>
      <weight>50</weight>
      <bold>false</bold>
@@ -425,6 +438,9 @@ border-radius: 25px;</string>
    </property>
    <property name="text">
     <string>Settings</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
  </widget>

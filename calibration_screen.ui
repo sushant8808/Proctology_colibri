@@ -77,6 +77,9 @@ font-size: 52pt;</string>
      <property name="text">
       <string>00.0</string>
      </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
     </widget>
     <widget class="QLabel" name="DAC_change_1470">
      <property name="geometry">
@@ -93,6 +96,9 @@ font-size: 32pt;</string>
      </property>
      <property name="text">
       <string>00000</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
     <widget class="home_button" name="pre_power_1470">
@@ -160,6 +166,7 @@ font-size: 32pt;</string>
      </property>
      <property name="font">
       <font>
+       <family>Roboto</family>
        <pointsize>22</pointsize>
       </font>
      </property>
@@ -254,6 +261,9 @@ font-size: 52pt;</string>
      <property name="text">
       <string>00.0</string>
      </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
     </widget>
     <widget class="QLabel" name="DAC_change_980">
      <property name="geometry">
@@ -270,6 +280,9 @@ font-size: 32pt;</string>
      </property>
      <property name="text">
       <string>00000</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
     <widget class="home_button" name="pre_power_980">
@@ -337,6 +350,7 @@ font-size: 32pt;</string>
      </property>
      <property name="font">
       <font>
+       <family>Roboto</family>
        <pointsize>22</pointsize>
       </font>
      </property>
@@ -399,6 +413,7 @@ border-radius: 25px;</string>
    </property>
    <property name="font">
     <font>
+     <family>Roboto</family>
      <pointsize>22</pointsize>
      <weight>50</weight>
      <bold>false</bold>
@@ -428,6 +443,9 @@ border-radius: 25px;</string>
    </property>
    <property name="text">
     <string>Calibration</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
   <widget class="home_button" name="back_to_home">

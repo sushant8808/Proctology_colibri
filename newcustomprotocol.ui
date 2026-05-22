@@ -29,10 +29,7 @@
     <string notr="true"/>
    </property>
    <property name="frameShape">
-    <enum>QFrame::Shape::StyledPanel</enum>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Shadow::Raised</enum>
+    <enum>QFrame::NoFrame</enum>
    </property>
    <widget class="QFrame" name="homeframe_2">
     <property name="geometry">
@@ -47,10 +44,7 @@
      <string notr="true"/>
     </property>
     <property name="frameShape">
-     <enum>QFrame::Shape::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Shadow::Raised</enum>
+     <enum>QFrame::NoFrame</enum>
     </property>
     <widget class="QLabel" name="L2_power">
      <property name="geometry">
@@ -65,6 +59,7 @@
       <font>
        <family>Roboto</family>
        <pointsize>22</pointsize>
+       <weight>50</weight>
        <italic>false</italic>
        <bold>false</bold>
       </font>
@@ -79,8 +74,8 @@
     <widget class="QLabel" name="L2_watts">
      <property name="geometry">
       <rect>
-       <x>212</x>
-       <y>73</y>
+       <x>200</x>
+       <y>80</y>
        <width>31</width>
        <height>21</height>
       </rect>
@@ -95,7 +90,7 @@
     <widget class="QLabel" name="L2_980nm">
      <property name="geometry">
       <rect>
-       <x>30</x>
+       <x>20</x>
        <y>65</y>
        <width>80</width>
        <height>20</height>
@@ -111,7 +106,7 @@
     <widget class="QLabel" name="L2_1470nm">
      <property name="geometry">
       <rect>
-       <x>30</x>
+       <x>20</x>
        <y>130</y>
        <width>80</width>
        <height>20</height>
@@ -127,15 +122,14 @@
     <widget class="home_button" name="B2_980sub">
      <property name="geometry">
       <rect>
-       <x>250</x>
+       <x>240</x>
        <y>55</y>
-       <width>40</width>
-       <height>40</height>
+       <width>50</width>
+       <height>50</height>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">image: url(:/icons/negative.svg);border: 0px solid;
-border-radius: 20px;</string>
+      <string notr="true"/>
      </property>
      <property name="text">
       <string/>
@@ -146,8 +140,8 @@ border-radius: 20px;</string>
       <rect>
        <x>310</x>
        <y>55</y>
-       <width>40</width>
-       <height>40</height>
+       <width>50</width>
+       <height>50</height>
       </rect>
      </property>
      <property name="sizePolicy">
@@ -162,12 +156,10 @@ border-radius: 20px;</string>
       </font>
      </property>
      <property name="layoutDirection">
-      <enum>Qt::LayoutDirection::LeftToRight</enum>
+      <enum>Qt::LeftToRight</enum>
      </property>
      <property name="styleSheet">
-      <string notr="true">border: 0px solid;
-border-radius: 20px;
-image: url(:/icons/plus.svg);
+      <string notr="true">
 </string>
      </property>
      <property name="text">
@@ -177,15 +169,14 @@ image: url(:/icons/plus.svg);
     <widget class="home_button" name="B2_1470sub">
      <property name="geometry">
       <rect>
-       <x>250</x>
+       <x>240</x>
        <y>120</y>
-       <width>40</width>
-       <height>40</height>
+       <width>50</width>
+       <height>50</height>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">image: url(:/icons/negative.svg);border: 0px solid;
-border-radius: 20px;</string>
+      <string notr="true"/>
      </property>
      <property name="text">
       <string/>
@@ -196,14 +187,12 @@ border-radius: 20px;</string>
       <rect>
        <x>310</x>
        <y>120</y>
-       <width>40</width>
-       <height>40</height>
+       <width>50</width>
+       <height>50</height>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">border: 0px solid;
-border-radius: 20px;
-image: url(:/icons/plus.svg);</string>
+      <string notr="true"/>
      </property>
      <property name="text">
       <string/>
@@ -212,7 +201,7 @@ image: url(:/icons/plus.svg);</string>
     <widget class="QLabel" name="L2_980_show">
      <property name="geometry">
       <rect>
-       <x>110</x>
+       <x>98</x>
        <y>50</y>
        <width>101</width>
        <height>50</height>
@@ -232,14 +221,11 @@ font-size: 40pt;</string>
      <property name="text">
       <string>15.0</string>
      </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-     </property>
     </widget>
     <widget class="QLabel" name="L2_1470_show">
      <property name="geometry">
       <rect>
-       <x>110</x>
+       <x>98</x>
        <y>115</y>
        <width>101</width>
        <height>50</height>
@@ -258,15 +244,12 @@ font-size: 40pt;</string>
      <property name="text">
       <string>15.0</string>
      </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-     </property>
     </widget>
     <widget class="QLabel" name="L2_watts_2">
      <property name="geometry">
       <rect>
-       <x>212</x>
-       <y>138</y>
+       <x>200</x>
+       <y>140</y>
        <width>31</width>
        <height>21</height>
       </rect>
@@ -292,10 +275,7 @@ font-size: 40pt;</string>
      <string notr="true"/>
     </property>
     <property name="frameShape">
-     <enum>QFrame::Shape::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Shadow::Raised</enum>
+     <enum>QFrame::NoFrame</enum>
     </property>
     <widget class="QLabel" name="label_2">
      <property name="geometry">
@@ -332,15 +312,14 @@ font-size: 40pt;</string>
     <widget class="home_button" name="B2_on_time_sub">
      <property name="geometry">
       <rect>
-       <x>250</x>
+       <x>240</x>
        <y>90</y>
-       <width>40</width>
-       <height>40</height>
+       <width>50</width>
+       <height>50</height>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">image: url(:/icons/negative.svg);border: 0px solid;
-border-radius: 20px;</string>
+      <string notr="true"/>
      </property>
      <property name="text">
       <string/>
@@ -351,8 +330,8 @@ border-radius: 20px;</string>
       <rect>
        <x>310</x>
        <y>90</y>
-       <width>40</width>
-       <height>40</height>
+       <width>50</width>
+       <height>50</height>
       </rect>
      </property>
      <property name="sizePolicy">
@@ -367,11 +346,10 @@ border-radius: 20px;</string>
       </font>
      </property>
      <property name="layoutDirection">
-      <enum>Qt::LayoutDirection::LeftToRight</enum>
+      <enum>Qt::LeftToRight</enum>
      </property>
      <property name="styleSheet">
-      <string notr="true">image: url(:/icons/plus.svg);border: 0px solid;
-border-radius: 20px;</string>
+      <string notr="true"/>
      </property>
      <property name="text">
       <string/>
@@ -380,16 +358,14 @@ border-radius: 20px;</string>
     <widget class="home_button" name="B2_off_time_sub">
      <property name="geometry">
       <rect>
-       <x>250</x>
+       <x>240</x>
        <y>190</y>
-       <width>40</width>
-       <height>40</height>
+       <width>50</width>
+       <height>50</height>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">border: 0px solid;
-image: url(:/icons/negative.svg);
-border-radius: 20px;</string>
+      <string notr="true"/>
      </property>
      <property name="text">
       <string/>
@@ -400,13 +376,12 @@ border-radius: 20px;</string>
       <rect>
        <x>310</x>
        <y>190</y>
-       <width>40</width>
-       <height>40</height>
+       <width>50</width>
+       <height>50</height>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">image: url(:/icons/plus.svg);border: 0px solid;
-border-radius: 20px;</string>
+      <string notr="true"/>
      </property>
      <property name="text">
       <string/>
@@ -435,9 +410,6 @@ font-size: 40pt;</string>
      <property name="text">
       <string>11.5</string>
      </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignCenter</set>
-     </property>
     </widget>
     <widget class="QLabel" name="L2_off_pulse_show">
      <property name="geometry">
@@ -460,9 +432,6 @@ font-size: 40pt;</string>
      </property>
      <property name="text">
       <string>11.5</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignCenter</set>
      </property>
     </widget>
     <widget class="QCheckBox" name="B2_pulsemode">
@@ -530,10 +499,7 @@ font-size: 40pt;</string>
      <string notr="true"/>
     </property>
     <property name="frameShape">
-     <enum>QFrame::Shape::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Shadow::Raised</enum>
+     <enum>QFrame::NoFrame</enum>
     </property>
     <widget class="QLabel" name="L2_timer">
      <property name="geometry">
@@ -548,6 +514,7 @@ font-size: 40pt;</string>
       <font>
        <family>Roboto</family>
        <pointsize>22</pointsize>
+       <weight>50</weight>
        <bold>false</bold>
       </font>
      </property>
@@ -579,13 +546,12 @@ font-size: 40pt;</string>
       <rect>
        <x>310</x>
        <y>100</y>
-       <width>40</width>
-       <height>40</height>
+       <width>50</width>
+       <height>50</height>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">image: url(:/icons/plus.svg);border: 0px solid;
-border-radius: 20px;</string>
+      <string notr="true"/>
      </property>
      <property name="text">
       <string/>
@@ -594,15 +560,14 @@ border-radius: 20px;</string>
     <widget class="home_button" name="B2_timer_sub">
      <property name="geometry">
       <rect>
-       <x>250</x>
+       <x>240</x>
        <y>100</y>
-       <width>40</width>
-       <height>40</height>
+       <width>50</width>
+       <height>50</height>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">image: url(:/icons/negative.svg);border: 0px solid;
-border-radius: 20px;</string>
+      <string notr="true"/>
      </property>
      <property name="text">
       <string/>
@@ -661,9 +626,6 @@ font-size: 40pt;</string>
      </property>
      <property name="text">
       <string>120</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignCenter</set>
      </property>
     </widget>
     <widget class="QPushButton" name="B2_timer_reset">
@@ -782,12 +744,14 @@ border-radius: 20px;</string>
    </property>
    <property name="font">
     <font>
+     <family>Roboto</family>
      <pointsize>22</pointsize>
+     <weight>50</weight>
      <bold>false</bold>
     </font>
    </property>
    <property name="layoutDirection">
-    <enum>Qt::LayoutDirection::LeftToRight</enum>
+    <enum>Qt::LeftToRight</enum>
    </property>
    <property name="styleSheet">
     <string notr="true">font-size: 22pt;</string>
@@ -824,6 +788,9 @@ border-radius: 20px;</string>
    <property name="text">
     <string>New Custom Protocol</string>
    </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
   </widget>
   <widget class="QLabel" name="modify_protocol_label">
    <property name="geometry">
@@ -839,6 +806,9 @@ border-radius: 20px;</string>
    </property>
    <property name="text">
     <string>Modify Custom Protocol</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
  </widget>

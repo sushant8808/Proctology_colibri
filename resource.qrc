@@ -8,10 +8,6 @@
         <file>volume_light.png</file>
         <file>setting_dark.png</file>
         <file>setting_light.png</file>
-        <file>negative.svg</file>
-        <file>plus.svg</file>
-        <file>star_filled.svg</file>
-        <file>star_outline.svg</file>
         <file>interlock_key_icon.svg</file>
         <file>usb_icon.svg</file>
         <file>modify_dark.png</file>
@@ -27,6 +23,14 @@
         <file>check_light.png</file>
         <file>keyboard_drop_light.png</file>
         <file>keyboard_drop_dark.png</file>
+        <file>negative_dark_active.png</file>
+        <file>positive_dark_active.png</file>
+        <file>negative_light_active.png</file>
+        <file>positive_light_active.png</file>
+        <file>star_filled_dark.png</file>
+        <file>star_filled_light.png</file>
+        <file>star_outline_dark.png</file>
+        <file>star_outline_light.png</file>
     </qresource>
     <qresource prefix="/audio">
         <file>Audio/0001.mp3</file>

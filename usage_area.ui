@@ -23,10 +23,7 @@
     </rect>
    </property>
    <property name="frameShape">
-    <enum>QFrame::Shape::StyledPanel</enum>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Shadow::Raised</enum>
+    <enum>QFrame::NoFrame</enum>
    </property>
    <widget class="QFrame" name="settingframe_2">
     <property name="geometry">
@@ -41,10 +38,7 @@
      <string notr="true"/>
     </property>
     <property name="frameShape">
-     <enum>QFrame::Shape::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Shadow::Raised</enum>
+     <enum>QFrame::NoFrame</enum>
     </property>
     <widget class="QLabel" name="label_10">
      <property name="geometry">
@@ -60,9 +54,6 @@
      </property>
      <property name="text">
       <string>No. of Surgery Done - </string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignHCenter</set>
      </property>
     </widget>
     <widget class="QLabel" name="usage_no_surgery">
@@ -80,9 +71,6 @@
      <property name="text">
       <string>000</string>
      </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignHCenter</set>
-     </property>
     </widget>
    </widget>
    <widget class="QFrame" name="settingframe_3">
@@ -98,10 +86,7 @@
      <string notr="true"/>
     </property>
     <property name="frameShape">
-     <enum>QFrame::Shape::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Shadow::Raised</enum>
+     <enum>QFrame::NoFrame</enum>
     </property>
     <widget class="QTableWidget" name="usage_table">
      <property name="geometry">
@@ -109,7 +94,7 @@
        <x>10</x>
        <y>10</y>
        <width>730</width>
-       <height>231</height>
+       <height>233</height>
       </rect>
      </property>
     </widget>
@@ -117,7 +102,7 @@
      <property name="geometry">
       <rect>
        <x>694</x>
-       <y>240</y>
+       <y>242</y>
        <width>51</width>
        <height>31</height>
       </rect>
@@ -130,7 +115,7 @@
      <property name="geometry">
       <rect>
        <x>5</x>
-       <y>240</y>
+       <y>242</y>
        <width>51</width>
        <height>31</height>
       </rect>
@@ -207,11 +192,12 @@ border-radius: 25px;</string>
    <property name="font">
     <font>
      <pointsize>22</pointsize>
+     <weight>50</weight>
      <bold>false</bold>
     </font>
    </property>
    <property name="layoutDirection">
-    <enum>Qt::LayoutDirection::LeftToRight</enum>
+    <enum>Qt::LeftToRight</enum>
    </property>
    <property name="styleSheet">
     <string notr="true">font-size: 22pt;</string>
@@ -236,7 +222,7 @@ border-radius: 25px;</string>
     <string>Usage Area</string>
    </property>
    <property name="alignment">
-    <set>Qt::AlignmentFlag::AlignCenter</set>
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
  </widget>

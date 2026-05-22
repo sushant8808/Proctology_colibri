@@ -25,6 +25,8 @@ protocolselect::protocolselect(QWidget *parent, Home *home)
 
     this->setWindowFlags(Qt::FramelessWindowHint);
 
+    setupTabs();
+
 }
 
 protocolselect::~protocolselect()
@@ -109,7 +111,7 @@ void protocolselect::loadProtocols(const QString &tableName, QWidget *tabWidget)
         }
 
         ProtocolItemWidget *item =
-            new ProtocolItemWidget(id, name, favourite);
+            new ProtocolItemWidget(id, 0, name, favourite);
 
         if (tableName == "protocol_custom" &&
             mode != NormalMode &&
@@ -230,16 +232,30 @@ void protocolselect::loadProtocols(const QString &tableName, QWidget *tabWidget)
     while (total < minItems)
     {
         ProtocolItemWidget *dummy =
-            new ProtocolItemWidget(-1, "-", false);
+            new ProtocolItemWidget(-1, 1, "-", false);
         dummy->setEnabled(false);
 
-        dummy->setStyleSheet(
-            "ProtocolItemWidget {"
-            "background-color: rgb(180,180,180);"
-            "border-radius: 20px;"
-            "border: 2px dashed gray;"
-            "}"
-            );
+        if(dark)
+        {
+            dummy->setStyleSheet(
+                "ProtocolItemWidget {"
+                "background-color: rgb(220,200,200);"
+                "border-radius: 20px;"
+                "border: 2px dashed rgb(230,230,230);"
+                "}"
+                );
+        }else
+        {
+            dummy->setStyleSheet(
+                "ProtocolItemWidget {"
+                "background-color: rgb(15,15,15);"
+                "border-radius: 20px;"
+                "border: 2px dashed rgb(25,25,25);"
+                "}"
+                );
+        }
+
+
 
         grid->addWidget(dummy, row, col);
         col++; total++;
@@ -376,7 +392,8 @@ void protocolselect::refreshPage()
     mode = NormalMode;
 
     // Reload all tabs
-    setupTabs();
+//    setupTabs();
+    loadProtocols("protocol_custom", ui->tabCustom);
 
     qDebug() << "Protocol Select Refresh Complete";
 }
