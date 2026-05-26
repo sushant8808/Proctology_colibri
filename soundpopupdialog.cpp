@@ -10,7 +10,7 @@ SoundPopupDialog::SoundPopupDialog(QWidget *parent)
     : QDialog(parent)
 {
     setWindowFlags(Qt::Popup);
-    setFixedSize(400, 300); // increased height for second slider
+    setFixedSize(600, 300); // increased height for second slider
 
     // ---- First Slider (Volume) ----
     label = new QLabel("Speaker Volume", this);
@@ -26,7 +26,7 @@ SoundPopupDialog::SoundPopupDialog(QWidget *parent)
             this, &SoundPopupDialog::onSliderValueChanged);
 
     // ---- Second Slider (e.g., Tone / Beep Level) ----
-    label2 = new QLabel("Beep volume", this);
+    label2 = new QLabel("Buzzer volume", this);
     label2->setAlignment(Qt::AlignCenter);
     label2->setStyleSheet("font-size: 28px;");
 
@@ -47,7 +47,7 @@ SoundPopupDialog::SoundPopupDialog(QWidget *parent)
     layout->addSpacing(10);
     layout->addWidget(slider);
 
-    layout->addSpacing(20);
+    layout->addSpacing(40);
 
     layout->addWidget(label2);
     layout->addSpacing(10);

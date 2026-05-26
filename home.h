@@ -93,10 +93,6 @@ private slots:
 
     void updateAlarmJouleLabel();
 
-    void on_B2_sec_alarm_toggled(bool checked);
-
-    void on_B2_joule_alarm_toggled(bool checked);
-
     void on_B2_sound_clicked();
 
     void on_B2_brightness_clicked();
@@ -135,8 +131,13 @@ private slots:
 
     int getMaxLimit();
 
+    void on_B2_sec_alarm_clicked();
+
+    void on_B2_joule_alarm_clicked();
+
 protected:
-    void showEvent(QShowEvent *event) override;  // 👈 Add this
+    void showEvent(QShowEvent *event) override;
+    bool eventFilter(QObject *obj, QEvent *event) override;
 
 private:
     Ui::Home *ui;

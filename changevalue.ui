@@ -23,19 +23,19 @@
     </rect>
    </property>
    <property name="layoutDirection">
-    <enum>Qt::LayoutDirection::LeftToRight</enum>
+    <enum>Qt::LeftToRight</enum>
    </property>
    <property name="styleSheet">
     <string notr="true"/>
    </property>
    <property name="tabPosition">
-    <enum>QTabWidget::TabPosition::North</enum>
+    <enum>QTabWidget::North</enum>
    </property>
    <property name="tabShape">
-    <enum>QTabWidget::TabShape::Rounded</enum>
+    <enum>QTabWidget::Rounded</enum>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>1</number>
    </property>
    <property name="tabsClosable">
     <bool>false</bool>
@@ -60,10 +60,7 @@
       </rect>
      </property>
      <property name="frameShape">
-      <enum>QFrame::Shape::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Shadow::Raised</enum>
+      <enum>QFrame::NoFrame</enum>
      </property>
      <widget class="QFrame" name="homeframe_2">
       <property name="geometry">
@@ -78,10 +75,7 @@
        <string notr="true"/>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Shape::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Shadow::Raised</enum>
+       <enum>QFrame::NoFrame</enum>
       </property>
       <widget class="QLabel" name="L2_power">
        <property name="geometry">
@@ -96,6 +90,7 @@
         <font>
          <family>Roboto</family>
          <pointsize>22</pointsize>
+         <weight>50</weight>
          <italic>false</italic>
          <bold>false</bold>
         </font>
@@ -192,7 +187,7 @@
         </font>
        </property>
        <property name="layoutDirection">
-        <enum>Qt::LayoutDirection::LeftToRight</enum>
+        <enum>Qt::LeftToRight</enum>
        </property>
        <property name="styleSheet">
         <string notr="true">image: url(:/icons/plus.svg);</string>
@@ -256,9 +251,6 @@ font-size: 48pt;</string>
        <property name="text">
         <string>15.0</string>
        </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-       </property>
       </widget>
       <widget class="QLabel" name="L2_1470_show">
        <property name="geometry">
@@ -281,9 +273,6 @@ font-size: 48pt;</string>
        </property>
        <property name="text">
         <string>15.0</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
       </widget>
       <widget class="QLabel" name="L2_watts_2">
@@ -316,10 +305,7 @@ font-size: 48pt;</string>
        <string notr="true"/>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Shape::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Shadow::Raised</enum>
+       <enum>QFrame::NoFrame</enum>
       </property>
       <widget class="QLabel" name="L2_timer">
        <property name="geometry">
@@ -334,6 +320,7 @@ font-size: 48pt;</string>
         <font>
          <family>Roboto</family>
          <pointsize>22</pointsize>
+         <weight>50</weight>
          <bold>false</bold>
         </font>
        </property>
@@ -446,9 +433,6 @@ font-size: 48pt;</string>
        <property name="text">
         <string>120</string>
        </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignCenter</set>
-       </property>
       </widget>
       <widget class="QPushButton" name="B2_timer_reset">
        <property name="geometry">
@@ -511,10 +495,7 @@ font-size: 14pt;</string>
       </rect>
      </property>
      <property name="frameShape">
-      <enum>QFrame::Shape::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Shadow::Raised</enum>
+      <enum>QFrame::NoFrame</enum>
      </property>
      <widget class="QFrame" name="homeframe_5">
       <property name="geometry">
@@ -529,10 +510,7 @@ font-size: 14pt;</string>
        <string notr="true"/>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Shape::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Shadow::Raised</enum>
+       <enum>QFrame::NoFrame</enum>
       </property>
       <widget class="QLabel" name="label_2">
        <property name="geometry">
@@ -603,7 +581,7 @@ font-size: 14pt;</string>
         </font>
        </property>
        <property name="layoutDirection">
-        <enum>Qt::LayoutDirection::LeftToRight</enum>
+        <enum>Qt::LeftToRight</enum>
        </property>
        <property name="styleSheet">
         <string notr="true">image: url(:/icons/plus.svg);</string>
@@ -667,9 +645,6 @@ font-size: 48pt;</string>
        <property name="text">
         <string>11.5</string>
        </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignCenter</set>
-       </property>
       </widget>
       <widget class="QLabel" name="L2_off_pulse_show">
        <property name="geometry">
@@ -692,9 +667,6 @@ font-size: 48pt;</string>
        </property>
        <property name="text">
         <string>11.5</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignCenter</set>
        </property>
       </widget>
       <widget class="QCheckBox" name="B2_pulsemode">
@@ -762,10 +734,7 @@ font-size: 48pt;</string>
        <string notr="true"/>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Shape::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Shadow::Raised</enum>
+       <enum>QFrame::NoFrame</enum>
       </property>
       <widget class="home_button" name="B2_alarm_sec_add">
        <property name="geometry">
@@ -882,9 +851,6 @@ font-size: 48pt;</string>
        <property name="text">
         <string>0.0</string>
        </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-       </property>
       </widget>
       <widget class="QLabel" name="L2_alarm_joule_show">
        <property name="geometry">
@@ -908,9 +874,6 @@ font-size: 48pt;</string>
        </property>
        <property name="text">
         <string>0.0</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
       </widget>
       <widget class="home_button" name="B2_alarm_joule_add">
@@ -970,7 +933,7 @@ font-size: 48pt;</string>
   <customwidget>
    <class>home_button</class>
    <extends>QPushButton</extends>
-   <header location="global">home_button.h</header>
+   <header>home_button.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

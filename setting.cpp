@@ -34,21 +34,21 @@ Setting::Setting(QWidget *parent, Home *home)
 
     connect(popup, &error_popup::yesClicked,
             this, [this]() {
-                clear_data_form_userdb();
-                qDebug() << "Yes";
-            });
+        clear_data_form_userdb();
+        qDebug() << "Yes";
+    });
 
     connect(popup, &error_popup::noClicked,
             this, [this]() {
-                clear_data = 0;
-                qDebug() << "No";
-            });
+        clear_data = 0;
+        qDebug() << "No";
+    });
 
 
     connect(popup, &error_popup::acknowledged,
             this,[](){
-                qDebug() << "ok";
-            });
+        qDebug() << "ok";
+    });
 
     refreshPage();
 }
@@ -105,7 +105,7 @@ void Setting::update_simp_adva_mode(void)
     if(simpliAdvanMode == 0)
     {
         ui->B3_simplified->setStyleSheet(
-            "color: rgb(255, 97, 34);"
+                    "color: rgb(255, 97, 34);"
             "border: 0px solid;"
             "border-top-left-radius: 25px;"
             "border-bottom-left-radius: 25px;"
@@ -113,7 +113,7 @@ void Setting::update_simp_adva_mode(void)
             );
 
         ui->B3_advanced->setStyleSheet(
-            "border: 0px solid;"
+                    "border: 0px solid;"
             "border-top-right-radius: 25px;"
             "border-bottom-right-radius: 25px;"
             "font-size: 14pt;"
@@ -122,7 +122,7 @@ void Setting::update_simp_adva_mode(void)
     if(simpliAdvanMode == 1)
     {
         ui->B3_advanced->setStyleSheet(
-            "color: rgb(255, 97, 34);"
+                    "color: rgb(255, 97, 34);"
             "border: 0px solid;"
             "border-top-right-radius: 25px;"
             "border-bottom-right-radius: 25px;"
@@ -130,7 +130,7 @@ void Setting::update_simp_adva_mode(void)
             );
 
         ui->B3_simplified->setStyleSheet(
-            "border: 0px solid;"
+                    "border: 0px solid;"
             "border-top-left-radius: 25px;"
             "border-bottom-left-radius: 25px;"
             "font-size: 14pt;"
@@ -218,16 +218,22 @@ void Setting::toggle_interlockkey_enable(void)
 
 void Setting::on_B3_dark_light_clicked()
 {
+    Adv_Sim_fromSetting = 1;
+    qDebug()<<dark;
+
     DatabaseInitializer dbinit;
+
+    dark = !dark;
 
     if (dark) {
         dbinit.updateSingleColumn("device_setting","theme",dark,1);
-        theme.applyDarkTheme();
+        theme.Dark_theme();
     } else {
         dbinit.updateSingleColumn("device_setting","theme",dark,1);
-        theme.applyLightTheme();
+        theme.Light_theme();
     }
-    dark = !dark;
+    qDebug()<<dark;
+
 }
 
 
@@ -251,12 +257,12 @@ void Setting::on_B3_service_engineer_area_clicked()
 void Setting::on_B3_clear_data_clicked()
 {
     popup->showMessage(
-        "CLEAR USER DATA",
-        "Are you sure you want to clear all patient data?\n"
+                "CLEAR USER DATA",
+                "Are you sure you want to clear all patient data?\n"
         "Data export recommended.",
-        error_popup::Validation,
-        true
-        );
+                error_popup::Confirmation,
+                true
+                );
 
     clear_data = 1;
 }
@@ -301,13 +307,19 @@ void Setting::on_B3_patientdata_export_clicked()
     bool ok2 = exportPatientWiseCSV();      // patient-wise
 
     if (ok1 && ok2) {
-        QMessageBox::information(this,
-                                 "Export Complete",
-                                 "All CSV files exported successfully.");
+        popup->showMessage(
+                    "Export Complete",
+                    "All CSV files exported successfully.",
+                    error_popup::Success,
+                    true
+                    );
     } else {
-        QMessageBox::warning(this,
-                             "Export Warning",
-                             "Some files could not be exported.");
+        popup->showMessage(
+                    "Export Warning",
+                    "Some files could not be exported.",
+                    error_popup::Warning,
+                    true
+                    );
     }
 }
 
@@ -339,7 +351,7 @@ bool Setting::exportPatientDataToCSV()
 {
     // 1️⃣ Fixed base path (YOUR PATH)
     QString baseDir =
-        "D:/OneDrive - Udyamlabs LLP/Qt projects/laser_ui_2/Patient_Export";
+            "D:/OneDrive - Udyamlabs LLP/Qt projects/laser_ui_2/Patient_Export";
 
     // 2️⃣ Create directory if it does not exist
     QDir dir(baseDir);
@@ -353,8 +365,8 @@ bool Setting::exportPatientDataToCSV()
     // 3️⃣ Create CSV file with timestamp
     QString filePath = baseDir + "/Patient_Data_"
                        + QDateTime::currentDateTime()
-                             .toString("yyyyMMdd_hhmmss")
-                       + ".csv";
+            .toString("yyyyMMdd_hhmmss")
+            + ".csv";
 
     QFile file(filePath);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
@@ -425,7 +437,7 @@ bool Setting::exportPatientDataToCSV()
 bool Setting::exportPatientWiseCSV()
 {
     QString baseDir =
-        "D:/OneDrive - Udyamlabs LLP/Qt projects/laser_ui_2/Patient_Export";
+            "D:/OneDrive - Udyamlabs LLP/Qt projects/laser_ui_2/Patient_Export";
 
     QDir dir(baseDir);
     if (!dir.exists() && !dir.mkpath(".")) {
@@ -479,7 +491,7 @@ bool Setting::exportPatientWiseCSV()
             QString patient = query.value(1).toString().simplified().replace(" ", "_");
 
             QString filePath =
-                baseDir + "/" + patient + "_" + QString::number(surgeryId) + ".csv";
+                    baseDir + "/" + patient + "_" + QString::number(surgeryId) + ".csv";
 
             file.setFileName(filePath);
             if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
@@ -531,12 +543,14 @@ void Setting::showEvent(QShowEvent *event)
 }
 
 void Setting::refreshPage()
-{
+{   
+    ui->version->setText(version);
+
     // ===== Refresh simplified / advanced mode =====
     if(simpliAdvanMode == 0)
     {
         ui->B3_simplified->setStyleSheet(
-            "color: rgb(255, 97, 34);"
+                    "color: rgb(255, 97, 34);"
             "border: 0px solid;"
             "border-top-left-radius: 25px;"
             "border-bottom-left-radius: 25px;"
@@ -544,7 +558,7 @@ void Setting::refreshPage()
             );
 
         ui->B3_advanced->setStyleSheet(
-            "border: 0px solid;"
+                    "border: 0px solid;"
             "border-top-right-radius: 25px;"
             "border-bottom-right-radius: 25px;"
             "font-size: 14pt;"
@@ -553,7 +567,7 @@ void Setting::refreshPage()
     else
     {
         ui->B3_advanced->setStyleSheet(
-            "color: rgb(255, 97, 34);"
+                    "color: rgb(255, 97, 34);"
             "border: 0px solid;"
             "border-top-right-radius: 25px;"
             "border-bottom-right-radius: 25px;"
@@ -561,7 +575,7 @@ void Setting::refreshPage()
             );
 
         ui->B3_simplified->setStyleSheet(
-            "border: 0px solid;"
+                    "border: 0px solid;"
             "border-top-left-radius: 25px;"
             "border-bottom-left-radius: 25px;"
             "font-size: 14pt;"

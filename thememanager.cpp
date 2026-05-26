@@ -1,4 +1,10 @@
 #include "thememanager.h"
+#include "error_popup.h"
+#include <QEventLoop>
+#include <QTimer>
+#include "global.h"
+
+error_popup *popup;
 
 ThemeManager::ThemeManager(QObject *parent) : QObject(parent)
 {
@@ -6,6 +12,7 @@ ThemeManager::ThemeManager(QObject *parent) : QObject(parent)
 
 void ThemeManager::applyDarkTheme()
 {
+
     // ===============================
     // 🎨 CENTRAL COLOR DEFINITIONS
     // ===============================
@@ -114,12 +121,8 @@ void ThemeManager::applyDarkTheme()
                       " background-color:" + mainBg + ";"
                         "}"
 
-                        // Select profile button
-            "#B2_SelPro {"
-                        " background-color:" + mainBg + ";"
-                   " border-radius:15px;"
-                   " font-size:16pt;"
-                   "}"
+
+
 
                    "#B3_simplified, #B3_advanced, #B3_usage_area, "
                    "#B3_service_engineer_area, #B5_to_standby, #B5_pause, #B5_change {"
@@ -455,10 +458,55 @@ void ThemeManager::applyDarkTheme()
                       " border-radius: 10px;"
                       "}"
 
+/* ========================================== */
+            /* 🌙 TOUCH DATE-TIME PICKER (DARK)          */
+            /* ========================================== */
+            "#lblHeader{"
+        " background: transparent;"
+        " font-size: 13pt;"
+        " font-weight: 600;"
+        " color: rgb(150,150,150);"
+        " letter-spacing: 1px;"
+        "}"
+        "#lblPickerDisplay{"
+        " background: transparent;"
+        " font-size: 24pt;"
+        " font-weight: bold;"
+        " color: " + textColor + ";"
+        " min-width: 75px;"
+        "}"
+        "#btnPickerArrow {"
+        " background-color: " + primaryBg + ";"
+        " color: " + textColor + ";"
+        " border: 1px solid rgb(70,70,70);"
+        " border-radius: 8px;"
+        " font-size: 18pt;"
+        " font-weight: bold;"
+        " min-width: 75px;"
+        " min-height: 55px;"
+        "}"
+        "#btnPickerArrow:pressed {"
+        " background-color: " + accentColor + ";"
+        " color: black;"
+        " border: 1px solid rgb(255,120,50);"
+        "}"
+        "#applyButton {"
+        " background-color: " + accentColor + ";"
+        " color: black;"
+        " border-radius: 12px;"
+        " font-size: 16pt;"
+        " min-height: 55px;"
+        " margin-top: 10px;"
+        " font-weight: bold;"
+        "}"
+        "#applyButton:pressed {"
+        " background-color: rgb(215,75,20);"
+        " color: white;"
+        "}"
+
                       // Icons
             "#B3_dark_light { background-image:url(:/icons/sun.png); }"
                       "#B2_modify_protocol { background-image:url(:/icons/save_dark.png); }"
-                      "#B2_SelPro { background-image:url(:/icons/menu_dark.png); }"
                       "#B2_back_to_home,#back_to_home { background-image:url(:/icons/home_dark.png); }"
                       "#B2_aimingbeam,#B5_aimingbeam { background-image:url(:/icons/laser_dark.png); }"
                       "#B2_sound,#B5_sound { background-image:url(:/icons/volume_dark.png); }"
@@ -478,10 +526,12 @@ void ThemeManager::applyDarkTheme()
         ;
 
     qApp->setStyleSheet(style);
+
 }
 
 void ThemeManager::applyLightTheme()
 {
+
     // ===============================
     // 🎨 CENTRAL COLOR DEFINITIONS
     // ===============================
@@ -590,12 +640,6 @@ void ThemeManager::applyLightTheme()
                         " background-color:" + mainBg + ";"
                       "}"
 
-                        // Select Profile Button
-            "#B2_SelPro {"
-                        " background-color:" + mainBg + ";"
-                   " border-radius:15px;"
-                   " font-size:16pt;"
-                   "}"
 
                    "#B3_simplified, #B3_advanced, #B3_usage_area, "
                    "#B3_service_engineer_area, #B5_to_standby, #B5_pause, #B5_change {"
@@ -930,10 +974,55 @@ void ThemeManager::applyLightTheme()
                       " border-radius: 10px;"
                       "}"
 
+            /* ========================================== */
+            /* ☀️ TOUCH DATE-TIME PICKER (LIGHT)         */
+            /* ========================================== */
+            "#lblHeader {"
+        " background: transparent;"
+        " font-size: 13pt;"
+        " font-weight: 600;"
+        " color: rgb(100,100,100);"
+        " letter-spacing: 1px;"
+        "}"
+        "#lblPickerDisplay {"
+        " background: transparent;"
+        " font-size: 24pt;"
+        " font-weight: bold;"
+        " color: " + textColor + ";"
+        " min-width: 75px;"
+        "}"
+        "#btnPickerArrow {"
+        " background-color: " + primaryBg + ";"
+        " color: " + textColor + ";"
+        " border: 1px solid rgb(180,180,180);"
+        " border-radius: 8px;"
+        " font-size: 18pt;"
+        " font-weight: bold;"
+        " min-width: 75px;"
+        " min-height: 55px;"
+        "}"
+        "#btnPickerArrow:pressed {"
+        " background-color: " + accentColor + ";"
+        " color: white;"
+        " border: 1px solid rgb(255,120,50);"
+        "}"
+        "#applyButton {"
+        " background-color: " + accentColor + ";"
+        " color: white;"
+        " border-radius: 12px;"
+        " font-size: 16pt;"
+        " min-height: 55px;"
+        " margin-top: 10px;"
+        " font-weight: bold;"
+        "}"
+        "#applyButton:pressed {"
+        " background-color: rgb(215,75,20);"
+        " color: white;"
+        "}"
+
                       // Icons
             "#B3_dark_light { background-image:url(:/icons/moon.png); }"
                       "#B2_modify_protocol { background-image:url(:/icons/save_light.png); }"
-                      "#B2_SelPro { background-image:url(:/icons/menu_light.png); }"
                       "#B2_back_to_home,#back_to_home { background-image:url(:/icons/home_light.png); }"
                       "#B2_aimingbeam,#B5_aimingbeam { background-image:url(:/icons/laser_light.png); }"
                       "#B2_sound,#B5_sound { background-image:url(:/icons/volume_light.png); }"
@@ -953,4 +1042,63 @@ void ThemeManager::applyLightTheme()
         ;
 
     qApp->setStyleSheet(style);
+
+}
+
+void ThemeManager::Dark_theme(void)
+{
+    if(Adv_Sim_fromSetting)
+    {
+        error_popup localPopup;
+        localPopup.showMessage(
+                    "DARK THEME",
+                    "Switching to Dark Theme.",
+                    error_popup::Info,
+                    false
+                    );
+
+        QEventLoop loop;
+        QTimer::singleShot(10, &loop, &QEventLoop::quit);
+        loop.exec();
+
+        applyDarkTheme();
+
+        QTimer::singleShot(5, &loop, &QEventLoop::quit);
+        loop.exec();
+
+        localPopup.forceHide();
+    }
+    else
+    {
+        applyDarkTheme();
+    }
+}
+
+void ThemeManager::Light_theme(void)
+{
+    if(Adv_Sim_fromSetting)
+    {
+        error_popup localPopup;
+        localPopup.showMessage(
+                    "LIGHT THEME",
+                    "Switching to Light Theme.",
+                    error_popup::Info,
+                    false
+                    );
+
+        QEventLoop loop;
+        QTimer::singleShot(10, &loop, &QEventLoop::quit);
+        loop.exec();
+
+        applyLightTheme();
+
+        QTimer::singleShot(5, &loop, &QEventLoop::quit);
+        loop.exec();
+
+        localPopup.forceHide();
+    }
+    else
+    {
+        applyLightTheme();
+    }
 }

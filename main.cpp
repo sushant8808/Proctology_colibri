@@ -8,19 +8,73 @@
 #include <QApplication>
 #include "runtime_manager.h"
 
+#include <QSplashScreen>
+#include <QProgressBar>
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QThread>
+
 
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
+    // Create a base pixmap with a size fitting your screen (e.g., 600x300)
+    QPixmap splashPixmap(800, 480);
+    splashPixmap.fill(QColor("#121212")); // Dark minimalist background
+
+    QSplashScreen splash(splashPixmap, Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
+    splash.setWindowState(Qt::WindowFullScreen);
+    // Create a layout inside the splash screen
+    QVBoxLayout *splashLayout = new QVBoxLayout(&splash);
+    splashLayout->setContentsMargins(40, 40, 40, 40);
+
+    // Add HIKARIX Title Label
+    QLabel *titleLabel = new QLabel("HIKARIX", &splash);
+    titleLabel->setAlignment(Qt::AlignCenter);
+    titleLabel->setStyleSheet("font-size: 60pt; font-weight: bold; color: #FFFFFF; font-family: 'Roboto';");
+
+    // Add Subtitle/Status Label
+    QLabel *statusLabel = new QLabel("Initializing system...", &splash);
+    statusLabel->setAlignment(Qt::AlignCenter);
+    statusLabel->setStyleSheet("font-size: 14px; color: #888888; font-family: 'Roboto';");
+
+    // Add Progress Bar
+    QProgressBar *progressBar = new QProgressBar(&splash);
+    progressBar->setRange(0, 100);
+    progressBar->setValue(0);
+    progressBar->setTextVisible(false); // Hide the percentage text for a cleaner look
+    progressBar->setStyleSheet(
+                "QProgressBar {"
+            "   border: 1px solid #333333;"
+            "   border-radius: 5px;"
+            "   background-color: #222222;"
+            "   height: 10px;"
+            "}"
+            "QProgressBar::chunk {"
+            "   background-color: #00A8FF;" // High-visibility blue loading bar
+                "   border-radius: 4px;"
+            "}"
+        );
+
+    // Assemble the layout
+    splashLayout->addWidget(titleLabel);
+    splashLayout->addStretch();
+    splashLayout->addWidget(statusLabel);
+    splashLayout->addSpacing(10);
+    splashLayout->addWidget(progressBar);
+
+    splash.show();
+    a.processEvents(); // Force Qt to draw the splash screen immediately
+
 
     // SYSTEM DB
     QString systemDbPath =
-        "/home/root/laserData/system.db";
+            "/home/root/laserData/system.db";
 
     if (!DatabaseManager::instance().connect(systemDbPath)) {
-       qDebug() << "SYSTEM DB failed";
+        qDebug() << "SYSTEM DB failed";
         return -1;
     }
 
@@ -30,10 +84,10 @@ int main(int argc, char *argv[])
 
     // USER DB
     QString userDbPath =
-        "/home/root/laserData/user.db";
+            "/home/root/laserData/user.db";
 
     if (!UserDatabaseManager::instance().connect(userDbPath)) {
-       qDebug() << "USER DB failed";
+        qDebug() << "USER DB failed";
         return -1;
     }
 
@@ -46,7 +100,9 @@ int main(int argc, char *argv[])
     g_runtimeManager = new RuntimeManager();
     g_runtimeManager->start();
 
-    // systemInit.insertPassword("1100","4321", "1234");
+//    systemInit.clearPasswordTable();
+
+//    systemInit.insertPassword("1100","4321", "1234");
 
     // dbinit.insertHomeData(
     //     10.0,                 // 980 nm power
@@ -433,8 +489,13 @@ int main(int argc, char *argv[])
     QFont appFont("Roboto");
     a.setFont(appFont);
 
+    statusLabel->setText("Applying User Themes...");
+    progressBar->setValue(20);
+    a.processEvents();
+
 
     ThemeManager theme;
+
     if(dark)
     {
         theme.applyDarkTheme();
@@ -442,13 +503,19 @@ int main(int argc, char *argv[])
     {
         theme.applyLightTheme();
     }
-    dark = !dark;
     qputenv("QT_IM_MODULE", QByteArray("qtvirtualkeyboard"));
 
 
     MainWindow w;
     w.setWindowState(Qt::WindowFullScreen);
+
+    statusLabel->setText("Launching UI Pages...");
+    progressBar->setValue(60);
+    a.processEvents();
+
     w.show();
     return a.exec();
+
+
 }
 

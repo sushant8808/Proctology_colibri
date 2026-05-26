@@ -683,6 +683,28 @@ bool DatabaseInitializer::insertPassword(const QString& loginPass,
     return true;
 }
 
+bool DatabaseInitializer::clearPasswordTable()
+{
+    QSqlQuery query(DatabaseManager::instance().db());
+
+    // Delete all rows
+    if (!query.exec("DELETE FROM password")) {
+        qDebug() << "Delete failed:"
+                 << query.lastError().text();
+        return false;
+    }
+
+    // Reset autoincrement counter
+    if (!query.exec("DELETE FROM sqlite_sequence WHERE name='password'")) {
+        qDebug() << "Reset sequence failed:"
+                 << query.lastError().text();
+        return false;
+    }
+
+    qDebug() << "Table cleared and ID reset";
+    return true;
+}
+
 void DatabaseInitializer::fetchPasswords()
 {
     QSqlQuery query(DatabaseManager::instance().db());
@@ -1358,6 +1380,34 @@ void DatabaseInitializer::fetchSystemTimer(int id)
         g_totalNoSurgeryDone = query.value("total_no_surgery_done").toInt();
         g_usageNoSurgeryDone = query.value("usage_no_surgery_done").toInt();
     }
+}
+
+bool DatabaseInitializer::clearUsageNoSurgeryDone(int id)
+{
+    QSqlQuery query(DatabaseManager::instance().db());
+
+    query.prepare(R"(
+        UPDATE system_timer
+        SET usage_no_surgery_done = 0
+        WHERE id = :id
+    )");
+
+    query.bindValue(":id", id);
+
+    if (!query.exec())
+    {
+        qDebug() << "clearUsageNoSurgeryDone failed:"
+                 << query.lastError().text();
+        return false;
+    }
+
+    qDebug() << "Rows affected:"
+             << query.numRowsAffected();
+
+    // Optional: also reset global variable
+    g_usageNoSurgeryDone = 0;
+
+    return true;
 }
 
 int DatabaseInitializer::getNextAvailableId(const QString& tableName)

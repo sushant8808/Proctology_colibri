@@ -22,19 +22,6 @@
   <property name="styleSheet">
    <string notr="true"/>
   </property>
-  <widget class="QPushButton" name="B2_SelPro">
-   <property name="geometry">
-    <rect>
-     <x>269</x>
-     <y>25</y>
-     <width>30</width>
-     <height>30</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
   <widget class="QLabel" name="L2_energy">
    <property name="geometry">
     <rect>
@@ -91,7 +78,7 @@ font-size: 14pt;</string>
     <rect>
      <x>45</x>
      <y>415</y>
-     <width>195</width>
+     <width>251</width>
      <height>60</height>
     </rect>
    </property>
@@ -102,8 +89,7 @@ font-size: 14pt;</string>
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">color: rgb(0, 255, 0);
-font-size: 48pt;</string>
+    <string notr="true"/>
    </property>
    <property name="text">
     <string>3600.0</string>
@@ -433,22 +419,6 @@ font-size: 48pt;</string>
         <string>Timer</string>
        </property>
       </widget>
-      <widget class="QLabel" name="L2_seconds">
-       <property name="geometry">
-        <rect>
-         <x>164</x>
-         <y>145</y>
-         <width>31</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">font-size: 20pt;</string>
-       </property>
-       <property name="text">
-        <string>S</string>
-       </property>
-      </widget>
       <widget class="home_button" name="B2_timer_add">
        <property name="geometry">
         <rect>
@@ -516,8 +486,8 @@ font-size: 48pt;</string>
       <widget class="QLabel" name="L2_timer_show">
        <property name="geometry">
         <rect>
-         <x>50</x>
-         <y>120</y>
+         <x>40</x>
+         <y>110</y>
          <width>111</width>
          <height>60</height>
         </rect>
@@ -529,14 +499,13 @@ font-size: 48pt;</string>
         </font>
        </property>
        <property name="styleSheet">
-        <string notr="true">color: rgb(50, 155, 255);
-font-size: 48pt;</string>
+        <string notr="true"/>
        </property>
        <property name="text">
         <string>000</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignCenter</set>
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
        </property>
       </widget>
       <widget class="QPushButton" name="B2_timer_reset">
@@ -1070,28 +1039,12 @@ font-size: 48pt;</string>
     <string>Avg. Power</string>
    </property>
   </widget>
-  <widget class="QLabel" name="L2_avg_watts">
-   <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>448</y>
-     <width>31</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font-size: 20pt;</string>
-   </property>
-   <property name="text">
-    <string>W</string>
-   </property>
-  </widget>
   <widget class="QLabel" name="L2_avg_power_show">
    <property name="geometry">
     <rect>
      <x>45</x>
      <y>415</y>
-     <width>130</width>
+     <width>231</width>
      <height>60</height>
     </rect>
    </property>
@@ -1102,8 +1055,7 @@ font-size: 48pt;</string>
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">color: rgb(0, 255, 0);
-font-size: 48pt;</string>
+    <string notr="true"/>
    </property>
    <property name="text">
     <string>30.0</string>
@@ -1260,22 +1212,6 @@ font-size: 48pt;</string>
      <string/>
     </property>
    </widget>
-  </widget>
-  <widget class="QLabel" name="L2_joules">
-   <property name="geometry">
-    <rect>
-     <x>570</x>
-     <y>450</y>
-     <width>30</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font-size: 20pt;</string>
-   </property>
-   <property name="text">
-    <string>J</string>
-   </property>
   </widget>
  </widget>
  <customwidgets>

@@ -4,6 +4,7 @@
 #include "setting.h"
 #include "runtime_manager.h"
 #include "databaseinitializer.h"
+#include "databasemanager.h"
 #include "userdatabasemanager.h"
 #include <QSqlError>
 #include <QMessageBox>
@@ -26,16 +27,16 @@ usage_area::usage_area(QWidget *parent, Home *home)
     ui->usage_table->setColumnCount(9);
 
     ui->usage_table->setHorizontalHeaderLabels({
-        "Select",
-        "ID",
-        "Protocol",
-        "Start\nTime",
-        "Surgery\nDuration(s)",
-        "Laser\nDuration(s)",
-        "Total\nEnergy(J)",
-        "Effective\nPower(W)",
-        "Fiber\nReconnect"
-    });
+                                                   "Select",
+                                                   "ID",
+                                                   "Protocol",
+                                                   "Start\nTime",
+                                                   "Surgery\nDuration(s)",
+                                                   "Laser\nDuration(s)",
+                                                   "Total\nEnergy(J)",
+                                                   "Effective\nPower(W)",
+                                                   "Fiber\nReconnect"
+                                               });
 
 
     QHeaderView *header = ui->usage_table->horizontalHeader();
@@ -95,29 +96,33 @@ usage_area::usage_area(QWidget *parent, Home *home)
     connect(ui->deleteButton, &QPushButton::clicked,
             this, &usage_area::deleteSelectedRows);
 
-    connect(ui->pageDeleteButton, &QPushButton::clicked,
-            this, &usage_area::deleteCurrentPage);
+    //    connect(ui->pageDeleteButton, &QPushButton::clicked,
+    //            this, &usage_area::deleteCurrentPage);
 
 
     popup = new error_popup(this);
 
     connect(popup, &error_popup::yesClicked,
             this, [this]() {
-                clear_data_form_userdb();
-                qDebug() << "Yes";
-            });
+        if(clear_data)
+            clear_data_form_userdb();
+        if(clear_page)
+            deleteCurrentPage();
+        qDebug() << "Yes";
+    });
 
     connect(popup, &error_popup::noClicked,
             this, [this]() {
-                clear_data = 0;
-                qDebug() << "No";
-            });
+        clear_data = 0;
+        clear_page = 0;
+        qDebug() << "No";
+    });
 
 
     connect(popup, &error_popup::acknowledged,
             this,[](){
-                qDebug() << "ok";
-            });
+        qDebug() << "ok";
+    });
 
 }
 
@@ -307,17 +312,19 @@ void usage_area::deleteCurrentPage()
     query.exec("COMMIT");
 
     loadSurgerySummaryPage(currentPage);
+
+    clear_page = 0;
 }
 
 void usage_area::on_B3_clear_data_clicked()
 {
     popup->showMessage(
-        "CLEAR USER DATA",
-        "Are you sure you want to clear all user data?\n"
+                "CLEAR USER DATA",
+                "Are you sure you want to clear all user data?\n"
         "Data export recommended.",
-        error_popup::Validation,
-        true
-        );
+                error_popup::Confirmation,
+                true
+                );
 
     clear_data = 1;
 }
@@ -349,7 +356,7 @@ void usage_area::refreshPage()
     dbInit.fetchSystemTimer(1);
 
     ui->usage_no_surgery->setText(
-        QString::number(g_usageNoSurgeryDone));
+                QString::number(g_usageNoSurgeryDone));
 
     // ===== Reload current page =====
 
@@ -375,7 +382,7 @@ void usage_area::refreshPage()
             continue;
 
         QCheckBox *checkBox =
-            widget->findChild<QCheckBox *>();
+                widget->findChild<QCheckBox *>();
 
         if (checkBox)
         {
@@ -386,6 +393,20 @@ void usage_area::refreshPage()
     // ===== Reset clear-data flag =====
 
     clear_data = 0;
+}
+
+
+void usage_area::on_pageDeleteButton_clicked()
+{
+    popup->showMessage(
+                "CLEAR USER DATA",
+                "Are you sure you want to clear user data from current page?\n"
+        "Data export recommended.",
+                error_popup::Confirmation,
+                true
+                );
+
+    clear_page = 1;
 }
 
 
@@ -407,10 +428,19 @@ void usage_area::refreshPage()
 //         true
 //         );
 
-//     // popup->showMessage(
-//     //     "EXPORT COMPLETED",
-//     //     "Surgical log successfully exported.",
-//     //     error_popup::Success,
-//     //     true
-//     //     );
+//      popup->showMessage(
+//          "EXPORT COMPLETED",
+//          "Surgical log successfully exported.",
+//          error_popup::Success,
+//          true
+//          );
 // }
+
+void usage_area::on_usage_reset_bt_clicked()
+{
+    DatabaseInitializer dbinit;
+    dbinit.clearUsageNoSurgeryDone(1);
+
+    refreshPage();
+}
+

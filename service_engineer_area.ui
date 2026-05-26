@@ -231,7 +231,7 @@ border-radius: 25px;</string>
     <string notr="true">font-size: 22pt;</string>
    </property>
    <property name="text">
-    <string>🡐</string>
+    <string>&lt;</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_8">

@@ -16,17 +16,83 @@ bool customMode = false;
 int selectedCustomId = -1;
 QString selectedCustomName = "";
 
+
 protocolselect::protocolselect(QWidget *parent, Home *home)
     : QWidget(parent)
     , ui(new Ui::protocolselect)
-    , home(home)   // store pointer
+    , home(home)
 {
     ui->setupUi(this);
-
     this->setWindowFlags(Qt::FramelessWindowHint);
 
+    // -------------------------------------------------------------
+    // INITIALIZE BUTTONS ONCE
+    // -------------------------------------------------------------
+    btnNew = new QPushButton("New", this);
+    btnModify = new QPushButton("Modify", this);
+    btnDelete = new QPushButton("Delete", this);
+    btnConfirm = new QPushButton("Confirm", this);
+
+    btnNew->setProperty("type", "customAction");
+    btnModify->setProperty("type", "customAction");
+    btnDelete->setProperty("type", "customAction");
+    btnConfirm->setProperty("type", "customAction");
+
+    btnNew->setFixedHeight(40);
+    btnModify->setFixedHeight(40);
+    btnDelete->setFixedHeight(40);
+    btnConfirm->setFixedHeight(40);
+
+    btnConfirm->hide(); // Hidden by default
+
+    // -------------------------------------------------------------
+    // PERMANENT CONNECTIONS
+    // -------------------------------------------------------------
+    connect(btnNew, &QPushButton::clicked, this, [=]() {
+        qDebug() << "New clicked";
+        new_protocol = true;
+        modify_protocol = false;
+        this->hide();
+        switchTonewprotocol();
+    });
+
+    connect(btnModify, &QPushButton::clicked, this, [=]() {
+        qDebug() << "Modify clicked";
+        mode = ModifyMode;
+        btnConfirm->show();
+    });
+
+    connect(btnDelete, &QPushButton::clicked, this, [=]() {
+        qDebug() << "Delete clicked";
+        mode = DeleteMode;
+        btnConfirm->show();
+    });
+
+    connect(btnConfirm, &QPushButton::clicked, this, [=]() {
+        qDebug() << "Confirm clicked";
+        if(mode == DeleteMode)
+        {
+            DatabaseInitializer dbinit;
+            dbinit.deletePresetProtocol("protocol_custom", selectedCustomName);
+
+            // Safely refresh UI using singleShot to prevent crash
+            QTimer::singleShot(0, this, [=](){ loadProtocols("protocol_custom", ui->tabCustom); });
+        }
+        else if(mode == ModifyMode)
+        {
+            custom_modify = 1;
+            new_protocol = false;
+            modify_protocol = true;
+            switchTonewprotocol();
+        }
+        mode = NormalMode;
+        btnConfirm->hide();
+    });
+
+    // Run your initial tab setup
     setupTabs();
 
+    last_theme_status = dark;
 }
 
 protocolselect::~protocolselect()
@@ -71,7 +137,18 @@ void protocolselect::loadProtocols(const QString &tableName, QWidget *tabWidget)
         QLayoutItem *item;
         while ((item = tabWidget->layout()->takeAt(0)) != nullptr)
         {
-            delete item->widget();
+            if (item->widget()) {
+                // Only delete widgets that are NOT our persistent buttons
+                if (item->widget() != btnNew && item->widget() != btnModify &&
+                        item->widget() != btnDelete && item->widget() != btnConfirm)
+                {
+                    delete item->widget();
+                } else {
+                    // Remove the button from the current layout parent visually
+                    // without deleting its pointer from memory
+                    item->widget()->setParent(nullptr);
+                }
+            }
             delete item;
         }
         delete tabWidget->layout();
@@ -111,116 +188,135 @@ void protocolselect::loadProtocols(const QString &tableName, QWidget *tabWidget)
         }
 
         ProtocolItemWidget *item =
-            new ProtocolItemWidget(id, 0, name, favourite);
+                new ProtocolItemWidget(id, 0, name, favourite);
 
         if (tableName == "protocol_custom" &&
-            mode != NormalMode &&
-            selectedCustomId == id)
+                mode != NormalMode &&
+                selectedCustomId == id)
         {
-            item->setStyleSheet(
-                "background-color: rgb(255,150,150);"
-                "border-radius: 20px;"
-                );
+
+            if (dark == 0)
+            {
+                item->setStyleSheet(
+                            "ProtocolItemWidget {"
+                    "background-color: rgb(60,60,60);"
+                    "border-radius: 20px;"
+                    "border: 3px solid rgb(255,97,34);"
+                    "color: white;"
+                    "}"
+                    );
+            }
+            else
+            {
+                item->setStyleSheet(
+                            "ProtocolItemWidget {"
+                    "background-color: rgb(220,220,220);"
+                    "border-radius: 20px;"
+                    "border: 3px solid rgb(255,97,34);"
+                    "color: black;"
+                    "}"
+                    );
+            }
         }
 
         // ---------- CLICK ----------
         connect(item, &ProtocolItemWidget::clicked, this, [=]()
-                {
-                    DatabaseInitializer db;
-                    db.fetchProtocol(sourceTable, id);
+        {
+            DatabaseInitializer db;
+            db.fetchProtocol(sourceTable, id);
 
-                    if(mode == DeleteMode && tableName == "protocol_custom")
-                    {
-                        qDebug()<< "delete";
-                        // Selection mode
-                        selectedCustomId = id;
-                        selectedCustomName = name;
+            if(mode == DeleteMode && tableName == "protocol_custom")
+            {
+                qDebug()<< "delete";
+                // Selection mode
+                selectedCustomId = id;
+                selectedCustomName = name;
 
-                        // Reload to update highlight
-                        loadProtocols("protocol_custom", ui->tabCustom);
+                // Reload to update highlight
+                loadProtocols("protocol_custom", ui->tabCustom);
 
-                    }else if(mode == ModifyMode && tableName == "protocol_custom")
-                    {
-                        qDebug()<< "modify";
-                        // Selection mode
-                        selectedCustomId = id;
-                        selectedCustomName = name;
+            }else if(mode == ModifyMode && tableName == "protocol_custom")
+            {
+                qDebug()<< "modify";
+                // Selection mode
+                selectedCustomId = id;
+                selectedCustomName = name;
 
-                        // Reload to update highlight
-                        loadProtocols("protocol_custom", ui->tabCustom);
+                // Reload to update highlight
+                loadProtocols("protocol_custom", ui->tabCustom);
 
-                    }else{
+            }else{
 
-                        no_protocol_used++;
-                        db.updateSingleColumn(sourceTable,
-                                              "no_protocol_used",
-                                              no_protocol_used,
-                                              id);
+                no_protocol_used++;
+                db.updateSingleColumn(sourceTable,
+                                      "no_protocol_used",
+                                      no_protocol_used,
+                                      id);
 
-                        emit protocolSelected(name);
-                        MainWindow::instance->switchPage(PAGE_HOME);
-                    }
-                });
+                emit protocolSelected(name);
+                MainWindow::instance->switchPage(PAGE_HOME);
+            }
+        });
 
         // ---------- STAR ----------
         connect(item, &ProtocolItemWidget::favouriteToggled,
                 this, [=](int id, bool fav)
-                {
-                    DatabaseInitializer db;
+        {
+            DatabaseInitializer db;
 
-                    db.updateSingleColumn(sourceTable,
-                                          "favourite",
-                                          fav ? 1 : 0,
-                                          id);
+            db.updateSingleColumn(sourceTable,
+                                  "favourite",
+                                  fav ? 1 : 0,
+                                  id);
 
-                    if (fav)
-                    {
-                        QSqlQuery q(DatabaseManager::instance().db());
-                        q.prepare(
+            if (fav)
+            {
+                QSqlQuery q(DatabaseManager::instance().db());
+                q.prepare(
                             "INSERT OR IGNORE INTO protocol_favourites "
                             "(id, name, source_table) VALUES (?, ?, ?)"
                             );
-                        q.addBindValue(id);
-                        q.addBindValue(name);
-                        q.addBindValue(sourceTable);
-                        q.exec();
-                    }
-                    else
-                    {
-                        QSqlQuery q(DatabaseManager::instance().db());
-                        q.prepare(
+                q.addBindValue(id);
+                q.addBindValue(name);
+                q.addBindValue(sourceTable);
+                q.exec();
+            }
+            else
+            {
+                QSqlQuery q(DatabaseManager::instance().db());
+                q.prepare(
                             "DELETE FROM protocol_favourites "
                             "WHERE id = ? AND source_table = ?"
                             );
-                        q.addBindValue(id);
-                        q.addBindValue(sourceTable);
-                        q.exec();
-                    }
+                q.addBindValue(id);
+                q.addBindValue(sourceTable);
+                q.exec();
+            }
 
-                    // Preset sub-tabs mapping
-                    struct PresetTab {
-                        QString tableName;
-                        QWidget* tabWidget;
-                    };
+            // Preset sub-tabs mapping
+            struct PresetTab {
+                QString tableName;
+                QWidget* tabWidget;
+            };
 
-                    PresetTab presetTabs[] = {
-                        {"preset_protocol_ent", ui->tabENT},
-                        {"preset_protocol_gynaecology", ui->tabGynaecology},
-                        {"preset_protocol_neurology", ui->tabNeurology},
-                        {"preset_protocol_therapy", ui->tabTherapy},
-                        {"preset_protocol_urology", ui->tabUrology},
-                        {"preset_protocol_vascular", ui->tabVascular},
-                        {"preset_protocol_general", ui->tabGeneral}
-                    };
+            PresetTab presetTabs[] = {
+                {"preset_protocol_ent", ui->tabENT},
+                {"preset_protocol_gynaecology", ui->tabGynaecology},
+                {"preset_protocol_neurology", ui->tabNeurology},
+                {"preset_protocol_therapy", ui->tabTherapy},
+                {"preset_protocol_urology", ui->tabUrology},
+                {"preset_protocol_vascular", ui->tabVascular},
+                {"preset_protocol_general", ui->tabGeneral}
+            };
 
-                    // Load preset protocols
-                    for(auto &tab : presetTabs) {
-                        loadProtocols(tab.tableName, tab.tabWidget);
-                    }
+            // Load preset protocols
+            for(auto &tab : presetTabs) {
+                loadProtocols(tab.tableName, tab.tabWidget);
+            }
 
-                    loadProtocols("protocol_favourites", ui->tabFavourite);
-                    loadProtocols("protocol_custom", ui->tabCustom);
-                });
+            loadProtocols("protocol_favourites", ui->tabFavourite);
+            loadProtocols("protocol_custom", ui->tabCustom);
+        });
 
         grid->addWidget(item, row, col);
         col++; total++;
@@ -232,13 +328,13 @@ void protocolselect::loadProtocols(const QString &tableName, QWidget *tabWidget)
     while (total < minItems)
     {
         ProtocolItemWidget *dummy =
-            new ProtocolItemWidget(-1, 1, "-", false);
+                new ProtocolItemWidget(-1, 1, "-", false);
         dummy->setEnabled(false);
 
-        if(dark)
+        if(dark == 0)
         {
             dummy->setStyleSheet(
-                "ProtocolItemWidget {"
+                        "ProtocolItemWidget {"
                 "background-color: rgb(220,200,200);"
                 "border-radius: 20px;"
                 "border: 2px dashed rgb(230,230,230);"
@@ -247,7 +343,7 @@ void protocolselect::loadProtocols(const QString &tableName, QWidget *tabWidget)
         }else
         {
             dummy->setStyleSheet(
-                "ProtocolItemWidget {"
+                        "ProtocolItemWidget {"
                 "background-color: rgb(15,15,15);"
                 "border-radius: 20px;"
                 "border: 2px dashed rgb(25,25,25);"
@@ -276,23 +372,10 @@ void protocolselect::loadProtocols(const QString &tableName, QWidget *tabWidget)
     // ✅ If Custom Tab → Add buttons on top
     if (tableName == "protocol_custom")
     {
+
         QHBoxLayout *buttonLayout = new QHBoxLayout();
 
-        QPushButton *btnNew = new QPushButton("New");
-        QPushButton *btnModify = new QPushButton("Modify");
-        QPushButton *btnDelete = new QPushButton("Delete");
-        QPushButton *btnConfirm = new QPushButton("Confirm");
-
-        btnNew->setProperty("type", "customAction");
-        btnModify->setProperty("type", "customAction");
-        btnDelete->setProperty("type", "customAction");
-        btnConfirm->setProperty("type", "customAction");
-
-        btnNew->setFixedHeight(40);
-        btnModify->setFixedHeight(40);
-        btnDelete->setFixedHeight(40);
-        btnConfirm->setFixedHeight(40);
-
+        // Re-add your persistent buttons
         buttonLayout->addWidget(btnNew);
         buttonLayout->addWidget(btnModify);
         buttonLayout->addWidget(btnDelete);
@@ -301,54 +384,12 @@ void protocolselect::loadProtocols(const QString &tableName, QWidget *tabWidget)
 
         vbox->addLayout(buttonLayout);
 
-        btnConfirm->hide();
-
-        // ---------- BUTTON CONNECTIONS ----------
-
-        connect(btnNew, &QPushButton::clicked, this, [=]() {
-            qDebug() << "New clicked";
-            new_protocol = true;
-            modify_protocol = false;
-            this->hide();
-            switchTonewprotocol();
-            // TODO: Open create protocol dialog
-        });
-
-        connect(btnModify, &QPushButton::clicked, this, [=]() {
-            qDebug() << "Modify clicked";
-            mode = ModifyMode;
-            btnConfirm->show();
-            // TODO: Modify selected protocol
-        });
-
-        connect(btnDelete, &QPushButton::clicked, this, [=]() {
-            qDebug() << "Delete clicked";
-            mode = DeleteMode;
-            btnConfirm->show();
-            // TODO: Delete selected protocol
-        });
-        connect(btnConfirm, &QPushButton::clicked, this, [=]() {
-            qDebug() << "Confirm clicked";
-            if(mode == DeleteMode)
-            {
-                DatabaseInitializer dbinit;
-
-                dbinit.deletePresetProtocol(tableName,selectedCustomName);
-
-                // Reload to update highlight
-                loadProtocols("protocol_custom", ui->tabCustom);
-            }
-            else if(mode == ModifyMode)
-            {
-                custom_modify = 1;
-                new_protocol = false;
-                modify_protocol = true;
-                switchTonewprotocol();
-            }
-            mode = NormalMode;
+        // Adjust visibility state matching current runtime mode
+        if (mode == NormalMode) {
             btnConfirm->hide();
-            // TODO: Confirm selected protocol
-        });
+        } else {
+            btnConfirm->show();
+        }
     }
 
     // ✅ Add scroll area below buttons
@@ -391,9 +432,15 @@ void protocolselect::refreshPage()
 
     mode = NormalMode;
 
+    if(last_theme_status != dark)
+        setupTabs();
+    else
+        loadProtocols("protocol_custom", ui->tabCustom);
+
     // Reload all tabs
-//    setupTabs();
-    loadProtocols("protocol_custom", ui->tabCustom);
+    //    setupTabs();
+    //    loadProtocols("protocol_custom", ui->tabCustom);
+
 
     qDebug() << "Protocol Select Refresh Complete";
 }

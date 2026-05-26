@@ -224,71 +224,6 @@
      </size>
     </property>
    </widget>
-   <widget class="keyboard_bt" name="bt_patient_id">
-    <property name="geometry">
-     <rect>
-      <x>280</x>
-      <y>65</y>
-      <width>30</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="keyboard_bt" name="bt_patient_name">
-    <property name="geometry">
-     <rect>
-      <x>280</x>
-      <y>166</y>
-      <width>30</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="keyboard_bt" name="bt_patient_age">
-    <property name="geometry">
-     <rect>
-      <x>280</x>
-      <y>265</y>
-      <width>30</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="keyboard_bt" name="bt_Surgery_name">
-    <property name="geometry">
-     <rect>
-      <x>640</x>
-      <y>165</y>
-      <width>30</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="keyboard_bt" name="bt_Surgeon_name">
-    <property name="geometry">
-     <rect>
-      <x>640</x>
-      <y>65</y>
-      <width>30</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
   </widget>
   <widget class="QPushButton" name="B4_skip">
    <property name="geometry">
@@ -370,7 +305,7 @@ background-color:rgb(255, 97, 34);
     <string notr="true">font-size: 22pt;</string>
    </property>
    <property name="text">
-    <string>🡐</string>
+    <string>&lt;</string>
    </property>
   </widget>
   <zorder>B4_skip</zorder>
@@ -379,13 +314,6 @@ background-color:rgb(255, 97, 34);
   <zorder>L4_tital</zorder>
   <zorder>B4_back_to_home</zorder>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>keyboard_bt</class>
-   <extends>QPushButton</extends>
-   <header>keyboard_bt.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

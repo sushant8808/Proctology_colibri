@@ -18,7 +18,7 @@ newcustomprotocol::newcustomprotocol(QWidget *parent, Home *home)
 
     this->setWindowFlags(Qt::FramelessWindowHint);
 
-
+    ui->Surgery_name->installEventFilter(this);
 
     // 980
     setupHoldButton(ui->B2_980add, timer_980add, [this]() { on_B2_980add_clicked(); });
@@ -741,14 +741,29 @@ void newcustomprotocol::refreshPage()
     qDebug() << "Custom Protocol Refresh Complete";
 }
 
-void newcustomprotocol::on_bt_surgery_name_clicked()
+// Add this function to newcustomprotocol.cpp
+
+bool newcustomprotocol::eventFilter(QObject *watched, QEvent *event)
 {
-    CustomKeyboard keyboard(this);
+    // Capture user clicks/touches inside the widget area
+    if (event->type() == QEvent::MouseButtonPress)
+    {
+        if (watched == ui->Surgery_name)
+        {
+            // Remove active focus from text container to avoid conflicting blink overlays
+            ui->Surgery_name->clearFocus();
 
-    keyboard.setTarget(ui->Surgery_name);
+            // Open up the custom full keyboard setup mapping to the target
+            CustomKeyboard keyboard(this, CustomKeyboard::FullLayout);
+            keyboard.setTarget(ui->Surgery_name);
+            keyboard.move(0, 160);
+            keyboard.exec();
 
-    keyboard.move(0, 160);
+            return true; // Click event successfully captured and processed here
+        }
+    }
 
-    keyboard.exec();
+    // Forward any other core standard operations down to the parent QWidget instance
+    return QWidget::eventFilter(watched, event);
 }
 

@@ -40,6 +40,10 @@ private slots:
 
     void clear_data_form_userdb();
 
+    void on_pageDeleteButton_clicked();
+
+    void on_usage_reset_bt_clicked();
+
 private:
     Ui::usage_area *ui;
     Home *home;

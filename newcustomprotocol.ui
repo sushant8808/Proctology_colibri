@@ -159,8 +159,7 @@
       <enum>Qt::LeftToRight</enum>
      </property>
      <property name="styleSheet">
-      <string notr="true">
-</string>
+      <string notr="true"/>
      </property>
      <property name="text">
       <string/>
@@ -719,19 +718,6 @@ border-radius: 20px;</string>
      </rect>
     </property>
    </widget>
-   <widget class="keyboard_bt" name="bt_surgery_name">
-    <property name="geometry">
-     <rect>
-      <x>715</x>
-      <y>285</y>
-      <width>30</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
   </widget>
   <widget class="QPushButton" name="B3_back_to_setting">
    <property name="geometry">
@@ -757,7 +743,7 @@ border-radius: 20px;</string>
     <string notr="true">font-size: 22pt;</string>
    </property>
    <property name="text">
-    <string>🡐</string>
+    <string>&lt;</string>
    </property>
   </widget>
   <widget class="home_button" name="B2_back_to_home">
@@ -817,11 +803,6 @@ border-radius: 20px;</string>
    <class>home_button</class>
    <extends>QPushButton</extends>
    <header>home_button.h</header>
-  </customwidget>
-  <customwidget>
-   <class>keyboard_bt</class>
-   <extends>QPushButton</extends>
-   <header>keyboard_bt.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

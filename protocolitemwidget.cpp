@@ -23,7 +23,7 @@ ProtocolItemWidget::ProtocolItemWidget(int id,
     if(its_dummy == 0)
     {
         starLabel = new QLabel();
-        starLabel->setFixedSize(30, 30);
+        starLabel->setFixedSize(35, 35);
         starLabel->setCursor(Qt::PointingHandCursor);
         starLabel->setAlignment(Qt::AlignCenter);
 
@@ -47,12 +47,11 @@ ProtocolItemWidget::ProtocolItemWidget(int id,
     mainLayout->setContentsMargins(18, 12, 18, 12);
     mainLayout->setSpacing(6);
 
-    // setMinimumHeight(80);
     setMinimumSize(300, 60);
     setMaximumHeight(90);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
-    if (dark == 0)
+    if (dark)
     {
         setStyleSheet(
                     "ProtocolItemWidget {"
@@ -93,7 +92,7 @@ void ProtocolItemWidget::mousePressEvent(QMouseEvent *event)
 
 void ProtocolItemWidget::updateStar()
 {
-    if(dark == 0)
+    if(dark)
     {
         if (isFavourite)
             starLabel->setPixmap(QPixmap(":/icons/star_filled_dark.png"));

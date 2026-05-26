@@ -5,6 +5,7 @@
 #include "databaseinitializer.h"
 #include "setting.h"
 #include "home.h"
+#include "error_popup.h"
 
 namespace Ui {
 class changepassword;
@@ -61,6 +62,8 @@ private:
     Ui::changepassword *ui;
     Home *home;
 
+    error_popup *popup;
+
     enum PassStage {
         CURRENT_PASS,
         NEW_PASS,
@@ -74,6 +77,8 @@ private:
     QString confirmPass;
 
     void updateDisplay();
+
+    bool success = 0;
 
 
 };

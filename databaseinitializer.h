@@ -64,6 +64,8 @@ public:
 
     void fetchPasswords();
 
+    bool clearPasswordTable();
+
     bool updatePassword(int id,
                         const QString& newLoginPass,
                         const QString& newUserPass,
@@ -167,6 +169,8 @@ public:
     bool ensureSystemTimerRow();
 
     void fetchSystemTimer(int id);
+
+    bool clearUsageNoSurgeryDone(int id);
 
     bool deletePresetProtocolById(
         const QString& tableName,

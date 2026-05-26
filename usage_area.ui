@@ -72,6 +72,24 @@
       <string>000</string>
      </property>
     </widget>
+    <widget class="QPushButton" name="usage_reset_bt">
+     <property name="geometry">
+      <rect>
+       <x>630</x>
+       <y>5</y>
+       <width>90</width>
+       <height>50</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font-size: 14pt;
+border: 1px solid rgb(255, 97, 34);
+border-radius: 25px;</string>
+     </property>
+     <property name="text">
+      <string>Reset</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QFrame" name="settingframe_3">
     <property name="geometry">
@@ -139,7 +157,7 @@ border: 1px solid rgb(255, 97, 34);
 border-radius: 25px;</string>
      </property>
      <property name="text">
-      <string>Multi delete</string>
+      <string>Delete Selected</string>
      </property>
     </widget>
     <widget class="QPushButton" name="pageDeleteButton">
@@ -157,7 +175,7 @@ border: 1px solid rgb(255, 97, 34);
 border-radius: 25px;</string>
      </property>
      <property name="text">
-      <string>Page delete</string>
+      <string>Page Delete</string>
      </property>
     </widget>
     <widget class="QPushButton" name="B3_clear_data">
@@ -175,7 +193,7 @@ border: 1px solid rgb(255, 97, 34);
 border-radius: 25px;</string>
      </property>
      <property name="text">
-      <string>Clear data</string>
+      <string>Clear All Data</string>
      </property>
     </widget>
    </widget>
@@ -203,7 +221,7 @@ border-radius: 25px;</string>
     <string notr="true">font-size: 22pt;</string>
    </property>
    <property name="text">
-    <string>🡐</string>
+    <string>&lt;</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_9">

@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QSqlQuery>
 #include <QDebug>
+#include <QPushButton>
 
 class Home;
 
@@ -34,9 +35,6 @@ protected:
     void showEvent(QShowEvent *event) override;
 
 private:
-    void refreshPage();
-
-private:
     Ui::protocolselect *ui;
     Home *home;
 
@@ -45,6 +43,13 @@ private:
     void setupTabs();
     void loadProtocols(const QString &tableName, QWidget *tabWidget);
     void loadHomeFromGlobals();  // Update Home UI or global variables
+
+    QPushButton *btnNew;
+    QPushButton *btnModify;
+    QPushButton *btnDelete;
+    QPushButton *btnConfirm;
+
+    void refreshPage();
 
 
 signals:

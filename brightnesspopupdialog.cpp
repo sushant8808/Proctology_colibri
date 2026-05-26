@@ -9,7 +9,7 @@ BrightnessPopupDialog::BrightnessPopupDialog(QWidget *parent)
     : QDialog(parent)
 {
     setWindowFlags(Qt::Popup);
-    setFixedSize(400, 200);
+    setFixedSize(600, 200);
 
     label = new QLabel("Screen Brightness", this);
     label->setAlignment(Qt::AlignCenter);

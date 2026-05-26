@@ -4,6 +4,7 @@
 #include <QWidget>
 #include "home.h"
 #include "customkeyboard.h"
+#include "error_popup.h"
 
 namespace Ui {
 class Surgery_data;
@@ -19,6 +20,7 @@ public:
 
 protected:
     void showEvent(QShowEvent *event) override;
+    bool eventFilter(QObject *watched, QEvent *event) override;
 
 private:
     void refreshPage();
@@ -47,19 +49,11 @@ private slots:
 
     void loadSurgeonNames();
 
-    void on_bt_patient_id_clicked();
-
-    void on_bt_patient_name_clicked();
-
-    void on_bt_patient_age_clicked();
-
-    void on_bt_Surgeon_name_clicked();
-
-    void on_bt_Surgery_name_clicked();
-
 private:
     Ui::Surgery_data *ui;
     Home *home;
+
+    error_popup *popup;
 };
 
 #endif // SURGERY_DATA_H

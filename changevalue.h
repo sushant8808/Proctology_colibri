@@ -53,10 +53,6 @@ private slots:
 
     void on_B2_audioalarm_stateChanged(int arg1);
 
-    void on_B2_sec_alarm_toggled(bool checked);
-
-    void on_B2_joule_alarm_toggled(bool checked);
-
     void on_B2_alarm_sec_sub_clicked();
 
     void on_B2_alarm_sec_add_clicked();
@@ -77,6 +73,10 @@ private slots:
 
     QString formatPulseTime(int valueUs);
     QString getPulseUnit(int valueUs);
+
+    void on_B2_sec_alarm_clicked();
+
+    void on_B2_joule_alarm_clicked();
 
 private:
     Ui::changevalue *ui;

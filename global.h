@@ -61,6 +61,9 @@ extern float totalEnergyDelivered; // cumulative energy
 extern float new_totalEnergyDelivered; // cumulative energy
 extern float new2_totalEnergyDelivered; // cumulative energy
 extern float liveTime;
+extern bool Adv_Sim_fromSetting;
+extern bool surgery_pause_bt;
+extern bool last_theme_status;
 
 extern float energyAtPress;
 extern float energyPerPedal;
@@ -89,6 +92,7 @@ extern int g_usageNoSurgeryDone;
 
 extern int user_admin_mode;
 extern bool clear_data;
+extern bool clear_page;
 extern bool custom_modify;
 
 extern int pulsemode_step1;

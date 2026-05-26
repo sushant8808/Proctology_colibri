@@ -216,7 +216,7 @@ font-size: 16pt;</string>
     <string notr="true">font-size: 22pt;</string>
    </property>
    <property name="text">
-    <string>🡐</string>
+    <string>&lt;</string>
    </property>
   </widget>
  </widget>

@@ -85,6 +85,7 @@ font-size: 52pt;</string>
      </property>
      <property name="font">
       <font>
+       <family>Ubuntu Sans</family>
        <pointsize>22</pointsize>
       </font>
      </property>
@@ -147,6 +148,7 @@ font-size: 52pt;</string>
      </property>
      <property name="font">
       <font>
+       <family>Ubuntu Sans</family>
        <pointsize>22</pointsize>
       </font>
      </property>
@@ -272,6 +274,7 @@ font-size: 52pt;</string>
    </property>
    <property name="font">
     <font>
+     <family>Ubuntu Sans</family>
      <pointsize>22</pointsize>
      <weight>50</weight>
      <bold>false</bold>
@@ -284,7 +287,7 @@ font-size: 52pt;</string>
     <string notr="true">font-size: 22pt;</string>
    </property>
    <property name="text">
-    <string>🡐</string>
+    <string>&lt;</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_8">

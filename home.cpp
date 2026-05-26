@@ -13,6 +13,8 @@
 #include <QVector>
 #include "mainwindow.h"
 #include "pageindex.h"
+#include <QMouseEvent>
+#include <QEvent>
 #include <cmath>
 
 Home::Home(QWidget *parent)
@@ -36,8 +38,6 @@ Home::Home(QWidget *parent)
     QTimer::singleShot(0, this, [this]() {
         originalEnergyShowPos = ui->L2_energy_show->pos();
         originalEnergyPos     = ui->L2_energy->pos();
-        originalJoulesPos     = ui->L2_joules->pos();
-
         ////qDebug() << "Captured Positions (delayed):" << originalEnergyShowPos;
     });
 
@@ -86,7 +86,6 @@ Home::Home(QWidget *parent)
     setupHoldButton(ui->B2_timer_add, timer_onTimeAdd, [this]() { on_B2_timer_add_clicked(); });
     setupHoldButton(ui->B2_timer_sub, timer_onTimeSub, [this]() { on_B2_timer_sub_clicked(); });
 
-    connect(ui->B2_SelPro, &QPushButton::clicked, this, &Home::openProtocolSelection);
 
     startup_done = false;
 
@@ -96,26 +95,28 @@ Home::Home(QWidget *parent)
             &DateTimeManager::dateTimeChanged,
             this,
             [=](const QDateTime &dt){
-                ui->labelDateTime->setText(
+        ui->labelDateTime->setText(
                     dt.toString("dd-MM-yy HH:mm:ss"));
-            });
+    });
 
     protocolselect* selWindow =
-        (protocolselect*) stack->widget(PAGE_PROTOCOLSELECT);
+            (protocolselect*) stack->widget(PAGE_PROTOCOLSELECT);
 
     connect(selWindow,
             &protocolselect::protocolSelected,
             this,
             [=](const QString &name)
-            {
-                protocolName = name;
+    {
+        protocolName = name;
 
-                updateFromGlobals();
+        updateFromGlobals();
 
-                protocolModified = false;
+        protocolModified = false;
 
-                updateProtocolLabel();
-            });
+        updateProtocolLabel();
+    });
+
+    ui->L2_protocol_show->installEventFilter(this);
 
 }
 
@@ -247,7 +248,6 @@ void Home::update_B2_timer_on(void)
     timerFlag = true;
     ui->L2_energy_show->show();
     ui->L2_timer_show->show();
-    ui->L2_seconds->show();
     ui->B2_timer_add->setEnabled(true);
     ui->B2_timer_sub->setEnabled(true);
     updateTimerLabel();
@@ -265,7 +265,6 @@ void Home::update_B2_timer_off(void)
     TimerSec = 0;
     ui->L2_energy_show->hide();
     ui->L2_timer_show->hide();
-    ui->L2_seconds->hide();
     ui->B2_timer_add->setEnabled(false);
     ui->B2_timer_sub->setEnabled(false);
 }
@@ -294,21 +293,28 @@ void Home::on_B2_timer_sub_clicked()
 
 void Home::updateTimerLabel()
 {
-    ui->L2_timer_show->setText(QString::number(TimerSec));
+    //    ui->L2_timer_show->setText(QString::number(TimerSec));
+
+    QString formattedTimer = QString::number(TimerSec);
+
+    ui->L2_timer_show->setText(
+                QString("<span style='font-size: 48pt; color: #3299ff;'>%1</span>"
+                "<span style='font-size: 20pt; color: #FFFFFF;'> S</span>")
+                .arg(formattedTimer)
+                );
 }
 
 void Home::updateJouleLabel()
 {
     currentJoule= TimerSec * (power980+power1470);
-//    ui->L2_energy_show->setText(QString::number(currentJoule,'f', 1));
+    //    ui->L2_energy_show->setText(QString::number(currentJoule,'f', 1));
     QString formattedJoule = QString::number(currentJoule, 'f', 1);
 
-    // 2. Combine it into the HTML string with different sizes
     ui->L2_energy_show->setText(
-        QString("<span style='font-size: 42px; color: #00FF00;'>%1</span>"
-                "<span style='font-size: 20px; color: #FFFFFF;'> J</span>")
-        .arg(formattedJoule)
-    );
+                QString("<span style='font-size: 48pt; color: #00FF00;'>%1</span>"
+                "<span style='font-size: 20pt; color: #FFFFFF;'> J</span>")
+                .arg(formattedJoule)
+                );
 }
 
 void Home::on_B2_pulsemode_stateChanged(int arg1)
@@ -557,17 +563,17 @@ void Home::updatePulseLabels()
 {
     // ON time
     ui->L2_on_pulse_show->setText(
-        formatPulseTime(pulseOnTime));
+                formatPulseTime(pulseOnTime));
 
     ui->L2_on_pulse_unit->setText(
-        getPulseUnit(pulseOnTime));
+                getPulseUnit(pulseOnTime));
 
     // OFF time
     ui->L2_off_pulse_show->setText(
-        formatPulseTime(pulseOffTime));
+                formatPulseTime(pulseOffTime));
 
     ui->L2_off_pulse_unit->setText(
-        getPulseUnit(pulseOffTime));
+                getPulseUnit(pulseOffTime));
 }
 
 void Home::on_B2_audioalarm_stateChanged(int arg1)
@@ -582,6 +588,14 @@ void Home::on_B2_audioalarm_stateChanged(int arg1)
         ui->B2_sec_alarm->setChecked(alarmSeconds > 0);
         ui->B2_joule_alarm->setChecked(alarmJoules > 0);
 
+        ui->L2_alarm_sec_show->setVisible(alarmSeconds > 0);
+        ui->B2_alarm_sec_add->setEnabled(alarmSeconds > 0);
+        ui->B2_alarm_sec_sub->setEnabled(alarmSeconds > 0);
+
+        ui->L2_alarm_joule_show->setVisible(alarmJoules > 0);
+        ui->B2_alarm_joule_add->setEnabled(alarmJoules > 0);
+        ui->B2_alarm_joule_sub->setEnabled(alarmJoules > 0);
+
         updateAlarmSecLabel();
         updateAlarmJouleLabel();
     }
@@ -591,7 +605,11 @@ void Home::on_B2_audioalarm_stateChanged(int arg1)
         ui->B2_joule_alarm->setChecked(false);
 
         ui->L2_alarm_sec_show->setVisible(false);
+        ui->B2_alarm_sec_add->setEnabled(false);
+        ui->B2_alarm_sec_sub->setEnabled(false);
         ui->L2_alarm_joule_show->setVisible(false);
+        ui->B2_alarm_joule_add->setEnabled(false);
+        ui->B2_alarm_joule_sub->setEnabled(false);
 
         updateAlarmSecLabel();
         updateAlarmJouleLabel();
@@ -605,69 +623,66 @@ void Home::on_B2_audioalarm_stateChanged(int arg1)
     qDebug()<<alarmSeconds<<alarmJoules;
 }
 
-
-void Home::on_B2_sec_alarm_toggled(bool checked)
+void Home::on_B2_sec_alarm_clicked()
 {
-    if (checked)
-    {
-        // Disable joule alarm
-        ui->B2_joule_alarm->setChecked(false);
 
-        // Reset joules
-        alarmJoules = 0;
+    ui->B2_sec_alarm->setChecked(true);
 
-        // Start seconds from minimum limit
-        if (alarmSeconds <= 0)
-            alarmSeconds = 1;
-    }
-    // else
-    // {
-    //     alarmSeconds = 0;
-    // }
+    ui->L2_alarm_sec_show->setVisible(true);
 
-    ui->L2_alarm_sec_show->setVisible(checked);
+    ui->B2_alarm_sec_add->setEnabled(true);
+    ui->B2_alarm_sec_sub->setEnabled(true);
 
-    ui->B2_alarm_sec_add->setEnabled(checked);
-    ui->B2_alarm_sec_sub->setEnabled(checked);
+    ui->L2_alarm_joule_show->setVisible(false);
 
-    ui->L2_alarm_joule_show->setVisible(!checked);
+    ui->B2_alarm_joule_add->setEnabled(false);
+    ui->B2_alarm_joule_sub->setEnabled(false);
 
-    ui->B2_alarm_joule_add->setEnabled(!checked);
-    ui->B2_alarm_joule_sub->setEnabled(!checked);
+    ui->B2_alarm_joule_sub->setStyleSheet(
+                "QPushButton {"
+            "background-image:url(:/icons/negative_dark_disabled.png);"
+            "}"
+        );
+
+    // Disable joule alarm
+    ui->B2_joule_alarm->setChecked(false);
+
+    // Reset joules
+    alarmJoules = 0;
+
+    // Start seconds from minimum limit
+    if (alarmSeconds <= 0)
+        alarmSeconds = 1;
+
 
     updateAlarmSecLabel();
     updateAlarmJouleLabel();
     qDebug()<<alarmSeconds<<alarmJoules;
 }
 
-void Home::on_B2_joule_alarm_toggled(bool checked)
+void Home::on_B2_joule_alarm_clicked()
 {
-    if (checked)
-    {
-        // Disable seconds alarm
-        ui->B2_sec_alarm->setChecked(false);
+    ui->B2_joule_alarm->setChecked(true);
 
-        // Reset seconds
-        alarmSeconds = 0;
+    ui->L2_alarm_joule_show->setVisible(true);
 
-        // Start joules from minimum limit
-        if (alarmJoules <= 0)
-            alarmJoules = 10;
-    }
-    // else
-    // {
-    //     alarmJoules = 0;
-    // }
+    ui->B2_alarm_joule_add->setEnabled(true);
+    ui->B2_alarm_joule_sub->setEnabled(true);
 
-    ui->L2_alarm_joule_show->setVisible(checked);
+    ui->L2_alarm_sec_show->setVisible(false);
 
-    ui->B2_alarm_joule_add->setEnabled(checked);
-    ui->B2_alarm_joule_sub->setEnabled(checked);
+    ui->B2_alarm_sec_add->setEnabled(false);
+    ui->B2_alarm_sec_sub->setEnabled(false);
 
-    ui->L2_alarm_sec_show->setVisible(!checked);
+    // Disable seconds alarm
+    ui->B2_sec_alarm->setChecked(false);
 
-    ui->B2_alarm_sec_add->setEnabled(!checked);
-    ui->B2_alarm_sec_sub->setEnabled(!checked);
+    // Reset seconds
+    alarmSeconds = 0;
+
+    // Start joules from minimum limit
+    if (alarmJoules <= 0)
+        alarmJoules = 10;
 
     updateAlarmSecLabel();
     updateAlarmJouleLabel();
@@ -872,10 +887,8 @@ void Home::setSimplifiedMode() {
     // Reset positions to original
     ui->L2_energy_show->move(originalEnergyShowPos);
     ui->L2_energy->move(originalEnergyPos);
-    ui->L2_joules->move(originalJoulesPos);
     ui->L2_avg_power->hide();
     ui->L2_avg_power_show->hide();
-    ui->L2_avg_watts->hide();
     simpliAdvanMode = 0;
 }
 
@@ -886,26 +899,24 @@ void Home::setAdvancedMode() {
     // Shift labels 100px to the right
     ui->L2_energy_show->move(originalEnergyShowPos.x() + 230, originalEnergyShowPos.y());
     ui->L2_energy->move(originalEnergyPos.x() + 230, originalEnergyPos.y());
-    ui->L2_joules->move(originalJoulesPos.x() + 230, originalJoulesPos.y());
     ui->L2_avg_power->show();
     ui->L2_avg_power_show->show();
-    ui->L2_avg_watts->show();
     simpliAdvanMode = 1;
 }
 
 void Home::updatedatabase() {
     dbinit.updateHomeData(
-        1,  // ID
-        std::round(power980 * 10.0) / 10.0,       // power980
-        std::round(power1470 * 10.0) / 10.0,      // power1470
-        TimerSec,                                  // timerSec
-        timer_reset,                               // timer_reset
-        timerFlag,                                 // timer_flag
-        std::round(pulseOnTime * 10.0) / 10.0,    // pulseOnTimeMs
-        std::round(pulseOffTime * 10.0) / 10.0,   // pulseOffTimeMs
-        pulseMode,                                 // pulse_mode
-        protocolName                               // protocol_name
-        );
+                1,  // ID
+                std::round(power980 * 10.0) / 10.0,       // power980
+                std::round(power1470 * 10.0) / 10.0,      // power1470
+                TimerSec,                                  // timerSec
+                timer_reset,                               // timer_reset
+                timerFlag,                                 // timer_flag
+                std::round(pulseOnTime * 10.0) / 10.0,    // pulseOnTimeMs
+                std::round(pulseOffTime * 10.0) / 10.0,   // pulseOffTimeMs
+                pulseMode,                                 // pulse_mode
+                protocolName                               // protocol_name
+                );
 }
 
 
@@ -929,7 +940,6 @@ void Home::showEvent(QShowEvent *event)
         // Capture original positions
         originalEnergyShowPos = ui->L2_energy_show->pos();
         originalEnergyPos     = ui->L2_energy->pos();
-        originalJoulesPos     = ui->L2_joules->pos();
 
         // Decide mode based on simpliAdvanMode flag
         if (simpliAdvanMode == 0) {
@@ -950,9 +960,18 @@ void Home::updateAvgEnergyLabel()
         currentAvgPower = (static_cast<double>(pulseOnTime) / (pulseOnTime + pulseOffTime)) * (power980 + power1470);
     else
         currentAvgPower = (power980 + power1470);
-    //qDebug()<<"*********"<<pulseOnTime<<pulseOffTime<<power980<<power1470<<"**********";
-    ui->L2_avg_power_show->setText(QString::number(currentAvgPower, 'f', 1));
-    //qDebug()<<currentAvgPower;
+
+    //    ui->L2_avg_power_show->setText(QString::number(currentAvgPower, 'f', 1));
+
+    QString formattedAvgJoule = QString::number(currentAvgPower, 'f', 1);
+
+    // 2. Combine it into the HTML string with different sizes
+    ui->L2_avg_power_show->setText(
+                QString("<span style='font-size: 48pt; color: #00FF00;'>%1</span>"
+                "<span style='font-size: 20pt; color: #FFFFFF;'> J</span>")
+                .arg(formattedAvgJoule)
+                );
+
 }
 
 void Home::updateFromGlobals()
@@ -1015,7 +1034,7 @@ void Home::setTimerResetState(bool reset)
     if (reset)
     {
         ui->B2_timer_reset->setStyleSheet(
-            "color: rgb(255, 97, 34);"
+                    "color: rgb(255, 97, 34);"
             "border: 0px solid;"
             "border-top-left-radius: 25px;"
             "border-bottom-left-radius: 25px;"
@@ -1023,7 +1042,7 @@ void Home::setTimerResetState(bool reset)
             );
 
         ui->B2_timer_noreset->setStyleSheet(
-            "border: 0px solid;"
+                    "border: 0px solid;"
             "border-top-right-radius: 25px;"
             "border-bottom-right-radius: 25px;"
             "font-size: 14pt;"
@@ -1032,7 +1051,7 @@ void Home::setTimerResetState(bool reset)
     else
     {
         ui->B2_timer_noreset->setStyleSheet(
-            "color: rgb(255, 97, 34);"
+                    "color: rgb(255, 97, 34);"
             "border: 0px solid;"
             "border-top-right-radius: 25px;"
             "border-bottom-right-radius: 25px;"
@@ -1040,7 +1059,7 @@ void Home::setTimerResetState(bool reset)
             );
 
         ui->B2_timer_reset->setStyleSheet(
-            "border: 0px solid;"
+                    "border: 0px solid;"
             "border-top-left-radius: 25px;"
             "border-bottom-left-radius: 25px;"
             "font-size: 14pt;"
@@ -1111,6 +1130,8 @@ void Home::refreshPage()
     // ----------------------
     // Protocol
     // ----------------------
+
+    startup_done = true;
 
     updateProtocolLabel();
 
@@ -1235,11 +1256,14 @@ void Home::refreshPage()
     // ----------------------
 
     ui->labelDateTime->setText(
-        DateTimeManager::instance()
-            ->currentDateTime()
-            .toString("dd-MM-yy HH:mm:ss"));
+                DateTimeManager::instance()
+                ->currentDateTime()
+                .toString("dd-MM-yy HH:mm:ss"));
 
     this->update();
+
+    startup_done = false;
+    protocolModified = false;
 
     qDebug() << "Home Refresh Complete";
 }
@@ -1257,4 +1281,15 @@ void Home::on_B2_modify_protocol_clicked()
     switchTonewprotocol();
 }
 
+bool Home::eventFilter(QObject *obj, QEvent *event)
+{
+    if (obj == ui->L2_protocol_show &&
+            event->type() == QEvent::MouseButtonPress)
+    {
+        openProtocolSelection();
+        return true;
+    }
+
+    return QWidget::eventFilter(obj, event);
+}
 

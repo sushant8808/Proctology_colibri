@@ -5,6 +5,8 @@
 #include "mainwindow.h"
 #include "pageindex.h"
 #include <QShowEvent>
+#include <QThread>
+#include "databaseinitializer.h"
 
 changepassword::changepassword(QWidget *parent, Home *home)
     : QWidget(parent)
@@ -24,6 +26,15 @@ changepassword::changepassword(QWidget *parent, Home *home)
     ui->new_pass->setMaxLength(4);
     ui->confirm_new_pass->setMaxLength(4);
 
+    popup = new error_popup(this);
+
+    connect(popup, &error_popup::acknowledged,
+            this,[this](){
+        if(success)
+            switchToSetting();
+        qDebug() << "ok";
+    });
+
 }
 
 changepassword::~changepassword()
@@ -42,8 +53,8 @@ void changepassword::appendDigit(const QString &digit)
         return;
 
     if (target != ui->current_pass &&
-        target != ui->new_pass &&
-        target != ui->confirm_new_pass)
+            target != ui->new_pass &&
+            target != ui->confirm_new_pass)
         return;
 
     if (target->text().length() >= 4)
@@ -90,18 +101,28 @@ void changepassword::on_B1_pass_ok_clicked()
     QString confirmPass = ui->confirm_new_pass->text();
 
     if (currentPass.length() != 4 ||
-        newPass.length() != 4 ||
-        confirmPass.length() != 4)
+            newPass.length() != 4 ||
+            confirmPass.length() != 4)
     {
-        QMessageBox::warning(this, "Error",
-                             "Please enter all 4-digit passwords");
+        popup->showMessage(
+                    "MISSING FIELDS",
+                    "Please enter all 4-digit passwords.\n"
+            "",
+                    error_popup::Warning,
+                    true
+                    );
         return;
     }
 
     if (currentPass != loginpass)
     {
-        QMessageBox::warning(this, "Error",
-                             "Current password is incorrect");
+        popup->showMessage(
+                    "INCORRECT",
+                    "Current password is incorrect.\n"
+            "",
+                    error_popup::Warning,
+                    true
+                    );
         ui->current_pass->clear();
         ui->current_pass->setFocus();
         return;
@@ -109,8 +130,13 @@ void changepassword::on_B1_pass_ok_clicked()
 
     if (newPass != confirmPass)
     {
-        QMessageBox::warning(this, "Error",
-                             "New passwords do not match");
+        popup->showMessage(
+                    "MISMATCH",
+                    "New passwords do not match.\n"
+            "",
+                    error_popup::Warning,
+                    true
+                    );
         ui->new_pass->clear();
         ui->confirm_new_pass->clear();
         ui->new_pass->setFocus();
@@ -122,16 +148,33 @@ void changepassword::on_B1_pass_ok_clicked()
 
     DatabaseInitializer dbinit;
 
-    dbinit.updatePassword(1,loginpass,"4321","1234");
+    qDebug()<<loginpass;
 
-    QMessageBox::information(this, "Success",
-                             "Password changed successfully");
-    switchToSetting();
+        dbinit.updatePassword(1,loginpass,"4321","1234");
+
+//    bool success = dbinit.updatePassword(1, loginpass, "4321", "1234");
+
+//    if (success) {
+//        qDebug() << "Password update succeeded!";
+//    } else {
+//        qCritical() << "Password update failed!";
+//    }
+
+    popup->showMessage(
+                "UPDATED",
+                "Password changed successfully.",
+                error_popup::Success,
+                true
+                );
+
+    success = 1;
+
 }
 
 void changepassword::switchToSetting()
 {
     MainWindow::instance->switchPage(PAGE_SETTING);
+    success = 0;
 }
 
 void changepassword::on_B3_back_to_setting_clicked()
@@ -150,6 +193,10 @@ void changepassword::refreshPage()
 
     // Set focus back to current password
     ui->current_pass->setFocus();
+
+    qDebug()<<loginpass;
+
+    success = 0;
 }
 
 void changepassword::showEvent(QShowEvent *event)

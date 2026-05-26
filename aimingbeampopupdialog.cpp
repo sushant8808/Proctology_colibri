@@ -8,8 +8,9 @@
 AimingBeamPopupDialog::AimingBeamPopupDialog(QWidget *parent)
     : QDialog(parent)
 {
+
     setWindowFlags(Qt::Popup);
-    setFixedSize(400, 200);
+    setFixedSize(600, 200);
 
     label = new QLabel("Aiming Beam Intensity", this);
     label->setAlignment(Qt::AlignCenter);

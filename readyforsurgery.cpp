@@ -62,6 +62,7 @@ ReadyForSurgery::ReadyForSurgery(QWidget *parent, Home *home)
     connect(ui->pushButton, &QPushButton::pressed, this, [=]() {
         if(surgery_pause == 1)
         {
+            popup->hidePopup();
             surgery_pause = 0;
         }
         else{
@@ -245,6 +246,15 @@ ReadyForSurgery::ReadyForSurgery(QWidget *parent, Home *home)
 
     connect(popup, &error_popup::noClicked, this, [this]() {
         qDebug() << "No";
+    });
+
+    connect(popup, &error_popup::acknowledged,
+            this,[this](){
+        if(surgery_pause)
+            surgery_pause = 0;
+
+        surgery_pause_bt = 0;
+        qDebug() << "ok";
     });
 }
 
@@ -438,7 +448,7 @@ void ReadyForSurgery::on_B5_to_standby_clicked()
         "END SURGERY",
         "Are you sure you want to end the surgery?\n"
         "",
-        error_popup::Validation,
+        error_popup::Confirmation,
         true
         );
 }
@@ -622,15 +632,28 @@ void ReadyForSurgery::playNextAudio()
 
 void ReadyForSurgery::on_B5_pause_clicked()
 {
-    if(surgery_pause == 0)
-    {
-        surgery_pause = 1;
-        ui->B5_pause->setText("Resume Surgery");
-    }else
-    {
-        surgery_pause = 0;
-        ui->B5_pause->setText("Pause Surgery");
-    }
+    surgery_pause_bt = 1;
+
+    popup->showMessage(
+        "SURGERY PAUSED",
+        "Press RESUME to continue the surgery. \n"
+        "OR\n"
+        "Press foot peddel to resume.",
+        error_popup::Info,
+        true
+        );
+
+    surgery_pause = 1;
+
+//    if(surgery_pause == 0)
+//    {
+//        surgery_pause = 1;
+//        ui->B5_pause->setText("Resume Surgery");
+//    }else
+//    {
+//        surgery_pause = 0;
+//        ui->B5_pause->setText("Pause Surgery");
+//    }
 }
 
 void ReadyForSurgery::end_surgery(void)
@@ -807,13 +830,13 @@ void ReadyForSurgery::refreshPage()
     if(energyUpdateTimer)
         energyUpdateTimer->stop();
 
-    bool timerEnabled = (timerFlag == 1);
-    ui->L5_timer_sec->setVisible(timerEnabled);
-    ui->label_5->setVisible(timerEnabled);
-    ui->label_6->setVisible(timerEnabled);
-    ui->label_8->setVisible(timerEnabled);
-    ui->L5_timer_state->setVisible(timerEnabled);
-    ui->label_10->setVisible(timerEnabled);
-    ui->label_11->setVisible(timerEnabled);
-    ui->L5_energy->setVisible(timerEnabled);
+//    bool timerEnabled = (timerFlag == 1);
+//    ui->L5_timer_sec->setVisible(timerEnabled);
+//    ui->label_5->setVisible(timerEnabled);
+//    ui->label_6->setVisible(timerEnabled);
+//    ui->label_8->setVisible(timerEnabled);
+//    ui->L5_timer_state->setVisible(timerEnabled);
+//    ui->label_10->setVisible(timerEnabled);
+//    ui->label_11->setVisible(timerEnabled);
+//    ui->L5_energy->setVisible(timerEnabled);
 }

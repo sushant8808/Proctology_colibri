@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QTimer>
 #include <QStackedWidget>
+#include <QLabel>
+#include <QProgressBar>
 
 #include "userlogin.h"
 #include "home.h"
@@ -32,7 +34,9 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(QWidget *parent = nullptr,
+                        QLabel *statusLabel = nullptr,
+                        QProgressBar *progressBar = nullptr);
     ~MainWindow();
 
     static MainWindow* instance;

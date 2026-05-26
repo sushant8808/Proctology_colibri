@@ -24,6 +24,7 @@ public:
 
 protected:
     void showEvent(QShowEvent *event) override;
+    bool eventFilter(QObject *watched, QEvent *event) override;
 
 private:
     void refreshPage();
@@ -71,8 +72,6 @@ private slots:
     void on_Surgery_name_textChanged(const QString &arg1);
 
     bool isProtocolNameExists(const QString &name);
-
-    void on_bt_surgery_name_clicked();
 
 private:
     Ui::newcustomprotocol *ui;

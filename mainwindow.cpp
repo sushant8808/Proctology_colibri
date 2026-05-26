@@ -11,7 +11,7 @@
 MainWindow* MainWindow::instance = nullptr;
 
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(QWidget *parent, QLabel *statusLabel, QProgressBar *progressBar)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
@@ -25,54 +25,86 @@ MainWindow::MainWindow(QWidget *parent)
     QVBoxLayout* layout = new QVBoxLayout(central);
     stackedWidget = new QStackedWidget(central);
 
+    // Helper macro/lambda to update progress smoothly if pointers exist
+    auto updateProgress = [&](int value, const QString &text) {
+        if (statusLabel) statusLabel->setText(text);
+        if (progressBar) progressBar->setValue(value);
+        qApp->processEvents(); // Force UI update on Colibri screen
+    };
+
     // -----------------------------
     // CREATE PAGES ONLY ONCE
     // -----------------------------
 
-    homePage =
-        new Home(stackedWidget);
+    //    homePage =
+    //        new Home(stackedWidget);
 
-    userloginPage =
-        new Userlogin(stackedWidget, homePage);
+    //    userloginPage =
+    //        new Userlogin(stackedWidget, homePage);
 
-    settingPage =
-        new Setting(stackedWidget, homePage);
+    //    settingPage =
+    //        new Setting(stackedWidget, homePage);
 
-    pulseModePage =
-        new PulseMode(stackedWidget, homePage);
+    //    pulseModePage =
+    //        new PulseMode(stackedWidget, homePage);
 
-    protocolSelectPage =
-        new protocolselect(stackedWidget, homePage);
+    //    protocolSelectPage =
+    //        new protocolselect(stackedWidget, homePage);
 
-    newProtocolPage =
-        new newcustomprotocol(stackedWidget, homePage);
+    //    newProtocolPage =
+    //        new newcustomprotocol(stackedWidget, homePage);
 
-    readyForSurgeryPage =
-        new ReadyForSurgery(stackedWidget, homePage);
+    //    readyForSurgeryPage =
+    //        new ReadyForSurgery(stackedWidget, homePage);
 
-    surgeryDataPage =
-        new Surgery_data(stackedWidget, homePage);
+    //    surgeryDataPage =
+    //        new Surgery_data(stackedWidget, homePage);
 
-    usageAreaPage =
-        new usage_area(stackedWidget, homePage);
+    //    usageAreaPage =
+    //        new usage_area(stackedWidget, homePage);
 
-    systemUsagesPage =
-        new system_usages(stackedWidget, homePage);
+    //    systemUsagesPage =
+    //        new system_usages(stackedWidget, homePage);
 
-    rentalInfoPage =
-        new rental_info(stackedWidget, homePage);
+    //    rentalInfoPage =
+    //        new rental_info(stackedWidget, homePage);
 
-    serviceEngineerPage =
-        new service_engineer_area(stackedWidget, homePage);
+    //    serviceEngineerPage =
+    //        new service_engineer_area(stackedWidget, homePage);
 
-    calibrationPage =
-        new Calibration_screen(stackedWidget, homePage);
+    //    calibrationPage =
+    //        new Calibration_screen(stackedWidget, homePage);
 
-    setDateTimePage =
-        new Set_date_time(stackedWidget, homePage);
+    //    setDateTimePage =
+    //        new Set_date_time(stackedWidget, homePage);
 
-    changePasswordPage =
-        new changepassword(stackedWidget, homePage);
+    //    changePasswordPage =
+    //        new changepassword(stackedWidget, homePage);
+
+    updateProgress(75, "Loading Core Interface...");
+    homePage = new Home(stackedWidget);
+    userloginPage = new Userlogin(stackedWidget, homePage);
+    settingPage = new Setting(stackedWidget, homePage);
+
+    updateProgress(80, "Loading Laser Surgery Modules...");
+    pulseModePage = new PulseMode(stackedWidget, homePage);
+    protocolSelectPage = new protocolselect(stackedWidget, homePage);
+    newProtocolPage = new newcustomprotocol(stackedWidget, homePage);
+
+    updateProgress(85, "Initializing Surgery Data...");
+    readyForSurgeryPage = new ReadyForSurgery(stackedWidget, homePage);
+    surgeryDataPage = new Surgery_data(stackedWidget, homePage);
+    usageAreaPage = new usage_area(stackedWidget, homePage);
+
+    updateProgress(90, "Loading System Management...");
+    systemUsagesPage = new system_usages(stackedWidget, homePage);
+    rentalInfoPage = new rental_info(stackedWidget, homePage);
+    serviceEngineerPage = new service_engineer_area(stackedWidget, homePage);
+
+    updateProgress(95, "Finalizing Device Calibration...");
+    calibrationPage = new Calibration_screen(stackedWidget, homePage);
+    setDateTimePage = new Set_date_time(stackedWidget, homePage);
+    changePasswordPage = new changepassword(stackedWidget, homePage);
 
     // -----------------------------
     // ADD TO STACKED WIDGET
@@ -116,6 +148,8 @@ MainWindow::MainWindow(QWidget *parent)
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
     setCentralWidget(central);
+
+    updateProgress(100, "System Ready!");
 
     if(password_enable == 0)
     {

@@ -16,7 +16,7 @@ public:
         Warning,
         Info,
         Success,
-        Validation
+        Confirmation
     };
 
     explicit error_popup(QWidget *parent = nullptr);
@@ -27,6 +27,8 @@ public:
                      bool acknowledgeAllowed);
 
     void hidePopup();
+
+    void forceHide();
 
 private:
     QWidget *centerBox;
@@ -48,8 +50,8 @@ private:
 
 signals:
     void acknowledged();      // for OK type popups
-    void yesClicked();        // for validation
-    void noClicked();         // for validation
+    void yesClicked();        // for Confirmation
+    void noClicked();         // for Confirmation
 };
 
 #endif // ERROR_POPUP_H

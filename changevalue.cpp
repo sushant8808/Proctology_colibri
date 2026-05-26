@@ -361,61 +361,90 @@ void changevalue::on_B2_audioalarm_stateChanged(int arg1)
     ui->B2_sec_alarm->setEnabled(enabled);
     ui->B2_joule_alarm->setEnabled(enabled);
 
-    if (!enabled)
+    if (enabled)
+    {
+        ui->B2_sec_alarm->setChecked(alarmSeconds > 0);
+        ui->B2_joule_alarm->setChecked(alarmJoules > 0);
+
+        ui->L2_alarm_sec_show->setVisible(alarmSeconds > 0);
+        ui->B2_alarm_sec_add->setEnabled(alarmSeconds > 0);
+        ui->B2_alarm_sec_sub->setEnabled(alarmSeconds > 0);
+
+        ui->L2_alarm_joule_show->setVisible(alarmJoules > 0);
+        ui->B2_alarm_joule_add->setEnabled(alarmJoules > 0);
+        ui->B2_alarm_joule_sub->setEnabled(alarmJoules > 0);
+    }else
     {
         ui->B2_sec_alarm->setChecked(false);
         ui->B2_joule_alarm->setChecked(false);
+
+        ui->L2_alarm_sec_show->setVisible(false);
+        ui->B2_alarm_sec_add->setEnabled(false);
+        ui->B2_alarm_sec_sub->setEnabled(false);
+        ui->L2_alarm_joule_show->setVisible(false);
+        ui->B2_alarm_joule_add->setEnabled(false);
+        ui->B2_alarm_joule_sub->setEnabled(false);
     }
 }
 
-void changevalue::on_B2_sec_alarm_toggled(bool checked)
+void changevalue::on_B2_sec_alarm_clicked()
 {
-    if (checked)
-    {
-        ui->B2_joule_alarm->setChecked(false);
+    ui->B2_sec_alarm->setChecked(true);
 
-        alarmJoules = 0;
+    ui->L2_alarm_sec_show->setVisible(true);
 
-        if (alarmSeconds <= 0)
-            alarmSeconds = 1;
-    }
+    ui->B2_alarm_sec_add->setEnabled(true);
+    ui->B2_alarm_sec_sub->setEnabled(true);
 
-    ui->L2_alarm_sec_show->setVisible(checked);
+    ui->L2_alarm_joule_show->setVisible(false);
 
-    ui->B2_alarm_sec_add->setEnabled(checked);
-    ui->B2_alarm_sec_sub->setEnabled(checked);
+    ui->B2_alarm_joule_add->setEnabled(false);
+    ui->B2_alarm_joule_sub->setEnabled(false);
 
-    ui->L2_alarm_joule_show->setVisible(!checked);
+    ui->B2_alarm_joule_sub->setStyleSheet(
+                "QPushButton {"
+            "background-image:url(:/icons/negative_dark_disabled.png);"
+            "}"
+        );
 
-    ui->B2_alarm_joule_add->setEnabled(!checked);
-    ui->B2_alarm_joule_sub->setEnabled(!checked);
+    // Disable joule alarm
+    ui->B2_joule_alarm->setChecked(false);
+
+    // Reset joules
+    alarmJoules = 0;
+
+    // Start seconds from minimum limit
+    if (alarmSeconds <= 0)
+        alarmSeconds = 1;
+
 
     updateAlarmSecLabel();
     updateAlarmJouleLabel();
 }
 
-
-void changevalue::on_B2_joule_alarm_toggled(bool checked)
+void changevalue::on_B2_joule_alarm_clicked()
 {
-    if (checked)
-    {
-        ui->B2_sec_alarm->setChecked(false);
+    ui->B2_joule_alarm->setChecked(true);
 
-        alarmSeconds = 0;
+    ui->L2_alarm_joule_show->setVisible(true);
 
-        if (alarmJoules <= 0)
-            alarmJoules = 10;
-    }
+    ui->B2_alarm_joule_add->setEnabled(true);
+    ui->B2_alarm_joule_sub->setEnabled(true);
 
-    ui->L2_alarm_joule_show->setVisible(checked);
+    ui->L2_alarm_sec_show->setVisible(false);
 
-    ui->B2_alarm_joule_add->setEnabled(checked);
-    ui->B2_alarm_joule_sub->setEnabled(checked);
+    ui->B2_alarm_sec_add->setEnabled(false);
+    ui->B2_alarm_sec_sub->setEnabled(false);
 
-    ui->L2_alarm_sec_show->setVisible(!checked);
+    // Disable seconds alarm
+    ui->B2_sec_alarm->setChecked(false);
 
-    ui->B2_alarm_sec_add->setEnabled(!checked);
-    ui->B2_alarm_sec_sub->setEnabled(!checked);
+    // Reset seconds
+    alarmSeconds = 0;
+
+    // Start joules from minimum limit
+    if (alarmJoules <= 0)
+        alarmJoules = 10;
 
     updateAlarmSecLabel();
     updateAlarmJouleLabel();
@@ -681,4 +710,3 @@ QString changevalue::getPulseUnit(int valueUs)
 
     return "s";
 }
-

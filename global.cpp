@@ -53,6 +53,9 @@ float totalEnergyDelivered = 0.0f; // cumulative energy
 float new_totalEnergyDelivered = 0.0f; // cumulative energy
 float new2_totalEnergyDelivered = 0.0f; // cumulative energy
 float liveTime = 0.0f;
+bool Adv_Sim_fromSetting = 0;
+bool surgery_pause_bt = 0;
+bool last_theme_status = 0;
 
 float energyAtPress = 0.0f;
 float energyPerPedal = 0.0f;
@@ -80,6 +83,7 @@ int g_usageNoSurgeryDone = 0;
 
 int user_admin_mode = 0;
 bool clear_data = 0 ;
+bool clear_page = 0;
 bool custom_modify = 0;
 
 int pulsemode_step1 = 50;

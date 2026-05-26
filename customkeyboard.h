@@ -7,15 +7,24 @@
 #include <QGridLayout>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QList>
 
 class CustomKeyboard : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit CustomKeyboard(QWidget *parent = nullptr);
+
+    enum KeyboardMode {
+            FullLayout,
+            NumericOnly
+        };
+
+    explicit CustomKeyboard(QWidget *parent = nullptr, KeyboardMode mode = FullLayout);
 
     void setTarget(QLineEdit *target);
+
+    void setKeyboardMode(KeyboardMode mode);
 
 private slots:
     void handleKeyPress();
@@ -45,6 +54,7 @@ private:
 
     bool shiftEnabled;
     bool capsEnabled;
+    KeyboardMode currentMode;
 };
 
 #endif

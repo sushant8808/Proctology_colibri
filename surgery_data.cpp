@@ -9,6 +9,7 @@
 #include "userdatabasemanager.h"
 #include "mainwindow.h"
 #include "pageindex.h"
+#include <QIntValidator>
 
 // ✅ Global variables
 QString surgeonName;
@@ -33,6 +34,26 @@ Surgery_data::Surgery_data(QWidget *parent, Home *home)
     // Optional: lock editing
     ui->LD4_surgery_name->setReadOnly(true);
 
+    popup = new error_popup(this);
+
+    // -------------------------------------------------------------
+    // 💡 LOCK AGE FIELD TO NUMBERS ONLY
+    // -------------------------------------------------------------
+    // Configures the field to accept integers between 0 and 120 only
+    QIntValidator *ageValidator = new QIntValidator(0, 120, this);
+    ui->LD4_patient_age->setValidator(ageValidator);
+
+    // -------------------------------------------------------------
+    // EVENT FILTERS ON LINE EDITS
+    // -------------------------------------------------------------
+    ui->LD4_patient_ID->installEventFilter(this);
+    ui->LD4_patient_name->installEventFilter(this);
+    ui->LD4_patient_age->installEventFilter(this);
+
+    if (ui->LD4_surgeon_name->lineEdit()) {
+        ui->LD4_surgeon_name->lineEdit()->installEventFilter(this);
+    }
+
     refreshPage();
 }
 
@@ -55,10 +76,17 @@ void Surgery_data::on_B4_save_clicked()
     bool genderSelected = (genderMale || genderFemale);
 
     if (surgeonName.isEmpty() || patientName.isEmpty() || patientAge.isEmpty() ||
-        surgeryName.isEmpty() || patientID.isEmpty() || !genderSelected)
+            surgeryName.isEmpty() || patientID.isEmpty() || !genderSelected)
     {
-        QMessageBox::warning(this, "Missing Information",
-                             "Please fill in all the fields (including Patient ID) and select gender before saving.");
+
+        popup->showMessage(
+                    "Missing Information",
+                    "Please fill in all the fields.\n"
+            "",
+                    error_popup::Warning,
+                    true
+                    );
+
         return;
     }
 
@@ -199,62 +227,49 @@ void Surgery_data::refreshPage()
     genderFemale = false;
 }
 
-void Surgery_data::on_bt_patient_id_clicked()
+// Add this function anywhere inside surgery_data.cpp
+
+bool Surgery_data::eventFilter(QObject *watched, QEvent *event)
 {
-    CustomKeyboard keyboard(this);
+    if (event->type() == QEvent::MouseButtonPress)
+    {
+        QLineEdit *targetLineEdit = nullptr;
+        CustomKeyboard::KeyboardMode keyboardMode = CustomKeyboard::FullLayout; // Default layout
 
-    keyboard.setTarget(ui->LD4_patient_ID);
+        if (watched == ui->LD4_patient_ID) {
+            targetLineEdit = ui->LD4_patient_ID;
+        }
+        else if (watched == ui->LD4_patient_name) {
+            targetLineEdit = ui->LD4_patient_name;
+        }
+        else if (watched == ui->LD4_patient_age) {
+            targetLineEdit = ui->LD4_patient_age;
+            keyboardMode = CustomKeyboard::NumericOnly; // 💡 Enforce numeric layout for age
+        }
+        else if (ui->LD4_surgeon_name->lineEdit() && watched == ui->LD4_surgeon_name->lineEdit()) {
+            targetLineEdit = ui->LD4_surgeon_name->lineEdit();
+        }
 
-    keyboard.move(0, 160);
+        if (targetLineEdit)
+        {
+            targetLineEdit->clearFocus();
 
-    keyboard.exec();
-}
+            // Pass the layout flag directly into the parameterized constructor
+            CustomKeyboard keyboard(this, keyboardMode);
+            keyboard.setTarget(targetLineEdit);
 
+            // Adjust placement calculation since the square numeric box profile is slightly taller
+            if (keyboardMode == CustomKeyboard::NumericOnly) {
+                keyboard.move(200, 60);
+            } else {
+                keyboard.move(0, 160);
+            }
 
-void Surgery_data::on_bt_patient_name_clicked()
-{
-    CustomKeyboard keyboard(this);
+            keyboard.exec();
+            return true;
+        }
+    }
 
-    keyboard.setTarget(ui->LD4_patient_name);
-
-    keyboard.move(0, 160);
-
-    keyboard.exec();
-}
-
-
-void Surgery_data::on_bt_patient_age_clicked()
-{
-    CustomKeyboard keyboard(this);
-
-    keyboard.setTarget(ui->LD4_patient_age);
-
-    keyboard.move(0, 160);
-
-    keyboard.exec();
-}
-
-
-void Surgery_data::on_bt_Surgeon_name_clicked()
-{
-    CustomKeyboard keyboard(this);
-
-    keyboard.setTarget(ui->LD4_surgeon_name->lineEdit());
-
-    keyboard.move(0, 160);
-
-    keyboard.exec();
-}
-
-
-void Surgery_data::on_bt_Surgery_name_clicked()
-{
-    CustomKeyboard keyboard(this);
-
-    keyboard.setTarget(ui->LD4_surgery_name);
-
-    keyboard.move(0, 160);
-
-    keyboard.exec();
+    return QWidget::eventFilter(watched, event);
 }
 
