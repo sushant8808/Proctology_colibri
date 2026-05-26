@@ -195,7 +195,7 @@ void protocolselect::loadProtocols(const QString &tableName, QWidget *tabWidget)
                 selectedCustomId == id)
         {
 
-            if (dark == 0)
+            if (dark)
             {
                 item->setStyleSheet(
                             "ProtocolItemWidget {"
@@ -222,40 +222,64 @@ void protocolselect::loadProtocols(const QString &tableName, QWidget *tabWidget)
         // ---------- CLICK ----------
         connect(item, &ProtocolItemWidget::clicked, this, [=]()
         {
+            // -------------------------
+            // DELETE MODE
+            // -------------------------
+            if(mode == DeleteMode)
+            {
+                if(tableName != "protocol_custom")
+                    return;
+
+                qDebug() << "delete";
+
+                selectedCustomId = id;
+                selectedCustomName = name;
+
+                loadProtocols("protocol_custom", ui->tabCustom);
+
+                return;
+            }
+
+            // -------------------------
+            // MODIFY MODE
+            // -------------------------
+            if(mode == ModifyMode)
+            {
+                if(tableName != "protocol_custom")
+                    return;
+
+                qDebug() << "modify";
+
+                selectedCustomId = id;
+                selectedCustomName = name;
+
+                loadProtocols("protocol_custom", ui->tabCustom);
+
+                return;
+            }
+
+            // -------------------------
+            // NORMAL MODE
+            // -------------------------
+
             DatabaseInitializer db;
+
             db.fetchProtocol(sourceTable, id);
 
-            if(mode == DeleteMode && tableName == "protocol_custom")
-            {
-                qDebug()<< "delete";
-                // Selection mode
-                selectedCustomId = id;
-                selectedCustomName = name;
+            no_protocol_used++;
 
-                // Reload to update highlight
-                loadProtocols("protocol_custom", ui->tabCustom);
+            db.updateSingleColumn(sourceTable,
+                                  "no_protocol_used",
+                                  no_protocol_used,
+                                  id);
 
-            }else if(mode == ModifyMode && tableName == "protocol_custom")
-            {
-                qDebug()<< "modify";
-                // Selection mode
-                selectedCustomId = id;
-                selectedCustomName = name;
+            qDebug() << "protocol emit";
 
-                // Reload to update highlight
-                loadProtocols("protocol_custom", ui->tabCustom);
+            emit protocolSelected(name);
 
-            }else{
+            home->updatedatabase();
 
-                no_protocol_used++;
-                db.updateSingleColumn(sourceTable,
-                                      "no_protocol_used",
-                                      no_protocol_used,
-                                      id);
-
-                emit protocolSelected(name);
-                MainWindow::instance->switchPage(PAGE_HOME);
-            }
+            MainWindow::instance->switchPage(PAGE_HOME);
         });
 
         // ---------- STAR ----------

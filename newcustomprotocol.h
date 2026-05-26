@@ -82,7 +82,7 @@ private:
     void updateJouleLabel();
     void updateAvgEnergyLabel();
     void updateTimerLabel();
-    void updatePulseLabels();
+    void updatePulseLabels(bool enabled);
     void setTimerResetState(bool reset);
     void setupHoldButton(QPushButton *button, QTimer *&timer, const std::function<void()> &slotFunc);
     void setSimplifiedMode();

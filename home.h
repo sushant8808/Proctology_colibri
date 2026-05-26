@@ -25,6 +25,7 @@ public:
     ~Home();
     void setSimplifiedMode();
     void setAdvancedMode();
+    void updatedatabase();
 
     int getStepForValue(int valueUs);
     int incrementPulseValue(int valueUs);
@@ -77,7 +78,9 @@ private slots:
 
     void on_B2_off_time_add_clicked();
 
-    void updatePulseLabels();
+    void updatePulseLabels(bool enabled);
+
+    void alarm_button_control();
 
     void on_B2_audioalarm_stateChanged(int arg1);
 
@@ -102,8 +105,6 @@ private slots:
     void on_B2_setting_clicked();
 
     void on_B2_ready_for_surgery_clicked();
-
-    void updatedatabase();
 
     void updateAvgEnergyLabel();
 

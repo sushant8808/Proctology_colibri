@@ -51,6 +51,8 @@ private slots:
 
     void on_B2_off_time_add_clicked();
 
+    void alarm_button_control();
+
     void on_B2_audioalarm_stateChanged(int arg1);
 
     void on_B2_alarm_sec_sub_clicked();
@@ -86,7 +88,7 @@ private:
     void updateJouleLabel();
     void updateAvgEnergyLabel();
     void updateTimerLabel();
-    void updatePulseLabels();
+    void updatePulseLabels(bool enabled);
     void updateAlarmSecLabel();
     void updateAlarmJouleLabel();
     void setTimerResetState(bool reset);

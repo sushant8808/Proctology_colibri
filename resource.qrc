@@ -32,6 +32,9 @@
         <file>star_outline_dark.png</file>
         <file>star_outline_light.png</file>
         <file>negative_dark_disabled.png</file>
+        <file>negative_light_disabled.png</file>
+        <file>positive_dark_disabled.png</file>
+        <file>positive_light_disabled.png</file>
     </qresource>
     <qresource prefix="/audio">
         <file>Audio/0001.mp3</file>

@@ -166,6 +166,24 @@ void newcustomprotocol::update_B2_timer_off()
     ui->B2_timer_add->setEnabled(false);
     ui->B2_timer_sub->setEnabled(false);
 
+    if(dark)
+    {
+        ui->B2_timer_sub->setStyleSheet("QPushButton {"
+                "background-image:url(:/icons/negative_dark_disabled.png);"
+                "}");
+        ui->B2_timer_add->setStyleSheet("QPushButton {"
+                "background-image:url(:/icons/positive_dark_disabled.png);"
+                "}");
+    }else
+    {
+        ui->B2_timer_sub->setStyleSheet("QPushButton {"
+                "background-image:url(:/icons/negative_light_disabled.png);"
+                "}");
+        ui->B2_timer_add->setStyleSheet("QPushButton {"
+                "background-image:url(:/icons/positive_light_disabled.png);"
+                "}");
+    }
+
     updateTimerLabel();
     updateJouleLabel();
 }
@@ -182,6 +200,23 @@ void newcustomprotocol::update_B2_timer_on()
     ui->L2_timer_show->show();
     ui->B2_timer_add->setEnabled(true);
     ui->B2_timer_sub->setEnabled(true);
+    if(dark)
+    {
+        ui->B2_timer_sub->setStyleSheet("QPushButton {"
+                "background-image:url(:/icons/negative_dark_active.png);"
+                "}");
+        ui->B2_timer_add->setStyleSheet("QPushButton {"
+                "background-image:url(:/icons/positive_dark_active.png);"
+                "}");
+    }else
+    {
+        ui->B2_timer_sub->setStyleSheet("QPushButton {"
+                "background-image:url(:/icons/negative_light_active.png);"
+                "}");
+        ui->B2_timer_add->setStyleSheet("QPushButton {"
+                "background-image:url(:/icons/positive_light_active.png);"
+                "}");
+    }
     updateTimerLabel();
 }
 
@@ -272,14 +307,14 @@ void newcustomprotocol::on_B2_pulsemode_stateChanged(int arg1)
     ui->L2_on_pulse_show->setVisible(enabled);
     ui->L2_off_pulse_show->setVisible(enabled);
 
-    updatePulseLabels();
+    updatePulseLabels(l_pulseMode);
 }
 
 void newcustomprotocol::on_B2_on_time_sub_clicked()
 {
     l_pulseOnTime = decrementPulseValue(l_pulseOnTime);
 
-    updatePulseLabels();
+    updatePulseLabels(l_pulseMode);
 }
 
 
@@ -287,14 +322,14 @@ void newcustomprotocol::on_B2_on_time_add_clicked()
 {
     l_pulseOnTime = incrementPulseValue(l_pulseOnTime);
 
-    updatePulseLabels();
+    updatePulseLabels(l_pulseMode);
 }
 
 void newcustomprotocol::on_B2_off_time_sub_clicked()
 {
     l_pulseOffTime = decrementPulseValue(l_pulseOffTime);
 
-    updatePulseLabels();
+    updatePulseLabels(l_pulseMode);
 }
 
 
@@ -302,7 +337,7 @@ void newcustomprotocol::on_B2_off_time_add_clicked()
 {
     l_pulseOffTime = incrementPulseValue(l_pulseOffTime);
 
-    updatePulseLabels();
+    updatePulseLabels(l_pulseMode);
 }
 
 
@@ -385,8 +420,72 @@ void newcustomprotocol::updateJouleLabel()
     currentJoule= l_TimerSec * (l_power980+l_power1470);
 }
 
-void newcustomprotocol::updatePulseLabels()
+void newcustomprotocol::updatePulseLabels(bool enabled)
 {
+    if(dark)
+    {
+        if(enabled)
+        {
+            ui->B2_on_time_sub->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/negative_dark_active.png);"
+                    "}");
+            ui->B2_on_time_add->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/positive_dark_active.png);"
+                    "}");
+            ui->B2_off_time_sub->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/negative_dark_active.png);"
+                    "}");
+            ui->B2_off_time_add->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/positive_dark_active.png);"
+                    "}");
+        }else
+        {
+            ui->B2_on_time_sub->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/negative_dark_disabled.png);"
+                    "}");
+            ui->B2_on_time_add->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/positive_dark_disabled.png);"
+                    "}");
+            ui->B2_off_time_sub->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/negative_dark_disabled.png);"
+                    "}");
+            ui->B2_off_time_add->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/positive_dark_disabled.png);"
+                    "}");
+        }
+
+    }else
+    {
+        if(enabled)
+        {
+            ui->B2_on_time_sub->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/negative_light_active.png);"
+                    "}");
+            ui->B2_on_time_add->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/positive_light_active.png);"
+                    "}");
+            ui->B2_off_time_sub->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/negative_light_active.png);"
+                    "}");
+            ui->B2_off_time_add->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/positive_light_active.png);"
+                    "}");
+        }else
+        {
+            ui->B2_on_time_sub->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/negative_light_disabled.png);"
+                    "}");
+            ui->B2_on_time_add->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/positive_light_disabled.png);"
+                    "}");
+            ui->B2_off_time_sub->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/negative_light_disabled.png);"
+                    "}");
+            ui->B2_off_time_add->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/positive_light_disabled.png);"
+                    "}");
+        }
+    }
     // ON time
     ui->L2_on_pulse_show->setText(
         formatPulseTime(l_pulseOnTime));
@@ -705,7 +804,7 @@ void newcustomprotocol::refreshPage()
 
     ui->L2_off_pulse_show->setVisible(l_pulseMode);
 
-    updatePulseLabels();
+    updatePulseLabels(l_pulseMode);
 
     // ---------------------------------
     // Joules

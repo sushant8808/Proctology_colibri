@@ -55,7 +55,7 @@ changevalue::changevalue(QWidget *parent)
     updatePower1470Label();
     updateTimerLabel();
     updateJouleLabel();
-    updatePulseLabels();
+    updatePulseLabels(pulseMode);
     updateAlarmSecLabel();
     updateAlarmJouleLabel();
 
@@ -213,6 +213,23 @@ void changevalue::update_B2_timer_off()
     ui->L2_timer_show->hide();
     ui->B2_timer_add->setEnabled(false);
     ui->B2_timer_sub->setEnabled(false);
+    if(dark)
+    {
+        ui->B2_timer_sub->setStyleSheet("QPushButton {"
+                "background-image:url(:/icons/negative_dark_disabled.png);"
+                "}");
+        ui->B2_timer_add->setStyleSheet("QPushButton {"
+                "background-image:url(:/icons/positive_dark_disabled.png);"
+                "}");
+    }else
+    {
+        ui->B2_timer_sub->setStyleSheet("QPushButton {"
+                "background-image:url(:/icons/negative_light_disabled.png);"
+                "}");
+        ui->B2_timer_add->setStyleSheet("QPushButton {"
+                "background-image:url(:/icons/positive_light_disabled.png);"
+                "}");
+    }
 }
 
 void changevalue::on_B2_timer_on_clicked()
@@ -229,6 +246,23 @@ void changevalue::update_B2_timer_on()
     ui->L2_timer_show->show();
     ui->B2_timer_add->setEnabled(true);
     ui->B2_timer_sub->setEnabled(true);
+    if(dark)
+    {
+        ui->B2_timer_sub->setStyleSheet("QPushButton {"
+                "background-image:url(:/icons/negative_dark_active.png);"
+                "}");
+        ui->B2_timer_add->setStyleSheet("QPushButton {"
+                "background-image:url(:/icons/positive_dark_active.png);"
+                "}");
+    }else
+    {
+        ui->B2_timer_sub->setStyleSheet("QPushButton {"
+                "background-image:url(:/icons/negative_light_active.png);"
+                "}");
+        ui->B2_timer_add->setStyleSheet("QPushButton {"
+                "background-image:url(:/icons/positive_light_active.png);"
+                "}");
+    }
     updateTimerLabel();
 }
 
@@ -274,7 +308,7 @@ void changevalue::setTimerResetState(bool reset)
     if (reset)
     {
         ui->B2_timer_reset->setStyleSheet(
-            "color: rgb(255, 97, 34);"
+                    "color: rgb(255, 97, 34);"
             "border: 0px solid;"
             "border-top-left-radius: 25px;"
             "border-bottom-left-radius: 25px;"
@@ -282,7 +316,7 @@ void changevalue::setTimerResetState(bool reset)
             );
 
         ui->B2_timer_noreset->setStyleSheet(
-            "border: 0px solid;"
+                    "border: 0px solid;"
             "border-top-right-radius: 25px;"
             "border-bottom-right-radius: 25px;"
             "font-size: 14pt;"
@@ -291,7 +325,7 @@ void changevalue::setTimerResetState(bool reset)
     else
     {
         ui->B2_timer_noreset->setStyleSheet(
-            "color: rgb(255, 97, 34);"
+                    "color: rgb(255, 97, 34);"
             "border: 0px solid;"
             "border-top-right-radius: 25px;"
             "border-bottom-right-radius: 25px;"
@@ -299,7 +333,7 @@ void changevalue::setTimerResetState(bool reset)
             );
 
         ui->B2_timer_reset->setStyleSheet(
-            "border: 0px solid;"
+                    "border: 0px solid;"
             "border-top-left-radius: 25px;"
             "border-bottom-left-radius: 25px;"
             "font-size: 14pt;"
@@ -321,7 +355,7 @@ void changevalue::on_B2_pulsemode_stateChanged(int arg1)
     ui->L2_on_pulse_show->setVisible(enabled);
     ui->L2_off_pulse_show->setVisible(enabled);
 
-    updatePulseLabels();
+    updatePulseLabels(pulseMode);
 }
 
 
@@ -329,14 +363,14 @@ void changevalue::on_B2_on_time_sub_clicked()
 {
     pulseOnTime = decrementPulseValue(pulseOnTime);
 
-    updatePulseLabels();
+    updatePulseLabels(pulseMode);
 }
 
 void changevalue::on_B2_on_time_add_clicked()
 {
     pulseOnTime = incrementPulseValue(pulseOnTime);
 
-    updatePulseLabels();
+    updatePulseLabels(pulseMode);
 }
 
 
@@ -344,14 +378,98 @@ void changevalue::on_B2_off_time_sub_clicked()
 {
     pulseOffTime = decrementPulseValue(pulseOffTime);
 
-    updatePulseLabels();
+    updatePulseLabels(pulseMode);
 }
 
 void changevalue::on_B2_off_time_add_clicked()
 {
     pulseOffTime = incrementPulseValue(pulseOffTime);
 
-    updatePulseLabels();
+    updatePulseLabels(pulseMode);
+}
+
+void changevalue::alarm_button_control()
+{
+    if(audioMode && alarmSeconds)
+    {
+        if(dark)
+        {
+            ui->B2_alarm_sec_sub->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/negative_dark_active.png);"
+                    "}");
+            ui->B2_alarm_sec_add->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/positive_dark_active.png);"
+                    "}");
+        }else
+        {
+            ui->B2_alarm_sec_sub->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/negative_light_active.png);"
+                    "}");
+            ui->B2_alarm_sec_add->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/positive_light_active.png);"
+                    "}");
+        }
+
+    }else
+    {
+        if(dark)
+        {
+            ui->B2_alarm_sec_sub->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/negative_dark_disabled.png);"
+                    "}");
+            ui->B2_alarm_sec_add->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/positive_dark_disabled.png);"
+                    "}");
+        }else
+        {
+            ui->B2_alarm_sec_sub->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/negative_light_disabled.png);"
+                    "}");
+            ui->B2_alarm_sec_add->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/positive_light_disabled.png);"
+                    "}");
+        }
+    }
+
+    if(audioMode && alarmJoules)
+    {
+        if(dark)
+        {
+            ui->B2_alarm_joule_sub->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/negative_dark_active.png);"
+                    "}");
+            ui->B2_alarm_joule_add->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/positive_dark_active.png);"
+                    "}");
+        }else
+        {
+            ui->B2_alarm_joule_sub->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/negative_light_active.png);"
+                    "}");
+            ui->B2_alarm_joule_add->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/positive_light_active.png);"
+                    "}");
+        }
+    }else
+    {
+        if(dark)
+        {
+            ui->B2_alarm_joule_sub->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/negative_dark_disabled.png);"
+                    "}");
+            ui->B2_alarm_joule_add->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/positive_dark_disabled.png);"
+                    "}");
+        }else
+        {
+            ui->B2_alarm_joule_sub->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/negative_light_disabled.png);"
+                    "}");
+            ui->B2_alarm_joule_add->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/positive_light_disabled.png);"
+                    "}");
+        }
+    }
 }
 
 void changevalue::on_B2_audioalarm_stateChanged(int arg1)
@@ -385,6 +503,10 @@ void changevalue::on_B2_audioalarm_stateChanged(int arg1)
         ui->B2_alarm_joule_add->setEnabled(false);
         ui->B2_alarm_joule_sub->setEnabled(false);
     }
+
+    audioMode = enabled;
+
+    alarm_button_control();
 }
 
 void changevalue::on_B2_sec_alarm_clicked()
@@ -523,30 +645,98 @@ void changevalue::updateJouleLabel()
     currentJoule= TimerSec * (power980+power1470);
 }
 
-void changevalue::updatePulseLabels()
+void changevalue::updatePulseLabels(bool enabled)
 {
+    if(dark)
+    {
+        if(enabled)
+        {
+            ui->B2_on_time_sub->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/negative_dark_active.png);"
+                    "}");
+            ui->B2_on_time_add->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/positive_dark_active.png);"
+                    "}");
+            ui->B2_off_time_sub->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/negative_dark_active.png);"
+                    "}");
+            ui->B2_off_time_add->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/positive_dark_active.png);"
+                    "}");
+        }else
+        {
+            ui->B2_on_time_sub->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/negative_dark_disabled.png);"
+                    "}");
+            ui->B2_on_time_add->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/positive_dark_disabled.png);"
+                    "}");
+            ui->B2_off_time_sub->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/negative_dark_disabled.png);"
+                    "}");
+            ui->B2_off_time_add->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/positive_dark_disabled.png);"
+                    "}");
+        }
+
+    }else
+    {
+        if(enabled)
+        {
+            ui->B2_on_time_sub->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/negative_light_active.png);"
+                    "}");
+            ui->B2_on_time_add->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/positive_light_active.png);"
+                    "}");
+            ui->B2_off_time_sub->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/negative_light_active.png);"
+                    "}");
+            ui->B2_off_time_add->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/positive_light_active.png);"
+                    "}");
+        }else
+        {
+            ui->B2_on_time_sub->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/negative_light_disabled.png);"
+                    "}");
+            ui->B2_on_time_add->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/positive_light_disabled.png);"
+                    "}");
+            ui->B2_off_time_sub->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/negative_light_disabled.png);"
+                    "}");
+            ui->B2_off_time_add->setStyleSheet("QPushButton {"
+                    "background-image:url(:/icons/positive_light_disabled.png);"
+                    "}");
+        }
+    }
+
     // ON time
     ui->L2_on_pulse_show->setText(
-        formatPulseTime(pulseOnTime));
+                formatPulseTime(pulseOnTime));
 
     ui->L2_on_pulse_unit->setText(
-        getPulseUnit(pulseOnTime));
+                getPulseUnit(pulseOnTime));
 
     // OFF time
     ui->L2_off_pulse_show->setText(
-        formatPulseTime(pulseOffTime));
+                formatPulseTime(pulseOffTime));
 
     ui->L2_off_pulse_unit->setText(
-        getPulseUnit(pulseOffTime));
+                getPulseUnit(pulseOffTime));
 }
 
 void changevalue::updateAlarmSecLabel()
 {
+
+    alarm_button_control();
     ui->L2_alarm_sec_show->setText(QString::number(alarmSeconds));
 }
 
 void changevalue::updateAlarmJouleLabel()
 {
+    alarm_button_control();
     ui->L2_alarm_joule_show->setText(QString::number(alarmJoules));
 }
 
