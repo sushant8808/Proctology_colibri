@@ -16,6 +16,7 @@
 #include <QMouseEvent>
 #include <QEvent>
 #include <cmath>
+#include "hardwaremanagerprovider.h"
 
 Home::Home(QWidget *parent)
     : QWidget(parent)
@@ -149,7 +150,13 @@ void Home::on_B2_980add_clicked()
     power980 += step;
 
     if (power980 > 15.0)
+    {
         power980 = 15.0;
+        WARNING_BEEP();
+    }
+    else
+        TOUCH_BEEP();
+
 
     power980 = std::round(power980 * 10.0) / 10.0;
 
@@ -172,7 +179,11 @@ void Home::on_B2_980sub_clicked()
     power980 -= step;
 
     if (power980 < 0.0)
+    {
         power980 = 0.0;
+        WARNING_BEEP();
+    }else
+        TOUCH_BEEP();
 
     power980 = std::round(power980 * 10.0) / 10.0;
 
@@ -196,8 +207,11 @@ void Home::on_B2_1470add_clicked()
 
     power1470 += step;
 
-    if (power1470 > 15.0)
+    if (power1470 > 15.0) {
         power1470 = 15.0;
+        WARNING_BEEP();
+    }else
+        TOUCH_BEEP();
 
     power1470 = std::round(power1470 * 10.0) / 10.0;
 
@@ -219,8 +233,11 @@ void Home::on_B2_1470sub_clicked()
 
     power1470 -= step;
 
-    if (power1470 < 0.0)
+    if (power1470 < 0.0) {
         power1470 = 0.0;
+        WARNING_BEEP();
+    }else
+        TOUCH_BEEP();
 
     power1470 = std::round(power1470 * 10.0) / 10.0;
 
@@ -242,6 +259,7 @@ void Home::updatePower1470Label()
 
 void Home::on_B2_timer_on_clicked()
 {
+    TOUCH_BEEP();
     update_B2_timer_on();
     markProtocolModified(Q_FUNC_INFO);
 }
@@ -275,6 +293,7 @@ void Home::update_B2_timer_on(void)
 
 void Home::on_B2_timer_off_clicked()
 {
+    TOUCH_BEEP();
     update_B2_timer_off();
     markProtocolModified(Q_FUNC_INFO);
 }
@@ -310,6 +329,7 @@ void Home::on_B2_timer_add_clicked()
 {
     if (ui->B2_timer_on->isChecked()) {
         if (TimerSec < 120) TimerSec++;
+        TOUCH_BEEP();
         updateTimerLabel();
         updateJouleLabel();
         markProtocolModified(Q_FUNC_INFO);
@@ -321,6 +341,7 @@ void Home::on_B2_timer_sub_clicked()
 {
     if (ui->B2_timer_on->isChecked()) {
         if (TimerSec > 1) TimerSec--;
+        TOUCH_BEEP();
         updateTimerLabel();
         updateJouleLabel();
         markProtocolModified(Q_FUNC_INFO);
@@ -373,7 +394,7 @@ void Home::on_B2_pulsemode_stateChanged(int arg1)
     ui->L2_on_pulse_unit->setVisible(enabled);
     ui->L2_off_pulse_unit->setVisible(enabled);
 
-
+    TOUCH_BEEP();
 
     updatePulseLabels(pulseMode);
 
@@ -383,6 +404,8 @@ void Home::on_B2_pulsemode_stateChanged(int arg1)
 void Home::on_B2_on_time_add_clicked()
 {
     pulseOnTime = incrementPulseValue(pulseOnTime);
+
+    TOUCH_BEEP();
 
     updatePulseLabels(pulseMode);
     updateAvgEnergyLabel();
@@ -394,6 +417,8 @@ void Home::on_B2_on_time_sub_clicked()
 {
     pulseOnTime = decrementPulseValue(pulseOnTime);
 
+    TOUCH_BEEP();
+
     updatePulseLabels(pulseMode);
     updateAvgEnergyLabel();
 
@@ -404,6 +429,8 @@ void Home::on_B2_off_time_add_clicked()
 {
     pulseOffTime = incrementPulseValue(pulseOffTime);
 
+    TOUCH_BEEP();
+
     updatePulseLabels(pulseMode);
     updateAvgEnergyLabel();
 
@@ -413,6 +440,8 @@ void Home::on_B2_off_time_add_clicked()
 void Home::on_B2_off_time_sub_clicked()
 {
     pulseOffTime = decrementPulseValue(pulseOffTime);
+
+    TOUCH_BEEP();
 
     updatePulseLabels(pulseMode);
     updateAvgEnergyLabel();
@@ -768,6 +797,8 @@ void Home::on_B2_audioalarm_stateChanged(int arg1)
 {
     bool enabled = (arg1 == Qt::Checked);
 
+    TOUCH_BEEP();
+
     ui->B2_sec_alarm->setEnabled(enabled);
     ui->B2_joule_alarm->setEnabled(enabled);
 
@@ -818,6 +849,8 @@ void Home::on_B2_audioalarm_stateChanged(int arg1)
 void Home::on_B2_sec_alarm_clicked()
 {
 
+    TOUCH_BEEP();
+
     ui->B2_sec_alarm->setChecked(true);
 
     ui->L2_alarm_sec_show->setVisible(true);
@@ -854,6 +887,8 @@ void Home::on_B2_sec_alarm_clicked()
 
 void Home::on_B2_joule_alarm_clicked()
 {
+    TOUCH_BEEP();
+
     ui->B2_joule_alarm->setChecked(true);
 
     ui->L2_alarm_joule_show->setVisible(true);
@@ -885,6 +920,8 @@ void Home::on_B2_alarm_sec_add_clicked()
 {
     const int maxAlarmSeconds = 20;
 
+    TOUCH_BEEP();
+
     if (alarmSeconds < maxAlarmSeconds)
         alarmSeconds += 1;
 
@@ -896,6 +933,8 @@ void Home::on_B2_alarm_sec_add_clicked()
 void Home::on_B2_alarm_sec_sub_clicked()
 {
     const int minAlarmSeconds = 0;
+
+    TOUCH_BEEP();
 
     if (alarmSeconds > minAlarmSeconds)
         alarmSeconds -= 1;
@@ -917,6 +956,9 @@ void Home::updateAlarmSecLabel()
 
 void Home::on_B2_alarm_joule_add_clicked()
 {
+
+    TOUCH_BEEP();
+
     QVector<int> steps = {10, 20, 50, 100};
 
     for (int i = 0; i < steps.size(); ++i)
@@ -935,6 +977,8 @@ void Home::on_B2_alarm_joule_add_clicked()
 
 void Home::on_B2_alarm_joule_sub_clicked()
 {
+    TOUCH_BEEP();
+
     QVector<int> steps = {10, 20, 50, 100};
 
     for (int i = steps.size() - 1; i >= 0; --i)
@@ -962,6 +1006,8 @@ void Home::updateAlarmJouleLabel()
 
 void Home::on_B2_sound_clicked()
 {
+    TOUCH_BEEP();
+
     DatabaseInitializer dbinit;
 
     QWidget *overlay = new QWidget(this);
@@ -997,6 +1043,8 @@ void Home::on_B2_sound_clicked()
 
 void Home::on_B2_brightness_clicked()
 {
+    TOUCH_BEEP();
+
     DatabaseInitializer dbinit;
 
     QWidget *overlay = new QWidget(this);
@@ -1028,6 +1076,8 @@ void Home::on_B2_brightness_clicked()
 
 void Home::on_B2_aimingbeam_clicked()
 {
+    TOUCH_BEEP();
+
     DatabaseInitializer dbinit;
 
     QWidget *overlay = new QWidget(this);
@@ -1065,6 +1115,7 @@ void Home::switchToSetting()
 
 void Home::on_B2_setting_clicked()
 {
+    TOUCH_BEEP();
     switchToSetting();
 }
 
@@ -1117,6 +1168,7 @@ void Home::switchTosurgerydata()
 
 void Home::on_B2_ready_for_surgery_clicked()
 {
+    TOUCH_BEEP();
     updatedatabase();
     switchTosurgerydata();
 }
@@ -1260,6 +1312,7 @@ void Home::setTimerResetState(bool reset)
 // Update your button click slots to just call this function
 void Home::on_B2_timer_reset_clicked()
 {
+    TOUCH_BEEP();
     timer_reset = 1;
     setTimerResetState(timer_reset);
     markProtocolModified(Q_FUNC_INFO);
@@ -1267,6 +1320,7 @@ void Home::on_B2_timer_reset_clicked()
 
 void Home::on_B2_timer_noreset_clicked()
 {
+    TOUCH_BEEP();
     timer_reset = 0;
     setTimerResetState(timer_reset);
     markProtocolModified(Q_FUNC_INFO);
@@ -1472,6 +1526,7 @@ void Home::switchTonewprotocol()
 
 void Home::on_B2_modify_protocol_clicked()
 {
+    TOUCH_BEEP();
     new_protocol = false;
     modify_protocol = true;
     switchTonewprotocol();

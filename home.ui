@@ -864,7 +864,7 @@ font-size: 48pt;</string>
          <x>20</x>
          <y>60</y>
          <width>131</width>
-         <height>21</height>
+         <height>31</height>
         </rect>
        </property>
        <property name="mouseTracking">
@@ -885,8 +885,8 @@ font-size: 48pt;</string>
         <rect>
          <x>20</x>
          <y>170</y>
-         <width>91</width>
-         <height>21</height>
+         <width>141</width>
+         <height>31</height>
         </rect>
        </property>
        <property name="mouseTracking">

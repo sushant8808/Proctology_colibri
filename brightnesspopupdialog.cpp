@@ -4,6 +4,8 @@
 #include <QVBoxLayout>
 #include "global.h"
 #include "tickedslider.h"
+#include "hardwaremanager.h"
+#include "hardwaremanagerprovider.h"
 
 BrightnessPopupDialog::BrightnessPopupDialog(QWidget *parent)
     : QDialog(parent)
@@ -39,5 +41,6 @@ BrightnessPopupDialog::BrightnessPopupDialog(QWidget *parent)
 void BrightnessPopupDialog::onSliderValueChanged(int value)
 {
     brightnessIntensity = value;
+    HardwareManagerProvider::instance()->setBrightness(value);
     //qDebug()<<brightnessIntensity;
 }

@@ -7,6 +7,7 @@
 #include "global.h"
 #include <QApplication>
 #include "runtime_manager.h"
+#include "hardwaremanager.h"
 
 #include <QSplashScreen>
 #include <QProgressBar>
@@ -14,11 +15,32 @@
 #include <QLabel>
 #include <QThread>
 
+static const char *HW_PROPERTY = "hardware_manager";
 
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
+
+    auto *hw = new HardwareManager(&a);
+
+            if (!hw->initGPIO()) {
+                qCritical("Failed to initialize GPIO");
+            }
+
+            if (!hw->initPWM()) {
+                qCritical("Failed to initialize PWM");
+            }
+
+            /*
+             * Expose hardware manager via QApplication
+             */
+            a.setProperty(HW_PROPERTY,
+                            QVariant::fromValue(static_cast<QObject *>(hw)));
+
+
+
 
     // Create a base pixmap with a size fitting your screen (e.g., 600x300)
     QPixmap splashPixmap(800, 480);

@@ -2,6 +2,10 @@ QT += core gui sql svg
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+LIBS += -lgpiod
+CONFIG += release
+QMAKE_CXXFLAGS_RELEASE += -g
+
 CONFIG += c++17
 
 # You can make your code fail to compile if it uses deprecated APIs.
@@ -17,11 +21,14 @@ SOURCES += \
     circularoverlay.cpp \
     clickablelabel.cpp \
     customkeyboard.cpp \
+    dac8552.cpp \
     databaseinitializer.cpp \
     databasemanager.cpp \
     datetime_manager.cpp \
     error_popup.cpp \
     global.cpp \
+    hardwaremanager.cpp \
+    hardwaremanagerprovider.cpp \
     home.cpp \
     home_button.cpp \
     keyboard_bt.cpp \
@@ -58,11 +65,14 @@ HEADERS += \
     circularoverlay.h \
     clickablelabel.h \
     customkeyboard.h \
+    dac8552.h \
     databaseinitializer.h \
     databasemanager.h \
     datetime_manager.h \
     error_popup.h \
     global.h \
+    hardwaremanager.h \
+    hardwaremanagerprovider.h \
     home.h \
     home_button.h \
     keyboard_bt.h \
@@ -117,3 +127,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     resource.qrc
+
+DISTFILES +=
