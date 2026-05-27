@@ -90,6 +90,8 @@ ReadyForSurgery::ReadyForSurgery(QWidget *parent, Home *home)
 
     connect(HardwareManagerProvider::instance(), &HardwareManager::fpChanged,this,&ReadyForSurgery::handleFootPedal);
 
+    connect(MainWindow::instance, &MainWindow::pause_surgery_interlock,this, &ReadyForSurgery::surgery_pause_popup);
+
     connect(ui->pushButton, &QPushButton::pressed, this, [=]() {
         if(surgery_pause == 1)
         {
@@ -681,6 +683,12 @@ void ReadyForSurgery::playNextAudio()
 
 void ReadyForSurgery::on_B5_pause_clicked()
 {
+    surgery_pause_popup();
+}
+
+void ReadyForSurgery::surgery_pause_popup()
+{
+    laserOFF();
     surgery_pause_bt = 1;
 
     popup->showMessage(
@@ -693,16 +701,6 @@ void ReadyForSurgery::on_B5_pause_clicked()
                 );
 
     surgery_pause = 1;
-
-    //    if(surgery_pause == 0)
-    //    {
-    //        surgery_pause = 1;
-    //        ui->B5_pause->setText("Resume Surgery");
-    //    }else
-    //    {
-    //        surgery_pause = 0;
-    //        ui->B5_pause->setText("Pause Surgery");
-    //    }
 }
 
 void ReadyForSurgery::end_surgery(void)

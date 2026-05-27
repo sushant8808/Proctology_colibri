@@ -64,6 +64,8 @@ extern float liveTime;
 extern bool Adv_Sim_fromSetting;
 extern bool surgery_pause_bt;
 extern bool last_theme_status;
+extern bool override_popup;
+extern bool interlock_status;
 
 extern float energyAtPress;
 extern float energyPerPedal;
@@ -76,6 +78,7 @@ extern bool startup_done;
 extern double powerValue;
 extern int dacAValue;
 extern int dacBValue;
+extern int g_stackIndex;
 
 // Timer globals
 extern int g_totalSystemMinutes;

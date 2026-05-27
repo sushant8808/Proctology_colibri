@@ -4,6 +4,8 @@
 #include <QVBoxLayout>
 #include "global.h"
 #include "tickedslider.h"
+#include "pageindex.h"
+#include "hardwaremanagerprovider.h"
 
 AimingBeamPopupDialog::AimingBeamPopupDialog(QWidget *parent)
     : QDialog(parent)
@@ -40,5 +42,6 @@ AimingBeamPopupDialog::AimingBeamPopupDialog(QWidget *parent)
 void AimingBeamPopupDialog::onSliderValueChanged(int value)
 {
     aimingbeamIntensity = value;
+    HardwareManagerProvider::instance()->demoAimingBeam(value, g_stackIndex != PAGE_READYFORSURGERY);
     //qDebug()<<aimingbeamIntensity;
 }

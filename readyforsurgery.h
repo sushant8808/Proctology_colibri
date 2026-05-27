@@ -79,6 +79,8 @@ private slots:
 
     void logEnergyValues();
 
+    void surgery_pause_popup();
+
 private:
     Ui::ReadyForSurgery *ui;
     Home *home;

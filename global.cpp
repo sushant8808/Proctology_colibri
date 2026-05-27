@@ -56,6 +56,8 @@ float liveTime = 0.0f;
 bool Adv_Sim_fromSetting = 0;
 bool surgery_pause_bt = 0;
 bool last_theme_status = 0;
+bool override_popup = 0;
+bool interlock_status = 0;
 
 float energyAtPress = 0.0f;
 float energyPerPedal = 0.0f;
@@ -68,6 +70,7 @@ bool startup_done = false;
 double powerValue = 0.0;
 int dacAValue = 0;
 int dacBValue = 0;
+int g_stackIndex = 0;
 
 int g_totalSystemMinutes = 0;
 qint64 g_surgery_ms = 0;

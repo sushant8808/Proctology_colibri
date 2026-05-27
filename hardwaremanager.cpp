@@ -135,6 +135,7 @@ void HardwareManager::handleGpioEvent(int fd)
 
             if (g.sodimmPin == 133) {
                 emit interlockChanged(value);
+                interlock_status = value;
                 qDebug() << Q_FUNC_INFO << g.sodimmPin << value << "Interlock status changed";
             }
 

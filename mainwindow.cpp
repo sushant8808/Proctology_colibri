@@ -7,6 +7,9 @@
 #include "pageindex.h"
 #include <QStackedWidget>
 #include <QVBoxLayout>
+#include "hardwaremanagerprovider.h"
+#include "error_popup.h"
+
 
 MainWindow* MainWindow::instance = nullptr;
 
@@ -20,6 +23,10 @@ MainWindow::MainWindow(QWidget *parent, QLabel *statusLabel, QProgressBar *progr
     this->setWindowFlags(Qt::FramelessWindowHint);
 
     instance = this;
+
+    popup = new error_popup(this);
+//    popup->setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+//    popup->setWindowModality(Qt::ApplicationModal);
 
     QWidget* central = new QWidget(this);
     QVBoxLayout* layout = new QVBoxLayout(central);
@@ -151,6 +158,31 @@ MainWindow::MainWindow(QWidget *parent, QLabel *statusLabel, QProgressBar *progr
 
     updateProgress(100, "System Ready!");
 
+    // Your runtime connection handler
+    connect(HardwareManagerProvider::instance(), &HardwareManager::interlockChanged,
+            this, [this](bool status) {
+        qDebug() << "Interlock loop status safely processed via Signal:" << status;
+        interlock_popup(status);
+    });
+
+    // Your setup initialization handler
+    QTimer::singleShot(100, this, [this]() {
+        bool currentStatus = HardwareManagerProvider::instance()->gpioValue(133);
+        qDebug() << "Initial Interlock status processed via explicit query:" << currentStatus;
+        interlock_popup(currentStatus);
+    });
+
+    connect(popup, &error_popup::acknowledged,
+            this,[this](){
+
+        if(override_popup) {
+            override_popup = 0;
+            popup->hidePopup();
+        }
+
+        qDebug() << "ok";
+    });
+
     if(password_enable == 0)
     {
         switchPage(PAGE_HOME);
@@ -176,4 +208,35 @@ void MainWindow::switchPage(int index)
         return;
 
     stackedWidget->setCurrentIndex(index);
+}
+
+void MainWindow::interlock_popup(bool status)
+{
+    if(!status)
+    {
+        int currentIndex = stackedWidget->currentIndex();
+
+        if(currentIndex == PAGE_READYFORSURGERY)
+        {
+            emit pause_surgery_interlock();
+        }
+        override_popup = 1;
+
+        popup->showMessage(
+                    "INTERLOCK KEY DISCONNECTED",
+                    "Connect the key to proceed.\n"
+                    "OR\n"
+                    "Press override button.",
+                    error_popup::Warning,
+                    true
+                    );
+
+        popup->raise();
+        popup->activateWindow();
+    }else
+    {
+        override_popup = 0;
+        popup->hidePopup();
+    }
+
 }

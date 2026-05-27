@@ -215,16 +215,18 @@ void error_popup::showMessage(const QString &title,
 
     if(surgery_pause_bt)
         ackButton->setText("RESUME");
+    else if(override_popup)
+        ackButton->setText("Override");
     else
         ackButton->setText("OK");
 
-    if(surgery_pause_bt)
+    if(surgery_pause_bt || override_popup)
     {
         ackButton->setStyleSheet(
                     "QPushButton {"
             "background-color: rgb(255, 97, 34);"
             "color: white;"
-            "max-width: 120px;"
+            "max-width: 150px;"
             "border: 1px solid rgb(255, 97, 34);"
             "border-radius: 25px;"
             "font-size:20px;"

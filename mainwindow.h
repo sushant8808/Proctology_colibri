@@ -22,6 +22,7 @@
 #include "calibration_screen.h"
 #include "set_date_time.h"
 #include "changepassword.h"
+#include "error_popup.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -43,10 +44,17 @@ public:
 
     void switchPage(int index);
 
+    void interlock_popup(bool status);
+
 private:
     Ui::MainWindow *ui;
 
+    error_popup *popup;
+
     QStackedWidget* stackedWidget;
+
+signals:
+    void pause_surgery_interlock(void);
 
 public:
 

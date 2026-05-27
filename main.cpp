@@ -455,13 +455,6 @@ int main(int argc, char *argv[])
     // Fetch
     // fetchPresetProtocolById("preset_protocol_ent", 1);
 
-    // dbinit.addColumn(
-    //     "password",
-    //     "pass_unable",
-    //     "INTEGER",
-    //     "1"
-    //     );
-
 
     // dbinit.printSQLiteVersion();
     // QStringList keepColumns = {
