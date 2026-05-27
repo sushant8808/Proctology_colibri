@@ -68,7 +68,7 @@ bool HardwareManager::initGPIO()
     const Mapping mappings[] = {
         {129, "gpiochip0", 2}, //MS-S - FP_Detect
         {131, "gpiochip4", 5}, //MS-1 - FP_Button
-        {133, "gpiochip3", 14},//MS-2
+        {133, "gpiochip3", 14},//MS-2 - Interlock Hardware line
         {135, "gpiochip0", 24},//MS-3
         {71,  "gpiochip0", 11},  //SS-S
         {73,  "gpiochip1", 4},   //SS-1
@@ -107,11 +107,11 @@ bool HardwareManager::initGPIO()
             line,
             notifier
         };
-//        qDebug()<<Q_FUNC_INFO<<m_gpios[m.sodimm].sodimmPin \
-//               <<m_gpios[m.sodimm].chip \
-//              <<m_gpios[m.sodimm].gpiodLine \
-//                  << m_gpios[m.sodimm].line \
-//                << m_gpios[m.sodimm].notifier;
+        //        qDebug()<<Q_FUNC_INFO<<m_gpios[m.sodimm].sodimmPin \
+        //               <<m_gpios[m.sodimm].chip \
+        //              <<m_gpios[m.sodimm].gpiodLine \
+        //                  << m_gpios[m.sodimm].line \
+        //                << m_gpios[m.sodimm].notifier;
     }
 
     return true;
@@ -126,11 +126,18 @@ void HardwareManager::handleGpioEvent(int fd)
 
             bool value = gpiod_line_get_value(g.gpiodLine);
             emit gpioChanged(g.sodimmPin, value);
+
             if(g.sodimmPin == 131){
                 emit fpChanged(value);
-                            qDebug()<<Q_FUNC_INFO<<g.sodimmPin<<value<<"FP changed";
+                qDebug()<<Q_FUNC_INFO<<g.sodimmPin<<value<<"FP changed";
             }
-//            qDebug()<<Q_FUNC_INFO<<g.sodimmPin<<value;
+
+            if (g.sodimmPin == 133) {
+                emit interlockChanged(value);
+                qDebug() << Q_FUNC_INFO << g.sodimmPin << value << "Interlock status changed";
+            }
+
+            //            qDebug()<<Q_FUNC_INFO<<g.sodimmPin<<value;
             break;
         }
     }
@@ -151,7 +158,7 @@ void HardwareManager::setBrightness(int level)
     // Clamp level to known range
     level = qBound(1, level, 5);
     int val = static_cast<int>(BrightnessLevel[level-1]);
-//    val = qBound(0, val, 4);
+    //    val = qBound(0, val, 4);
 
     QFile f(brightnessPath);
     if (!f.open(QIODevice::WriteOnly)) {
@@ -167,12 +174,12 @@ void HardwareManager::setBrightness(int level)
 
 void HardwareManager::demoAimingBeam(int level, bool timeout)
 {
-const auto &pwm = m_pwms['E']; // PWM E for Aiming Beam
+    const auto &pwm = m_pwms['E']; // PWM E for Aiming Beam
 
-setPwmSafe(pwm, AimingBeamLevel[level-1] , AIMING_BEAM_PERIOD);
+    setPwmSafe(pwm, AimingBeamLevel[level-1] , AIMING_BEAM_PERIOD);
 
     if(timeout){
-    QTimer::singleShot(2000, this, [this]() {
+        QTimer::singleShot(2000, this, [this]() {
             writeSysfs(m_pwms['E'].pwmPath + "/enable", "0");
         });
     }
@@ -188,7 +195,7 @@ void HardwareManager::setAimingBeam(bool val)
 bool HardwareManager::initPWM()
 {
 
-        /*
+    /*
          * Mapping:
          * PWM A → pwmchip0/pwm0
          * PWM B → pwmchip1/pwm0
@@ -198,31 +205,31 @@ bool HardwareManager::initPWM()
          *
          * ⚠️ VERIFY on your board
          */
-//        m_pwms['A'] = { "/sys/class/pwm/pwmchip0",
-//                        "/sys/class/pwm/pwmchip0/pwm0" };
-        m_pwms['B'] = { "/sys/class/pwm/pwmchip1",
-                        "/sys/class/pwm/pwmchip1/pwm0" };
-        m_pwms['C'] = { "/sys/class/pwm/pwmchip2",
-                        "/sys/class/pwm/pwmchip2/pwm0" };
-        m_pwms['D'] = { "/sys/class/pwm/pwmchip3",
-                        "/sys/class/pwm/pwmchip3/pwm0" };
-        m_pwms['E'] = { "/sys/class/pwm/pwmchip4",
-                        "/sys/class/pwm/pwmchip4/pwm0" };
+    //        m_pwms['A'] = { "/sys/class/pwm/pwmchip0",
+    //                        "/sys/class/pwm/pwmchip0/pwm0" };
+    m_pwms['B'] = { "/sys/class/pwm/pwmchip1",
+                    "/sys/class/pwm/pwmchip1/pwm0" };
+    m_pwms['C'] = { "/sys/class/pwm/pwmchip2",
+                    "/sys/class/pwm/pwmchip2/pwm0" };
+    m_pwms['D'] = { "/sys/class/pwm/pwmchip3",
+                    "/sys/class/pwm/pwmchip3/pwm0" };
+    m_pwms['E'] = { "/sys/class/pwm/pwmchip4",
+                    "/sys/class/pwm/pwmchip4/pwm0" };
 
-        for (auto it = m_pwms.begin(); it != m_pwms.end(); ++it) {
-            const auto &pwm = it.value();
+    for (auto it = m_pwms.begin(); it != m_pwms.end(); ++it) {
+        const auto &pwm = it.value();
 
-            // Export pwm0 if not already exported
-            if (!QFile::exists(pwm.pwmPath)) {
-                if (!writeSysfs(pwm.chipPath + "/export", "0"))
-                    return false;
-            }
-
-            // Disable before configuring (required by kernel)
-            writeSysfs(pwm.pwmPath + "/enable", "0");
+        // Export pwm0 if not already exported
+        if (!QFile::exists(pwm.pwmPath)) {
+            if (!writeSysfs(pwm.chipPath + "/export", "0"))
+                return false;
         }
 
-        return true;
+        // Disable before configuring (required by kernel)
+        writeSysfs(pwm.pwmPath + "/enable", "0");
+    }
+
+    return true;
 
 
 }
@@ -254,27 +261,27 @@ bool HardwareManager::initPWM()
 void HardwareManager::setPwmSafe(const PwmChannel &pwm, int dutyNs, int periodNs)
 {
     // Clamp duty <= period
-        if (dutyNs > periodNs)
-            dutyNs = periodNs;
+    if (dutyNs > periodNs)
+        dutyNs = periodNs;
 
-        // 1️⃣ Disable PWM before changing anything
-        writeSysfs(pwm.pwmPath + "/enable", "0");
+    // 1️⃣ Disable PWM before changing anything
+    writeSysfs(pwm.pwmPath + "/enable", "0");
 
-        // 2️⃣ Temporarily increase period if needed
-        int currentPeriod = periodNs;
-        if (dutyNs > periodNs) {
-            // use very large period to safely assign duty
-            writeSysfs(pwm.pwmPath + "/period", "1000000000"); // 1 second
-        }
+    // 2️⃣ Temporarily increase period if needed
+    int currentPeriod = periodNs;
+    if (dutyNs > periodNs) {
+        // use very large period to safely assign duty
+        writeSysfs(pwm.pwmPath + "/period", "1000000000"); // 1 second
+    }
 
-        // 3️⃣ Assign duty
-        writeSysfs(pwm.pwmPath + "/duty_cycle", QString::number(dutyNs));
+    // 3️⃣ Assign duty
+    writeSysfs(pwm.pwmPath + "/duty_cycle", QString::number(dutyNs));
 
-        // 4️⃣ Assign final period
-        writeSysfs(pwm.pwmPath + "/period", QString::number(periodNs));
+    // 4️⃣ Assign final period
+    writeSysfs(pwm.pwmPath + "/period", QString::number(periodNs));
 
-        // 5️⃣ Enable PWM
-        writeSysfs(pwm.pwmPath + "/enable", "1");
+    // 5️⃣ Enable PWM
+    writeSysfs(pwm.pwmPath + "/enable", "1");
 }
 
 void HardwareManager::setPwm(const PwmChannel &pwm,
@@ -292,59 +299,59 @@ void HardwareManager::beep(BuzzerType type)
 {
     const auto &pwm = m_pwms['C']; // PWM C for buzzer
 
-        struct Tone {
-            int freqHz;
-            int dutyPercent;
-            int durationMs;
-        };
+    struct Tone {
+        int freqHz;
+        int dutyPercent;
+        int durationMs;
+    };
 
-        QList<Tone> tones;
+    QList<Tone> tones;
 
-        int setVolume = volume[beepIntensity-1];
-        switch (type) {
-        case TouchBeep:
-            tones.append({1200, setVolume, 50});  // single short beep
-            break;
+    int setVolume = volume[beepIntensity-1];
+    switch (type) {
+    case TouchBeep:
+        tones.append({1200, setVolume, 50});  // single short beep
+        break;
 
-        case ErrorBeep:
-            // dual-tone: 1200Hz 300ms + 2400Hz 300ms
-            tones.append({2400, setVolume, 100});
-            tones.append({2400, setVolume, 100});
-            tones.append({2400, setVolume, 100});
-            break;
+    case ErrorBeep:
+        // dual-tone: 1200Hz 300ms + 2400Hz 300ms
+        tones.append({2400, setVolume, 100});
+        tones.append({2400, setVolume, 100});
+        tones.append({2400, setVolume, 100});
+        break;
 
-        case WarningBeep:
-            // dual-tone shorter
-            tones.append({1200, setVolume, 150});
-            tones.append({2400, setVolume, 100});
-            break;
+    case WarningBeep:
+        // dual-tone shorter
+        tones.append({1200, setVolume, 150});
+        tones.append({2400, setVolume, 100});
+        break;
 
-        case SuccessBeep:
-            // two short pulses
-            tones.append({1200, setVolume, 80});
-            tones.append({1200, setVolume, 80});
-            break;
-        }
+    case SuccessBeep:
+        // two short pulses
+        tones.append({1200, setVolume, 80});
+        tones.append({1200, setVolume, 80});
+        break;
+    }
 
-        // Chain tones sequentially using QTimer
-        int delay = 0;
-        for (const auto &t : tones) {
-            QTimer::singleShot(delay, this, [this, pwm, t]() {
-                int periodNs = freqToPeriodNs(t.freqHz);
-                int dutyNs = volumeToDutyNs(periodNs, t.dutyPercent);
+    // Chain tones sequentially using QTimer
+    int delay = 0;
+    for (const auto &t : tones) {
+        QTimer::singleShot(delay, this, [this, pwm, t]() {
+            int periodNs = freqToPeriodNs(t.freqHz);
+            int dutyNs = volumeToDutyNs(periodNs, t.dutyPercent);
 
-                // Configure PWM
+            // Configure PWM
+            writeSysfs(pwm.pwmPath + "/enable", "0");
+            //                writeSysfs(pwm.pwmPath + "/period", QString::number(periodNs));
+            //                writeSysfs(pwm.pwmPath + "/duty_cycle", QString::number(dutyNs));
+            //                writeSysfs(pwm.pwmPath + "/enable", "1");
+            setPwmSafe(pwm, dutyNs, periodNs);
+
+            // Stop after duration
+            QTimer::singleShot(t.durationMs, this, [pwm]() {
                 writeSysfs(pwm.pwmPath + "/enable", "0");
-//                writeSysfs(pwm.pwmPath + "/period", QString::number(periodNs));
-//                writeSysfs(pwm.pwmPath + "/duty_cycle", QString::number(dutyNs));
-//                writeSysfs(pwm.pwmPath + "/enable", "1");
-                setPwmSafe(pwm, dutyNs, periodNs);
-
-                // Stop after duration
-                QTimer::singleShot(t.durationMs, this, [pwm]() {
-                    writeSysfs(pwm.pwmPath + "/enable", "0");
-                });
             });
-            delay += t.durationMs + 20; // small gap between tones
-        }
+        });
+        delay += t.durationMs + 20; // small gap between tones
+    }
 }

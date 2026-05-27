@@ -122,6 +122,11 @@ Home::Home(QWidget *parent)
 
     ui->L2_protocol_show->installEventFilter(this);
 
+    connect(HardwareManagerProvider::instance(), &HardwareManager::interlockChanged,
+            this, [](bool status) {
+        qDebug() << "Interlock loop status safely processed:" << status;
+    });
+
 }
 
 Home::~Home()

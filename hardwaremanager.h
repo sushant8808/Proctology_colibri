@@ -37,6 +37,7 @@ public:
 signals:
     void gpioChanged(int sodimmPin, bool value);
     void fpChanged(bool value);
+    void interlockChanged(bool status);
 
 private slots:
     void handleGpioEvent(int fd);
