@@ -149,7 +149,7 @@ void Home::on_B2_980add_clicked()
 
     power980 += step;
 
-    if (power980 > 15.0)
+    if (power980 >= 15.0)
     {
         power980 = 15.0;
         WARNING_BEEP();
@@ -207,7 +207,7 @@ void Home::on_B2_1470add_clicked()
 
     power1470 += step;
 
-    if (power1470 > 15.0) {
+    if (power1470 >= 15.0) {
         power1470 = 15.0;
         WARNING_BEEP();
     }else
@@ -267,6 +267,7 @@ void Home::on_B2_timer_on_clicked()
 void Home::update_B2_timer_on(void)
 {
     timerFlag = true;
+    TimerSec = 1;
     ui->L2_energy_show->show();
     ui->L2_timer_show->show();
     ui->B2_timer_add->setEnabled(true);
@@ -328,8 +329,13 @@ void Home::update_B2_timer_off(void)
 void Home::on_B2_timer_add_clicked()
 {
     if (ui->B2_timer_on->isChecked()) {
-        if (TimerSec < 120) TimerSec++;
-        TOUCH_BEEP();
+        if (TimerSec < 120)
+        {
+            TimerSec++;
+            TOUCH_BEEP();
+        }else
+            WARNING_BEEP();
+
         updateTimerLabel();
         updateJouleLabel();
         markProtocolModified(Q_FUNC_INFO);
@@ -340,8 +346,11 @@ void Home::on_B2_timer_add_clicked()
 void Home::on_B2_timer_sub_clicked()
 {
     if (ui->B2_timer_on->isChecked()) {
-        if (TimerSec > 1) TimerSec--;
-        TOUCH_BEEP();
+        if (TimerSec > 1) {
+            TimerSec--;
+            TOUCH_BEEP();
+        }else
+            WARNING_BEEP();
         updateTimerLabel();
         updateJouleLabel();
         markProtocolModified(Q_FUNC_INFO);
@@ -507,8 +516,10 @@ int Home::incrementPulseValue(int valueUs)
 
     valueUs += getStepForValue(valueUs);
 
-    if (valueUs > pulseMaxLimit)
+    if (valueUs > pulseMaxLimit) {
         valueUs = pulseMaxLimit;
+        WARNING_BEEP();
+    }
 
     return valueUs;
 }
@@ -538,8 +549,10 @@ int Home::decrementPulseValue(int valueUs)
 
     valueUs -= getStepForValue(valueUs);
 
-    if (valueUs < pulseMinLimit)
+    if (valueUs < pulseMinLimit) {
         valueUs = pulseMinLimit;
+        WARNING_BEEP();
+    }
 
     return valueUs;
 }
@@ -920,10 +933,13 @@ void Home::on_B2_alarm_sec_add_clicked()
 {
     const int maxAlarmSeconds = 20;
 
-    TOUCH_BEEP();
 
-    if (alarmSeconds < maxAlarmSeconds)
+
+    if (alarmSeconds < maxAlarmSeconds) {
         alarmSeconds += 1;
+        TOUCH_BEEP();
+    }else
+        WARNING_BEEP();
 
     updateAlarmSecLabel();
     markProtocolModified(Q_FUNC_INFO);
@@ -934,11 +950,13 @@ void Home::on_B2_alarm_sec_sub_clicked()
 {
     const int minAlarmSeconds = 0;
 
-    TOUCH_BEEP();
 
-    if (alarmSeconds > minAlarmSeconds)
+
+    if (alarmSeconds > minAlarmSeconds) {
         alarmSeconds -= 1;
-
+        TOUCH_BEEP();
+    }else
+        WARNING_BEEP();
     updateAlarmSecLabel();
     markProtocolModified(Q_FUNC_INFO);
     qDebug()<<alarmSeconds<<alarmJoules;
@@ -957,8 +975,6 @@ void Home::updateAlarmSecLabel()
 void Home::on_B2_alarm_joule_add_clicked()
 {
 
-    TOUCH_BEEP();
-
     QVector<int> steps = {10, 20, 50, 100};
 
     for (int i = 0; i < steps.size(); ++i)
@@ -968,6 +984,12 @@ void Home::on_B2_alarm_joule_add_clicked()
             alarmJoules = steps[i];
             break;
         }
+    }
+
+    if(alarmJoules < 10 && alarmJoules < 100) {
+        TOUCH_BEEP();
+    }else {
+        WARNING_BEEP();
     }
 
     updateAlarmJouleLabel();
@@ -989,6 +1011,8 @@ void Home::on_B2_alarm_joule_sub_clicked()
             break;
         }
     }
+
+
 
     updateAlarmJouleLabel();
     markProtocolModified(Q_FUNC_INFO);

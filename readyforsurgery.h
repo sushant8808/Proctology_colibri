@@ -12,6 +12,9 @@
 #include <QQueue>
 #include <QString>
 #include "error_popup.h"
+#include "dac8552.h"
+#include "hardwaremanager.h"
+#include "hardwaremanagerprovider.h"
 
 
 
@@ -29,6 +32,7 @@ public:
     ~ReadyForSurgery();
 
 protected:
+    QStackedWidget* stack;
     void showEvent(QShowEvent *event) override;
 
 private:
@@ -65,6 +69,16 @@ private slots:
 
     void resetSurgerySession();
 
+    void handleFootPedal(bool value);
+
+    void laserON();
+
+    void laserOFF();
+
+    void timerRingHandler();
+
+    void logEnergyValues();
+
 private:
     Ui::ReadyForSurgery *ui;
     Home *home;
@@ -78,6 +92,8 @@ private:
 
     error_popup *popup;
 
+    DAC8552 m_dac;
+
     int lastAnnouncedEnergy = 0;
     int lastAnnouncedSeconds = 0;
     bool isPlaying = false;
@@ -87,6 +103,9 @@ private:
 
 
     QTimer *energyUpdateTimer = nullptr;
+    QTimer pulseOnTimer;
+    QTimer pulseOffTimer;
+    bool m_fp_pressed;
 
     void updateEnergy();
 

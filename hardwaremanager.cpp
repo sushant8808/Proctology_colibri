@@ -149,9 +149,9 @@ void HardwareManager::setBrightness(int level)
 
 
     // Clamp level to known range
-
+    level = qBound(1, level, 5);
     int val = static_cast<int>(BrightnessLevel[level-1]);
-    val = qBound(0, val, 4);
+//    val = qBound(0, val, 4);
 
     QFile f(brightnessPath);
     if (!f.open(QIODevice::WriteOnly)) {
@@ -300,7 +300,7 @@ void HardwareManager::beep(BuzzerType type)
 
         QList<Tone> tones;
 
-        int setVolume = volume[soundIntensity-1];
+        int setVolume = volume[beepIntensity-1];
         switch (type) {
         case TouchBeep:
             tones.append({1200, setVolume, 50});  // single short beep

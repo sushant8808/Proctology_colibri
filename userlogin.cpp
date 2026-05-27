@@ -7,6 +7,7 @@
 #include "usage_area.h"
 #include "mainwindow.h"
 #include "pageindex.h"
+#include "hardwaremanagerprovider.h"
 
 Userlogin::Userlogin(QWidget *parent, Home *home)
     : QWidget(parent)
@@ -51,37 +52,42 @@ void Userlogin::appendDigit(const QString &digit)
     ui->L1_passcheck->setText("");
 }
 
-void Userlogin::on_B1_pass_0_clicked() { appendDigit("0"); }
-void Userlogin::on_B1_pass_1_clicked() { appendDigit("1"); }
-void Userlogin::on_B1_pass_2_clicked() { appendDigit("2"); }
-void Userlogin::on_B1_pass_3_clicked() { appendDigit("3"); }
-void Userlogin::on_B1_pass_4_clicked() { appendDigit("4"); }
-void Userlogin::on_B1_pass_5_clicked() { appendDigit("5"); }
-void Userlogin::on_B1_pass_6_clicked() { appendDigit("6"); }
-void Userlogin::on_B1_pass_7_clicked() { appendDigit("7"); }
-void Userlogin::on_B1_pass_8_clicked() { appendDigit("8"); }
-void Userlogin::on_B1_pass_9_clicked() { appendDigit("9"); }
+void Userlogin::on_B1_pass_0_clicked() { appendDigit("0"); TOUCH_BEEP();}
+void Userlogin::on_B1_pass_1_clicked() { appendDigit("1"); TOUCH_BEEP();}
+void Userlogin::on_B1_pass_2_clicked() { appendDigit("2"); TOUCH_BEEP();}
+void Userlogin::on_B1_pass_3_clicked() { appendDigit("3"); TOUCH_BEEP();}
+void Userlogin::on_B1_pass_4_clicked() { appendDigit("4"); TOUCH_BEEP();}
+void Userlogin::on_B1_pass_5_clicked() { appendDigit("5"); TOUCH_BEEP();}
+void Userlogin::on_B1_pass_6_clicked() { appendDigit("6"); TOUCH_BEEP();}
+void Userlogin::on_B1_pass_7_clicked() { appendDigit("7"); TOUCH_BEEP();}
+void Userlogin::on_B1_pass_8_clicked() { appendDigit("8"); TOUCH_BEEP();}
+void Userlogin::on_B1_pass_9_clicked() { appendDigit("9"); TOUCH_BEEP();}
 
 void Userlogin::on_B1_pass_ok_clicked()
 {
     if (enteredPassword.length() != 4) {
         ui->L1_passcheck->setText("Enter 4 digits");
+        WARNING_BEEP();
         return;
     }
 
     if ((enteredPassword == loginpass) && (user_admin_mode == 0)) {
         ui->L1_passcheck->setText("Correct");
+        SUCCESS_BEEP()
         QTimer::singleShot(0, this, &Userlogin::switchToHome);
     }else if((enteredPassword == adminpass) && (user_admin_mode == 1))
     {
         ui->L1_passcheck->setText("Correct");
+        SUCCESS_BEEP()
         QTimer::singleShot(0, this, &Userlogin::switchToServiceEngArea);
     }else if((enteredPassword == userpass) && (user_admin_mode == 2))
     {
         ui->L1_passcheck->setText("Correct");
+        SUCCESS_BEEP()
         QTimer::singleShot(0, this, &Userlogin::switchToUsageArea);
     }else {
         ui->L1_passcheck->setText("Incorrect password");
+        WARNING_BEEP();
         enteredPassword.clear();
         ui->L1_passprint->setText("");
     }
@@ -89,6 +95,7 @@ void Userlogin::on_B1_pass_ok_clicked()
 
 void Userlogin::on_B1_pass_c_clicked()
 {
+    TOUCH_BEEP();
     enteredPassword.clear();
     ui->L1_passprint->setText("");
     ui->L1_passcheck->setText("");
