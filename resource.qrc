@@ -35,6 +35,10 @@
         <file>negative_light_disabled.png</file>
         <file>positive_dark_disabled.png</file>
         <file>positive_light_disabled.png</file>
+        <file>interlock_connected_dark.png</file>
+        <file>interlock_connected_light.png</file>
+        <file>interlock_disconnected_dark.png</file>
+        <file>interlock_disconnected_light.png</file>
     </qresource>
     <qresource prefix="/audio">
         <file>Audio/0001.mp3</file>

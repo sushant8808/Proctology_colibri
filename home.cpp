@@ -122,9 +122,18 @@ Home::Home(QWidget *parent)
 
     ui->L2_protocol_show->installEventFilter(this);
 
+    // Your runtime connection handler
     connect(HardwareManagerProvider::instance(), &HardwareManager::interlockChanged,
-            this, [](bool status) {
-        qDebug() << "Interlock loop status safely processed:" << status;
+            this, [this](bool status) {
+        qDebug() << "Interlock loop status safely processed via Signal:" << status;
+        updateInterlockUi(status);
+    });
+
+    // Your setup initialization handler
+    QTimer::singleShot(100, this, [this]() {
+        bool currentStatus = HardwareManagerProvider::instance()->gpioValue(133);
+        qDebug() << "Initial Interlock status processed via explicit query:" << currentStatus;
+        updateInterlockUi(currentStatus);
     });
 
 }
@@ -1571,5 +1580,16 @@ bool Home::eventFilter(QObject *obj, QEvent *event)
     }
 
     return QWidget::eventFilter(obj, event);
+}
+
+void Home::updateInterlockUi(bool status)
+{
+    if (status) {
+        ui->Interlock_key->setStyleSheet(dark ? "background-image:url(:/icons/interlock_connected_dark.png);"
+                                              : "background-image:url(:/icons/interlock_connected_light.png);");
+    } else {
+        ui->Interlock_key->setStyleSheet(dark ? "background-image:url(:/icons/interlock_disconnected_dark.png);"
+                                              : "background-image:url(:/icons/interlock_disconnected_light.png);");
+    }
 }
 

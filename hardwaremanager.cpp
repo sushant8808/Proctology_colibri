@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <unistd.h>
 #include "global.h"
+
 static bool writeSysfs(const QString &path, const QString &value)
 {
     QFile f(path);

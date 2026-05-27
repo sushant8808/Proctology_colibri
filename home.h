@@ -36,6 +36,9 @@ public:
     QString formatPulseTime(int valueUs);
     QString getPulseUnit(int valueUs);
 
+
+
+
 private slots:
 
     void switchToLogin();
@@ -135,6 +138,9 @@ private slots:
     void on_B2_sec_alarm_clicked();
 
     void on_B2_joule_alarm_clicked();
+
+    void updateInterlockUi(bool status);
+
 
 protected:
     void showEvent(QShowEvent *event) override;
