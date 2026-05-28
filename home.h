@@ -23,6 +23,7 @@ class Home : public QWidget
 public:
     explicit Home(QWidget *parent = nullptr);
     ~Home();
+
     void setSimplifiedMode();
     void setAdvancedMode();
     void updatedatabase();
@@ -35,6 +36,8 @@ public:
 
     QString formatPulseTime(int valueUs);
     QString getPulseUnit(int valueUs);
+
+    void updateInterlockUi(bool status);
 
 
 
@@ -139,7 +142,7 @@ private slots:
 
     void on_B2_joule_alarm_clicked();
 
-    void updateInterlockUi(bool status);
+
 
 
 protected:

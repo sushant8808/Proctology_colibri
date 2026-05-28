@@ -24,9 +24,7 @@ MainWindow::MainWindow(QWidget *parent, QLabel *statusLabel, QProgressBar *progr
 
     instance = this;
 
-    popup = new error_popup(this);
-//    popup->setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
-//    popup->setWindowModality(Qt::ApplicationModal);
+    popup1 = new error_popup(this);
 
     QWidget* central = new QWidget(this);
     QVBoxLayout* layout = new QVBoxLayout(central);
@@ -42,51 +40,6 @@ MainWindow::MainWindow(QWidget *parent, QLabel *statusLabel, QProgressBar *progr
     // -----------------------------
     // CREATE PAGES ONLY ONCE
     // -----------------------------
-
-    //    homePage =
-    //        new Home(stackedWidget);
-
-    //    userloginPage =
-    //        new Userlogin(stackedWidget, homePage);
-
-    //    settingPage =
-    //        new Setting(stackedWidget, homePage);
-
-    //    pulseModePage =
-    //        new PulseMode(stackedWidget, homePage);
-
-    //    protocolSelectPage =
-    //        new protocolselect(stackedWidget, homePage);
-
-    //    newProtocolPage =
-    //        new newcustomprotocol(stackedWidget, homePage);
-
-    //    readyForSurgeryPage =
-    //        new ReadyForSurgery(stackedWidget, homePage);
-
-    //    surgeryDataPage =
-    //        new Surgery_data(stackedWidget, homePage);
-
-    //    usageAreaPage =
-    //        new usage_area(stackedWidget, homePage);
-
-    //    systemUsagesPage =
-    //        new system_usages(stackedWidget, homePage);
-
-    //    rentalInfoPage =
-    //        new rental_info(stackedWidget, homePage);
-
-    //    serviceEngineerPage =
-    //        new service_engineer_area(stackedWidget, homePage);
-
-    //    calibrationPage =
-    //        new Calibration_screen(stackedWidget, homePage);
-
-    //    setDateTimePage =
-    //        new Set_date_time(stackedWidget, homePage);
-
-    //    changePasswordPage =
-    //        new changepassword(stackedWidget, homePage);
 
     updateProgress(75, "Loading Core Interface...");
     homePage = new Home(stackedWidget);
@@ -165,19 +118,13 @@ MainWindow::MainWindow(QWidget *parent, QLabel *statusLabel, QProgressBar *progr
         interlock_popup(status);
     });
 
-    // Your setup initialization handler
-    QTimer::singleShot(100, this, [this]() {
-        bool currentStatus = HardwareManagerProvider::instance()->gpioValue(133);
-        qDebug() << "Initial Interlock status processed via explicit query:" << currentStatus;
-        interlock_popup(currentStatus);
-    });
-
-    connect(popup, &error_popup::acknowledged,
+    connect(popup1, &error_popup::acknowledged,
             this,[this](){
 
-        if(override_popup) {
-            override_popup = 0;
-            popup->hidePopup();
+        if(override_popup == 1) {
+            override_popup = 2;
+            popup1->hidePopup();
+            qDebug() << "override_popup"<<override_popup;
         }
 
         qDebug() << "ok";
@@ -212,17 +159,23 @@ void MainWindow::switchPage(int index)
 
 void MainWindow::interlock_popup(bool status)
 {
-    if(!status)
+    if (!status) // Interlock Key is DISCONNECTED
     {
-        int currentIndex = stackedWidget->currentIndex();
+        qDebug() << "override_popup"<<override_popup;
 
+        if (override_popup == 2) {
+            return;
+        }
+
+        int currentIndex = stackedWidget->currentIndex();
         if(currentIndex == PAGE_READYFORSURGERY)
         {
             emit pause_surgery_interlock();
         }
-        override_popup = 1;
 
-        popup->showMessage(
+        override_popup = 1; // Mark that the warning is currently active
+
+        popup1->showMessage(
                     "INTERLOCK KEY DISCONNECTED",
                     "Connect the key to proceed.\n"
                     "OR\n"
@@ -231,12 +184,15 @@ void MainWindow::interlock_popup(bool status)
                     true
                     );
 
-        popup->raise();
-        popup->activateWindow();
-    }else
+        popup1->raise();
+        popup1->activateWindow();
+    }
+    else // Interlock Key is SAFELY CONNECTED
     {
+        // Only completely reset the state when the physical key returns!
         override_popup = 0;
-        popup->hidePopup();
+        popup1->hidePopup();
+        qDebug() << "🔒 Interlock loop physically closed. Resetting override status.";
     }
 
 }

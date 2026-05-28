@@ -92,6 +92,10 @@ ReadyForSurgery::ReadyForSurgery(QWidget *parent, Home *home)
 
     connect(MainWindow::instance, &MainWindow::pause_surgery_interlock,this, &ReadyForSurgery::surgery_pause_popup);
 
+    // Change these two lines in your constructor:
+    connect(&pulseOnTimer, &QTimer::timeout, this, &ReadyForSurgery::handlePulseOnTimeout);
+    connect(&pulseOffTimer, &QTimer::timeout, this, &ReadyForSurgery::handlePulseOffTimeout);
+
     connect(ui->pushButton, &QPushButton::pressed, this, [=]() {
         if(surgery_pause == 1)
         {
@@ -572,23 +576,30 @@ void ReadyForSurgery::updateEnergy()
 {
     if (timerFlag == 1 && timerRing->getCurrentValue() <= 0.0f)
     {
-        qDebug() << "⛔ Timer reached zero → Auto stopping laser";
+        qDebug() << "⛔ Timer reached zero → Force Killing Laser & Pulse Timers";
 
-        g_runtimeManager->set980Active(false);
-        g_runtimeManager->set1470Active(false);
-
+        // Kill ALL active background drivers completely
+        pulseOnTimer.stop();
+        pulseOffTimer.stop();
         energyUpdateTimer->stop();
         timerRing->stopTimerAnimation();
 
-        if (timer_reset == 1)
-        {
+        // Safe Hardware Shutoff
+        m_dac.setDac(0, 0);
+        m_dac.setDac(1, 0);
+        g_runtimeManager->set980Active(false);
+        g_runtimeManager->set1470Active(false);
+
+        if (timer_reset == 1) {
             timerRing->resetTimer();
         }
 
         ui->pushButton->setText("Laser OFF");
-        ui->pushButton->setStyleSheet(
-                    "background-color: gray; color: black; font: 12pt \"Roboto\";");
+        ui->pushButton->setStyleSheet("background-color: gray; color: black; font: 12pt \"Roboto\";");
 
+        // Finalize calculations and log to DB once on completion
+        energyAtRelease = new_totalEnergyDelivered + new2_totalEnergyDelivered;
+        logEnergyValues();
         return;
     }
 
@@ -688,7 +699,7 @@ void ReadyForSurgery::on_B5_pause_clicked()
 
 void ReadyForSurgery::surgery_pause_popup()
 {
-    laserOFF();
+//    laserOFF();
     surgery_pause_bt = 1;
 
     popup->showMessage(
@@ -890,31 +901,44 @@ void ReadyForSurgery::refreshPage()
 
 void ReadyForSurgery::handleFootPedal(bool value)
 {
-    // Corrected Hardware Logic Mapping:
-    // If value == 1 (true)  -> Pedal is physically PRESSED
-    // If value == 0 (false) -> Pedal is physically RELEASED
-
-    if (stack->currentIndex() == PAGE_READYFORSURGERY) {
-        if (value) { // Removed '!' so true = pressed
-            m_fp_pressed = true;
-            qDebug() << Q_FUNC_INFO << "Pedal Pressed";
-
-            if (pulseMode) {
-                qDebug() << Q_FUNC_INFO << "Pedal pressed pulse mode";
-                pulseOnTimer.setInterval(pulseOnTime);
-                pulseOffTimer.setInterval(pulseOffTime);
-            } else {
-                qDebug() << Q_FUNC_INFO << "Pedal pressed cw mode";
-            }
-            laserON();
-        } else { // false = released
-            qDebug() << Q_FUNC_INFO << "Pedal Released";
-            m_fp_pressed = false;
-            laserOFF();
-        }
-    } else {
+    if (stack->currentIndex() != PAGE_READYFORSURGERY) {
         qDebug() << Q_FUNC_INFO << "Pedal ignored";
         WARNING_BEEP();
+        return;
+    }
+
+    if (value) { // Pedal Pressed
+        m_fp_pressed = true;
+        qDebug() << "--------------------------------------------------";
+        qDebug() << "📢 [PEDAL ACTION] -> Pedal Physically Pressed";
+
+        if (pulseMode) {
+            qDebug() << "⚙️ [MODE DETECTED] -> PULSE Mode";
+
+            // ===== TIMER CONFIGURATION LOGS =====
+            qDebug() << "⏳ [TIMER SETUP] -> Setting pulseOnTimer interval to:" << pulseOnTime << "ms";
+            pulseOnTimer.setInterval(pulseOnTime);
+
+            qDebug() << "⏳ [TIMER SETUP] -> Setting pulseOffTimer interval to:" << pulseOffTime << "ms";
+            pulseOffTimer.setInterval(pulseOffTime);
+
+            // Kick off the loop
+            laserON();
+        } else {
+            qDebug() << "⚙️ [MODE DETECTED] -> CW (Continuous) Mode";
+            laserON();
+        }
+    } else { // Pedal Released
+        m_fp_pressed = false;
+        qDebug() << "📢 [PEDAL ACTION] -> Pedal Physically Released";
+        qDebug() << "--------------------------------------------------";
+
+        // Kill the background cycling engines immediately
+        pulseOnTimer.stop();
+        pulseOffTimer.stop();
+        qDebug() << "🛑 [TIMER STOP] -> Hard pedal release: Forced stopped pulseOnTimer & pulseOffTimer";
+
+        laserOFF();
     }
 }
 
@@ -923,68 +947,105 @@ void ReadyForSurgery::laserON()
     if (surgery_pause == 1) {
         popup->hidePopup();
         surgery_pause = 0;
+        return;
+    }
+
+    // 1. Fire Hardware DAC Ports
+    m_dac.setDac(1, dacBValue); // 980nm
+    m_dac.setDac(0, dacAValue);  // 1470nm
+
+    if (power1470) g_runtimeManager->set1470Active(true);
+    if (power980)  g_runtimeManager->set980Active(true);
+
+    // 2. Drive Software Tracking Timers
+    timerRing->startTimerAnimation();
+    energyUpdateTimer->start();
+
+    if (timer_reset == 1) {
+        energyAtPress = new2_totalEnergyDelivered;
     } else {
-        // Hardware DAC assignments
-        m_dac.setDac(1, dacBValue); // 980nm
-        m_dac.setDac(0, dacAValue);  // 1470nm
+        energyAtPress = new_totalEnergyDelivered;
+    }
 
-        if (power1470) g_runtimeManager->set1470Active(true);
-        if (power980)  g_runtimeManager->set980Active(true);
+    // 3. UI Presentation Layer
+    ui->pushButton->setText("Laser\nON");
+    ui->pushButton->setStyleSheet("background-color: red; color: white; font: 12pt \"Roboto\";");
 
-        // Match UI timer start actions
-        timerRing->startTimerAnimation();
-        energyUpdateTimer->start();
+    // 4. Trace Output & Setup Next Tick Window
+    if (pulseMode) {
+        qDebug() << "⚡ [PULSE STATE] -> HIGH (Laser Active) | 1470 DAC:" << dacAValue << "| 980 DAC:" << dacBValue;
 
-        if (timer_reset == 1) {
-            energyAtPress = new2_totalEnergyDelivered;
-        } else {
-            energyAtPress = new_totalEnergyDelivered;
-        }
-
-        // Visual Sync with UI
-        ui->pushButton->setText("Laser\nON");
-        ui->pushButton->setStyleSheet("background-color: red; color: white; font: 12pt \"Roboto\";");
-
-        if (pulseMode) {
-            pulseOffTimer.stop();
-            pulseOnTimer.start();
-        }
-
-        qDebug() << "1470 DAC:" << dacAValue << "980 DAC:" << dacBValue;
+        pulseOffTimer.stop();
+        pulseOnTimer.start();
+        qDebug() << "▶️ [TIMER START] -> pulseOnTimer started for" << pulseOnTimer.interval() << "ms (" << (pulseOnTimer.isActive() ? "SUCCESS" : "FAILED") << ")";
+    } else {
+        qDebug() << "🟢 [CW STATE] -> Continuous Emission Active | 1470 DAC:" << dacAValue << "| 980 DAC:" << dacBValue;
     }
 }
 
 void ReadyForSurgery::laserOFF()
 {
-    // Safety clear hardware DACs
+    // Safety drop physical outputs to zero immediately
     m_dac.setDac(0, 0);
     m_dac.setDac(1, 0);
+    g_runtimeManager->set980Active(false);
+    g_runtimeManager->set1470Active(false);
 
-    if (pulseMode) {
-        if (m_fp_pressed) {
-            pulseOffTimer.start();
-            pulseOnTimer.stop();
-        } else {
-            pulseOffTimer.stop();
-            pulseOnTimer.stop();
-            timerRingHandler();
-        }
+    if (pulseMode && m_fp_pressed) {
+        // We are cycling inside an active press loop; start waiting for the next pulse window
+        qDebug() << "⚫ [PULSE STATE] -> LOW (Laser Gated Off) | Waiting for off-time gap";
+
+        pulseOnTimer.stop();
+        pulseOffTimer.start();
+        qDebug() << "▶️ [TIMER START] -> pulseOffTimer started for" << pulseOffTimer.interval() << "ms (" << (pulseOffTimer.isActive() ? "SUCCESS" : "FAILED") << ")";
     } else {
+        // Terminal Turnoff: User stepped off pedal or countdown hit absolute limit
+        qDebug() << "🛑 [HARDWARE STOP] -> Terminal shutdown called. Disabling all subsystems safely.";
+
         timerRingHandler();
+        energyUpdateTimer->stop();
+        updateEnergy();
+
+        energyAtRelease = new_totalEnergyDelivered + new2_totalEnergyDelivered;
+
+        // Restore UI safely
+        ui->pushButton->setText("Laser\nOFF");
+        ui->pushButton->setStyleSheet("background-color: gray; color: black; font: 12pt \"Roboto\";");
+
+        logEnergyValues();
+    }
+}
+
+void ReadyForSurgery::handlePulseOnTimeout()
+{
+    qDebug() << "⏰ [TIMEOUT EVENT] -> pulseOnTimer finished (" << pulseOnTime << "ms elapsed)";
+    pulseOnTimer.stop();
+
+    // Guard Check: Drop out immediately if the background tracking loop reached zero
+    if (timerFlag == 1 && timerRing->getCurrentValue() <= 0.0f) {
+        qDebug() << "⚠️ [SAFETY BLOCK] -> Timer ran out during active pulse window. Suppressing off-timer transition.";
+        return;
     }
 
-    // Stop timers & freeze frames
-    energyUpdateTimer->stop();
-    updateEnergy();
+    if (m_fp_pressed && pulseMode) {
+        laserOFF();
+    }
+}
 
-    energyAtRelease = new_totalEnergyDelivered + new2_totalEnergyDelivered;
+void ReadyForSurgery::handlePulseOffTimeout()
+{
+    qDebug() << "⏰ [TIMEOUT EVENT] -> pulseOffTimer finished (" << pulseOffTime << "ms elapsed)";
+    pulseOffTimer.stop();
 
-    // Visual Sync with UI
-    ui->pushButton->setText("Laser\nOFF");
-    ui->pushButton->setStyleSheet("background-color: gray; color: black; font: 12pt \"Roboto\";");
+    // Guard Check: Drop out immediately if the background tracking loop reached zero
+    if (timerFlag == 1 && timerRing->getCurrentValue() <= 0.0f) {
+        qDebug() << "⚠️ [SAFETY BLOCK] -> Timer ran out during passive loop cycle. Suppressing re-ignition.";
+        return;
+    }
 
-    // Call calculation and Database saving
-    logEnergyValues();
+    if (m_fp_pressed && pulseMode) {
+        laserON();
+    }
 }
 
 void ReadyForSurgery::timerRingHandler()
@@ -1012,45 +1073,45 @@ void ReadyForSurgery::logEnergyValues()
 {
     if((timerFlag == 0) && (timer_reset == 0))
     {
-        qDebug() << "| energyAtPress1:" << energyAtPress
-                 << "| energyAtRelease:" << energyAtRelease
-                 << "| last_energyPerPedal:" << last_energyPerPedal;
+        //        qDebug() << "| energyAtPress1:" << energyAtPress
+        //                 << "| energyAtRelease:" << energyAtRelease
+        //                 << "| last_energyPerPedal:" << last_energyPerPedal;
         energyPerPedal = energyAtRelease - last_energyPerPedal;
         last_energyPerPedal = energyAtRelease;
     }else if((timerFlag == 1) && (timer_reset == 0))
     {
-        qDebug() << "| energyAtPress2:" << energyAtPress
-                 << "| energyAtRelease:" << energyAtRelease
-                 << "| last_energyPerPedal:" << last_energyPerPedal;
+        //        qDebug() << "| energyAtPress2:" << energyAtPress
+        //                 << "| energyAtRelease:" << energyAtRelease
+        //                 << "| last_energyPerPedal:" << last_energyPerPedal;
         energyPerPedal = energyAtRelease - last_energyPerPedal;
         last_energyPerPedal = energyAtRelease;
     }
     else
     {
-        qDebug() << "| energyAtPress3:" << energyAtPress
-                 << "| energyAtRelease:" << energyAtRelease
-                 << "| last_energyPerPedal:" << last_energyPerPedal;
+        //        qDebug() << "| energyAtPress3:" << energyAtPress
+        //                 << "| energyAtRelease:" << energyAtRelease
+        //                 << "| last_energyPerPedal:" << last_energyPerPedal;
         energyPerPedal = energyAtRelease - energyAtPress;
     }
 
     if (energyPerPedal < 0)
         energyPerPedal = 0;
 
-    qDebug() << "| Name:" << protocolName
-             << "| 980_power:" << power980
-             << "| 1470_power:" << power1470
-             << "| 650_power level:" << aimingbeamIntensity
-             << "| Max timer per pedal:" << TimerSec
-             << "| Timer Reset:" << timer_reset
-             << "| Timer Flag:" << timerFlag
-             << "| Pulse ON(ms):" << pulseOnTime
-             << "| Pulse OFF(ms):" << pulseOffTime
-             << "| Pulse Mode:" << pulseMode
-             << "| Total Energy:" << new_totalEnergyDelivered + new2_totalEnergyDelivered
-             << "| per pedal energy deliverd:" << energyPerPedal;
+    //    qDebug() << "| Name:" << protocolName
+    //             << "| 980_power:" << power980
+    //             << "| 1470_power:" << power1470
+    //             << "| 650_power level:" << aimingbeamIntensity
+    //             << "| Max timer per pedal:" << TimerSec
+    //             << "| Timer Reset:" << timer_reset
+    //             << "| Timer Flag:" << timerFlag
+    //             << "| Pulse ON(ms):" << pulseOnTime
+    //             << "| Pulse OFF(ms):" << pulseOffTime
+    //             << "| Pulse Mode:" << pulseMode
+    //             << "| Total Energy:" << new_totalEnergyDelivered + new2_totalEnergyDelivered
+    //             << "| per pedal energy deliverd:" << energyPerPedal;
 
-    for(int i = 0; i<8;i++)
-        qDebug()<< " | Stored energy value:" << storedEnergy[i];
+    //    for(int i = 0; i<8;i++)
+    //        qDebug()<< " | Stored energy value:" << storedEnergy[i];
 
     // ===== Store in SQLite =====
     QSqlQuery query(UserDatabaseManager::instance().db());
@@ -1106,3 +1167,4 @@ void ReadyForSurgery::logEnergyValues()
         qDebug() << "Failed to insert surgery log:" << query.lastError().text();
     }
 }
+

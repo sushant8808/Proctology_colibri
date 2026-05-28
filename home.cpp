@@ -26,8 +26,6 @@ Home::Home(QWidget *parent)
 
     this->setWindowFlags(Qt::FramelessWindowHint);
 
-
-
     startup_done = true;
 
     ////qDebug()<<"in home constructor";
@@ -120,6 +118,8 @@ Home::Home(QWidget *parent)
 
     });
 
+
+
     ui->L2_protocol_show->installEventFilter(this);
 
     // Your runtime connection handler
@@ -127,14 +127,15 @@ Home::Home(QWidget *parent)
             this, [this](bool status) {
         qDebug() << "Interlock loop status safely processed via Signal:" << status;
         updateInterlockUi(status);
+        MainWindow::instance->interlock_popup(status);
     });
 
-    // Your setup initialization handler
-    QTimer::singleShot(100, this, [this]() {
-        bool currentStatus = HardwareManagerProvider::instance()->gpioValue(133);
-        qDebug() << "Initial Interlock status processed via explicit query:" << currentStatus;
-        updateInterlockUi(currentStatus);
-    });
+//    QTimer::singleShot(50, this, [this]() {
+//        bool currentStatus = HardwareManagerProvider::instance()->gpioValue(133);
+//        qDebug() << "Initial Interlock status processed via explicit query:" << currentStatus;
+//        updateInterlockUi(currentStatus);
+//        MainWindow::instance->interlock_popup(currentStatus);
+//    });
 
 }
 
@@ -352,6 +353,7 @@ void Home::on_B2_timer_add_clicked()
 
         updateTimerLabel();
         updateJouleLabel();
+        updatedatabase();
         markProtocolModified(Q_FUNC_INFO);
     }
 
@@ -367,6 +369,7 @@ void Home::on_B2_timer_sub_clicked()
             WARNING_BEEP();
         updateTimerLabel();
         updateJouleLabel();
+        updatedatabase();
         markProtocolModified(Q_FUNC_INFO);
     }
 
@@ -1186,13 +1189,13 @@ void Home::setAdvancedMode() {
 void Home::updatedatabase() {
     dbinit.updateHomeData(
                 1,  // ID
-                std::round(power980 * 10.0) / 10.0,       // power980
-                std::round(power1470 * 10.0) / 10.0,      // power1470
+                std::round(power980 * 10.0) / 10.0,        // power980
+                std::round(power1470 * 10.0) / 10.0,       // power1470
                 TimerSec,                                  // timerSec
                 timer_reset,                               // timer_reset
                 timerFlag,                                 // timer_flag
-                std::round(pulseOnTime * 10.0) / 10.0,    // pulseOnTimeMs
-                std::round(pulseOffTime * 10.0) / 10.0,   // pulseOffTimeMs
+                pulseOnTime,                               // pulseOnTimeMs
+                pulseOffTime,                              // pulseOffTimeMs
                 pulseMode,                                 // pulse_mode
                 protocolName                               // protocol_name
                 );
@@ -1409,6 +1412,14 @@ void Home::updateProtocolLabel()
 
 void Home::refreshPage()
 {
+
+    QTimer::singleShot(50, this, [this]() {
+        bool currentStatus = HardwareManagerProvider::instance()->gpioValue(133);
+        qDebug() << "Initial Interlock status processed via explicit query:" << currentStatus;
+        updateInterlockUi(currentStatus);
+        MainWindow::instance->interlock_popup(currentStatus);
+    });
+
     qDebug() << "Refreshing Home Page";
 
     // ----------------------
@@ -1584,12 +1595,19 @@ bool Home::eventFilter(QObject *obj, QEvent *event)
 
 void Home::updateInterlockUi(bool status)
 {
-    if (status) {
-        ui->Interlock_key->setStyleSheet(dark ? "background-image:url(:/icons/interlock_connected_dark.png);"
+    if(override_popup == 2)
+    {
+        ui->Interlock_key->setStyleSheet(dark ? "background-image:url(:/icons/interlock_override_dark.png);"
+                                          : "background-image:url(:/icons/interlock_override_light.png);");
+    }else
+    {
+        if (status) {
+            ui->Interlock_key->setStyleSheet(dark ? "background-image:url(:/icons/interlock_connected_dark.png);"
                                               : "background-image:url(:/icons/interlock_connected_light.png);");
-    } else {
-        ui->Interlock_key->setStyleSheet(dark ? "background-image:url(:/icons/interlock_disconnected_dark.png);"
+        } else {
+            ui->Interlock_key->setStyleSheet(dark ? "background-image:url(:/icons/interlock_disconnected_dark.png);"
                                               : "background-image:url(:/icons/interlock_disconnected_light.png);");
+        }
     }
 }
 

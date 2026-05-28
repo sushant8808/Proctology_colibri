@@ -64,8 +64,7 @@ extern float liveTime;
 extern bool Adv_Sim_fromSetting;
 extern bool surgery_pause_bt;
 extern bool last_theme_status;
-extern bool override_popup;
-extern bool interlock_status;
+extern int override_popup;
 
 extern float energyAtPress;
 extern float energyPerPedal;

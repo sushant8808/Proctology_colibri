@@ -39,6 +39,8 @@
         <file>interlock_connected_light.png</file>
         <file>interlock_disconnected_dark.png</file>
         <file>interlock_disconnected_light.png</file>
+        <file>interlock_override_dark.png</file>
+        <file>interlock_override_light.png</file>
     </qresource>
     <qresource prefix="/audio">
         <file>Audio/0001.mp3</file>

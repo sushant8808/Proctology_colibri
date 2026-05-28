@@ -81,6 +81,10 @@ private slots:
 
     void surgery_pause_popup();
 
+    void handlePulseOnTimeout();
+
+    void handlePulseOffTimeout();
+
 private:
     Ui::ReadyForSurgery *ui;
     Home *home;

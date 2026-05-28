@@ -56,8 +56,7 @@ float liveTime = 0.0f;
 bool Adv_Sim_fromSetting = 0;
 bool surgery_pause_bt = 0;
 bool last_theme_status = 0;
-bool override_popup = 0;
-bool interlock_status = 0;
+int override_popup = 0;
 
 float energyAtPress = 0.0f;
 float energyPerPedal = 0.0f;

@@ -46,12 +46,13 @@ public:
 
     void interlock_popup(bool status);
 
+    error_popup *popup1;
+
 private:
     Ui::MainWindow *ui;
 
-    error_popup *popup;
-
     QStackedWidget* stackedWidget;
+
 
 signals:
     void pause_surgery_interlock(void);

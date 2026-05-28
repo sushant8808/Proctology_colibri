@@ -8,7 +8,7 @@ DAC8552::DAC8552(QObject *parent) : QObject(parent)
 
 int DAC8552::setDac(short ch, int powerwatt)
 {
-    qDebug()<<Q_FUNC_INFO<<ch<<powerwatt;
+//    qDebug()<<Q_FUNC_INFO<<ch<<powerwatt;
     if(ch>=0 &&ch<2){
         const char *dev = "/dev/colibri-spi-cs0";
         uint8_t control;
@@ -17,7 +17,7 @@ int DAC8552::setDac(short ch, int powerwatt)
         } else if (ch == 1) {
             control = 0x24;      // 0b0010_0100 : Write data & LOAD DAC B, Buffer Select = B, PD=00
         } else {
-            qDebug()<<Q_FUNC_INFO<<"Channel must be A or B\n";
+//            qDebug()<<Q_FUNC_INFO<<"Channel must be A or B\n";
             return 1;
         }
 
@@ -43,12 +43,12 @@ int DAC8552::setDac(short ch, int powerwatt)
             return 1;
         }
 
-        qDebug()<<Q_FUNC_INFO<<"Wrote channel" <<ch<<code;
+//        qDebug()<<Q_FUNC_INFO<<"Wrote channel" <<ch<<code;
         close(fd);
         return 0;
     }
     else{
-        qDebug()<<Q_FUNC_INFO<<"invalid channel value";
+//        qDebug()<<Q_FUNC_INFO<<"invalid channel value";
         return 1;
     }
 
