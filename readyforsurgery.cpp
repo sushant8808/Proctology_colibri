@@ -10,8 +10,6 @@
 #include <QSqlError>
 #include "runtime_manager.h"
 #include "datetime_manager.h"
-//#include <QMediaPlayer>
-//#include <QMediaContent>  // Added for Qt5 media loading
 #include <QFile>
 #include <QSqlQuery>
 #include <QQueue>
@@ -46,8 +44,6 @@ bool setPwmDutyCycle(int chip, int pwm, int duty_ns)
     return writeSysfsValue(dutyPath, QString::number(duty_ns));
 }
 
-// Cleaned up unused Qt6 global audio objects
-//QMediaPlayer *player = nullptr;
 
 
 ReadyForSurgery::ReadyForSurgery(QWidget *parent, Home *home)
@@ -162,45 +158,45 @@ ReadyForSurgery::ReadyForSurgery(QWidget *parent, Home *home)
 
         if((timerFlag == 0) && (timer_reset == 0))
         {
-            qDebug() << "| energyAtPress1:" << energyAtPress
-                     << "| energyAtRelease:" << energyAtRelease
-                     << "| last_energyPerPedal:" << last_energyPerPedal;
+            //            qDebug() << "| energyAtPress1:" << energyAtPress
+            //                     << "| energyAtRelease:" << energyAtRelease
+            //                     << "| last_energyPerPedal:" << last_energyPerPedal;
             energyPerPedal = energyAtRelease - last_energyPerPedal;
             last_energyPerPedal = energyAtRelease;
         }else if((timerFlag == 1) && (timer_reset == 0))
         {
-            qDebug() << "| energyAtPress2:" << energyAtPress
-                     << "| energyAtRelease:" << energyAtRelease
-                     << "| last_energyPerPedal:" << last_energyPerPedal;
+            //            qDebug() << "| energyAtPress2:" << energyAtPress
+            //                     << "| energyAtRelease:" << energyAtRelease
+            //                     << "| last_energyPerPedal:" << last_energyPerPedal;
             energyPerPedal = energyAtRelease - last_energyPerPedal;
             last_energyPerPedal = energyAtRelease;
         }
         else
         {
-            qDebug() << "| energyAtPress3:" << energyAtPress
-                     << "| energyAtRelease:" << energyAtRelease
-                     << "| last_energyPerPedal:" << last_energyPerPedal;
+            //            qDebug() << "| energyAtPress3:" << energyAtPress
+            //                     << "| energyAtRelease:" << energyAtRelease
+            //                     << "| last_energyPerPedal:" << last_energyPerPedal;
             energyPerPedal = energyAtRelease - energyAtPress;
         }
 
         if (energyPerPedal < 0)
             energyPerPedal = 0;
 
-        qDebug() << "| Name:" << protocolName
-                 << "| 980_power:" << power980
-                 << "| 1470_power:" << power1470
-                 << "| 650_power level:" << aimingbeamIntensity
-                 << "| Max timer per pedal:" << TimerSec
-                 << "| Timer Reset:" << timer_reset
-                 << "| Timer Flag:" << timerFlag
-                 << "| Pulse ON(ms):" << pulseOnTime
-                 << "| Pulse OFF(ms):" << pulseOffTime
-                 << "| Pulse Mode:" << pulseMode
-                 << "| Total Energy:" << new_totalEnergyDelivered + new2_totalEnergyDelivered
-                 << "| per pedal energy deliverd:" << energyPerPedal;
+        //        qDebug() << "| Name:" << protocolName
+        //                 << "| 980_power:" << power980
+        //                 << "| 1470_power:" << power1470
+        //                 << "| 650_power level:" << aimingbeamIntensity
+        //                 << "| Max timer per pedal:" << TimerSec
+        //                 << "| Timer Reset:" << timer_reset
+        //                 << "| Timer Flag:" << timerFlag
+        //                 << "| Pulse ON(ms):" << pulseOnTime
+        //                 << "| Pulse OFF(ms):" << pulseOffTime
+        //                 << "| Pulse Mode:" << pulseMode
+        //                 << "| Total Energy:" << new_totalEnergyDelivered + new2_totalEnergyDelivered
+        //                 << "| per pedal energy deliverd:" << energyPerPedal;
 
-        for(int i = 0; i<8;i++)
-            qDebug()<< " | Stored energy value:" << storedEnergy[i];
+        //        for(int i = 0; i<8;i++)
+        //            qDebug()<< " | Stored energy value:" << storedEnergy[i];
 
         // ===== Store in SQLite =====
         QSqlQuery query(UserDatabaseManager::instance().db());
@@ -256,23 +252,6 @@ ReadyForSurgery::ReadyForSurgery(QWidget *parent, Home *home)
             qDebug() << "Failed to insert surgery log:" << query.lastError().text();
         }
     });
-
-    // ===== Qt5 Audio Engine Initialization =====
-    //    player = new QMediaPlayer(this);
-
-    // Qt5 handles volumes using integers from 0 to 100.
-    // Scales intensity slider (1 to 5) smoothly up to a max volume of 100.
-    //    int qt5Volume = static_cast<int>((soundIntensity / 5.0) * 100);
-    //    player->setVolume(qt5Volume);
-
-    //    connect(player, &QMediaPlayer::mediaStatusChanged, this,
-    //            [=](QMediaPlayer::MediaStatus status)
-    //            {
-    //                if (status == QMediaPlayer::EndOfMedia)
-    //                {
-    //                    playNextAudio();
-    //                }
-    //            });
 
     popup = new error_popup(this);
 
@@ -461,6 +440,10 @@ void ReadyForSurgery::on_B5_sound_clicked()
     soundOverlay->setProgress(soundIntensity);
     TOUCH_BEEP();
 
+    mqsVolume = soundIntensity*20;
+
+    m_mqs.setMqsVolume(mqsVolume);
+
     dbinit.updateSingleColumn("device_setting", "sound_intensity", soundIntensity, 1);
     dbinit.updateSingleColumn("device_setting", "beep_intensity", beepIntensity, 1);
 }
@@ -549,6 +532,9 @@ void ReadyForSurgery::on_B5_change_clicked()
 
 void ReadyForSurgery::on_B5_reset_clicked()
 {
+
+
+
     if (storedCount < 8) {
         storedEnergy[storedCount] = energyDelivered;
 
@@ -576,7 +562,7 @@ void ReadyForSurgery::updateEnergy()
 {
     if (timerFlag == 1 && timerRing->getCurrentValue() <= 0.0f)
     {
-        qDebug() << "⛔ Timer reached zero → Force Killing Laser & Pulse Timers";
+        //        qDebug() << "⛔ Timer reached zero → Force Killing Laser & Pulse Timers";
 
         // Kill ALL active background drivers completely
         pulseOnTimer.stop();
@@ -639,14 +625,18 @@ void ReadyForSurgery::updateEnergy()
         if (currentMultiple > lastMultiple)
         {
             int announcedValue = currentMultiple * alarmJoules;
-            audioQueue.clear();
+            //            audioQueue.clear();
 
-            QString filePath = QString("qrc:/audio/Audio/%1.mp3")
+            QString filePath = QString("/home/root/laserAudio/%1.wav")
                     .arg(announcedValue, 4, 10, QChar('0'));
-            audioQueue.enqueue(filePath);
+            //            audioQueue.enqueue(filePath);
 
-            if (!isPlaying)
-                playNextAudio();
+            m_mqs.playWav(filePath);
+
+            qDebug()<<filePath;
+
+            //            if (!isPlaying)
+            //                playNextAudio();
 
             lastAnnouncedEnergy = announcedValue;
         }
@@ -662,7 +652,7 @@ void ReadyForSurgery::updateEnergy()
         if (currentMultiple > lastMultiple)
         {
             audioQueue.clear();
-            audioQueue.enqueue("qrc:/audio/Audio/0001.mp3");
+            audioQueue.enqueue("/home/root/laserAudio/0001.mp3");
 
             if (!isPlaying)
                 playNextAudio();
@@ -699,7 +689,7 @@ void ReadyForSurgery::on_B5_pause_clicked()
 
 void ReadyForSurgery::surgery_pause_popup()
 {
-//    laserOFF();
+    //    laserOFF();
     surgery_pause_bt = 1;
 
     popup->showMessage(
@@ -851,6 +841,10 @@ void ReadyForSurgery::refreshPage()
     if(soundOverlay)
         soundOverlay->setProgress(soundIntensity);
 
+    mqsVolume = soundIntensity*20;
+
+    m_mqs.setMqsVolume(mqsVolume);
+
     if(brightnessOverlay)
         brightnessOverlay->setProgress(brightnessIntensity);
 
@@ -887,56 +881,46 @@ void ReadyForSurgery::refreshPage()
 
     if(energyUpdateTimer)
         energyUpdateTimer->stop();
-
-    //    bool timerEnabled = (timerFlag == 1);
-    //    ui->L5_timer_sec->setVisible(timerEnabled);
-    //    ui->label_5->setVisible(timerEnabled);
-    //    ui->label_6->setVisible(timerEnabled);
-    //    ui->label_8->setVisible(timerEnabled);
-    //    ui->L5_timer_state->setVisible(timerEnabled);
-    //    ui->label_10->setVisible(timerEnabled);
-    //    ui->label_11->setVisible(timerEnabled);
-    //    ui->L5_energy->setVisible(timerEnabled);
 }
 
 void ReadyForSurgery::handleFootPedal(bool value)
 {
     if (stack->currentIndex() != PAGE_READYFORSURGERY) {
-        qDebug() << Q_FUNC_INFO << "Pedal ignored";
+        //        qDebug() << Q_FUNC_INFO << "Pedal ignored";
         WARNING_BEEP();
         return;
     }
 
     if (value) { // Pedal Pressed
         m_fp_pressed = true;
-        qDebug() << "--------------------------------------------------";
-        qDebug() << "📢 [PEDAL ACTION] -> Pedal Physically Pressed";
+        //        qDebug() << "--------------------------------------------------";
+        //        qDebug() << "📢 [PEDAL ACTION] -> Pedal Physically Pressed";
 
         if (pulseMode) {
-            qDebug() << "⚙️ [MODE DETECTED] -> PULSE Mode";
+            //            qDebug() << "⚙️ [MODE DETECTED] -> PULSE Mode";
 
             // ===== TIMER CONFIGURATION LOGS =====
-            qDebug() << "⏳ [TIMER SETUP] -> Setting pulseOnTimer interval to:" << pulseOnTime << "ms";
+            //            qDebug() << "⏳ [TIMER SETUP] -> Setting pulseOnTimer interval to:" << pulseOnTime << "ms";
             pulseOnTimer.setInterval(pulseOnTime);
 
-            qDebug() << "⏳ [TIMER SETUP] -> Setting pulseOffTimer interval to:" << pulseOffTime << "ms";
+            //            qDebug() << "⏳ [TIMER SETUP] -> Setting pulseOffTimer interval to:" << pulseOffTime << "ms";
             pulseOffTimer.setInterval(pulseOffTime);
 
             // Kick off the loop
             laserON();
         } else {
-            qDebug() << "⚙️ [MODE DETECTED] -> CW (Continuous) Mode";
+            //            qDebug() << "⚙️ [MODE DETECTED] -> CW (Continuous) Mode";
             laserON();
         }
     } else { // Pedal Released
         m_fp_pressed = false;
-        qDebug() << "📢 [PEDAL ACTION] -> Pedal Physically Released";
-        qDebug() << "--------------------------------------------------";
+        //        qDebug() << "📢 [PEDAL ACTION] -> Pedal Physically Released";
+        //        qDebug() << "--------------------------------------------------";
 
         // Kill the background cycling engines immediately
         pulseOnTimer.stop();
         pulseOffTimer.stop();
-        qDebug() << "🛑 [TIMER STOP] -> Hard pedal release: Forced stopped pulseOnTimer & pulseOffTimer";
+        //        qDebug() << "🛑 [TIMER STOP] -> Hard pedal release: Forced stopped pulseOnTimer & pulseOffTimer";
 
         laserOFF();
     }
@@ -973,13 +957,13 @@ void ReadyForSurgery::laserON()
 
     // 4. Trace Output & Setup Next Tick Window
     if (pulseMode) {
-        qDebug() << "⚡ [PULSE STATE] -> HIGH (Laser Active) | 1470 DAC:" << dacAValue << "| 980 DAC:" << dacBValue;
+        //        qDebug() << "⚡ [PULSE STATE] -> HIGH (Laser Active) | 1470 DAC:" << dacAValue << "| 980 DAC:" << dacBValue;
 
         pulseOffTimer.stop();
         pulseOnTimer.start();
-        qDebug() << "▶️ [TIMER START] -> pulseOnTimer started for" << pulseOnTimer.interval() << "ms (" << (pulseOnTimer.isActive() ? "SUCCESS" : "FAILED") << ")";
+        //        qDebug() << "▶️ [TIMER START] -> pulseOnTimer started for" << pulseOnTimer.interval() << "ms (" << (pulseOnTimer.isActive() ? "SUCCESS" : "FAILED") << ")";
     } else {
-        qDebug() << "🟢 [CW STATE] -> Continuous Emission Active | 1470 DAC:" << dacAValue << "| 980 DAC:" << dacBValue;
+        //        qDebug() << "🟢 [CW STATE] -> Continuous Emission Active | 1470 DAC:" << dacAValue << "| 980 DAC:" << dacBValue;
     }
 }
 
@@ -993,14 +977,14 @@ void ReadyForSurgery::laserOFF()
 
     if (pulseMode && m_fp_pressed) {
         // We are cycling inside an active press loop; start waiting for the next pulse window
-        qDebug() << "⚫ [PULSE STATE] -> LOW (Laser Gated Off) | Waiting for off-time gap";
+        //        qDebug() << "⚫ [PULSE STATE] -> LOW (Laser Gated Off) | Waiting for off-time gap";
 
         pulseOnTimer.stop();
         pulseOffTimer.start();
-        qDebug() << "▶️ [TIMER START] -> pulseOffTimer started for" << pulseOffTimer.interval() << "ms (" << (pulseOffTimer.isActive() ? "SUCCESS" : "FAILED") << ")";
+        //        qDebug() << "▶️ [TIMER START] -> pulseOffTimer started for" << pulseOffTimer.interval() << "ms (" << (pulseOffTimer.isActive() ? "SUCCESS" : "FAILED") << ")";
     } else {
         // Terminal Turnoff: User stepped off pedal or countdown hit absolute limit
-        qDebug() << "🛑 [HARDWARE STOP] -> Terminal shutdown called. Disabling all subsystems safely.";
+        //        qDebug() << "🛑 [HARDWARE STOP] -> Terminal shutdown called. Disabling all subsystems safely.";
 
         timerRingHandler();
         energyUpdateTimer->stop();
@@ -1018,12 +1002,12 @@ void ReadyForSurgery::laserOFF()
 
 void ReadyForSurgery::handlePulseOnTimeout()
 {
-    qDebug() << "⏰ [TIMEOUT EVENT] -> pulseOnTimer finished (" << pulseOnTime << "ms elapsed)";
+    //    qDebug() << "⏰ [TIMEOUT EVENT] -> pulseOnTimer finished (" << pulseOnTime << "ms elapsed)";
     pulseOnTimer.stop();
 
     // Guard Check: Drop out immediately if the background tracking loop reached zero
     if (timerFlag == 1 && timerRing->getCurrentValue() <= 0.0f) {
-        qDebug() << "⚠️ [SAFETY BLOCK] -> Timer ran out during active pulse window. Suppressing off-timer transition.";
+        //        qDebug() << "⚠️ [SAFETY BLOCK] -> Timer ran out during active pulse window. Suppressing off-timer transition.";
         return;
     }
 
@@ -1034,12 +1018,12 @@ void ReadyForSurgery::handlePulseOnTimeout()
 
 void ReadyForSurgery::handlePulseOffTimeout()
 {
-    qDebug() << "⏰ [TIMEOUT EVENT] -> pulseOffTimer finished (" << pulseOffTime << "ms elapsed)";
+    //    qDebug() << "⏰ [TIMEOUT EVENT] -> pulseOffTimer finished (" << pulseOffTime << "ms elapsed)";
     pulseOffTimer.stop();
 
     // Guard Check: Drop out immediately if the background tracking loop reached zero
     if (timerFlag == 1 && timerRing->getCurrentValue() <= 0.0f) {
-        qDebug() << "⚠️ [SAFETY BLOCK] -> Timer ran out during passive loop cycle. Suppressing re-ignition.";
+        //        qDebug() << "⚠️ [SAFETY BLOCK] -> Timer ran out during passive loop cycle. Suppressing re-ignition.";
         return;
     }
 

@@ -15,7 +15,8 @@
 #include "dac8552.h"
 #include "hardwaremanager.h"
 #include "hardwaremanagerprovider.h"
-
+#include "mqs_audio.h"
+#include "colibri_adc.h"
 
 
 
@@ -30,6 +31,9 @@ class ReadyForSurgery : public QWidget
 public:
     explicit ReadyForSurgery(QWidget *parent = nullptr, Home *home = nullptr);
     ~ReadyForSurgery();
+    MQS_Audio m_mqs;
+    Colibri_ADC m_adc;
+    uint8_t mqsVolume;
 
 protected:
     QStackedWidget* stack;

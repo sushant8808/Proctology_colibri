@@ -20,6 +20,7 @@ SOURCES += \
     changevalue.cpp \
     circularoverlay.cpp \
     clickablelabel.cpp \
+    colibri_adc.cpp \
     customkeyboard.cpp \
     dac8552.cpp \
     databaseinitializer.cpp \
@@ -34,6 +35,7 @@ SOURCES += \
     keyboard_bt.cpp \
     main.cpp \
     mainwindow.cpp \
+    mqs_audio.cpp \
     newcustomprotocol.cpp \
     protocolitemwidget.cpp \
     protocolselect.cpp \
@@ -64,6 +66,7 @@ HEADERS += \
     changevalue.h \
     circularoverlay.h \
     clickablelabel.h \
+    colibri_adc.h \
     customkeyboard.h \
     dac8552.h \
     databaseinitializer.h \
@@ -77,6 +80,7 @@ HEADERS += \
     home_button.h \
     keyboard_bt.h \
     mainwindow.h \
+    mqs_audio.h \
     newcustomprotocol.h \
     pageindex.h \
     protocolitemwidget.h \

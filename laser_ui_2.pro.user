@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.15.1, 2026-05-28T12:37:45. -->
+<!-- Written by QtCreator 4.15.1, 2026-05-29T12:57:55. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -244,21 +244,27 @@
       <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">RemoteLinux.DirectUploadStep</value>
       <valuelist type="QVariantList" key="ProjectExplorer.RunConfiguration.LastDeployedFiles">
        <value type="QString">/yocto/rnd-projects/build-laser_ui_2-Colibri_6ull-Debug/laser_ui_2</value>
+       <value type="QString">/yocto/rnd-projects/build-laser_ui_2-Colibri_6ull-Debug/laser_ui_2</value>
       </valuelist>
       <valuelist type="QVariantList" key="ProjectExplorer.RunConfiguration.LastDeployedHosts">
        <value type="QString">192.168.50.202</value>
+       <value type="QString">192.168.50.201</value>
       </valuelist>
       <valuelist type="QVariantList" key="ProjectExplorer.RunConfiguration.LastDeployedRemotePaths">
+       <value type="QString">/opt/laser_ui_2/bin</value>
        <value type="QString">/opt/laser_ui_2/bin</value>
       </valuelist>
       <valuelist type="QVariantList" key="ProjectExplorer.RunConfiguration.LastDeployedSysroots">
        <value type="QString">/yocto/Colibri-imx6ull/tdx-5.7.0-sdk/sysroots/armv7at2hf-neon-tdx-linux-gnueabi</value>
+       <value type="QString">/yocto/Colibri-imx6ull/tdx-5.7.0-sdk/sysroots/armv7at2hf-neon-tdx-linux-gnueabi</value>
       </valuelist>
       <valuelist type="QVariantList" key="RemoteLinux.LastDeployedLocalTimes">
        <value type="QDateTime">2026-05-28T12:19:42.010</value>
+       <value type="QDateTime">2026-05-28T18:59:12.999</value>
       </valuelist>
       <valuelist type="QVariantList" key="RemoteLinux.LastDeployedRemoteTimes">
        <value type="QDateTime">2026-05-28T12:20:19.000</value>
+       <value type="QDateTime">2026-05-28T18:59:49.000</value>
       </valuelist>
      </valuemap>
      <value type="int" key="ProjectExplorer.BuildStepList.StepsCount">3</value>
