@@ -21,6 +21,8 @@
 #include "hardwaremanager.h"
 #include "hardwaremanagerprovider.h"
 
+#define ADC_CH0 0
+
 bool writeSysfsValue(const QString &path, const QString &value)
 {
     QFile file(path);
@@ -829,6 +831,11 @@ void ReadyForSurgery::showEvent(QShowEvent *event)
 
 void ReadyForSurgery::refreshPage()
 {
+
+    float adcValue = m_adc.readVoltage(ADC_CH0);
+
+    qDebug()<<"adcvalue"<<adcValue;
+
     updatePower980Label();
     updatePower1470Label();
     updateTimerSecLabel();
