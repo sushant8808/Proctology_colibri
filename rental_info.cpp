@@ -28,6 +28,7 @@ void rental_info::switchToServiceEngArea()
 void rental_info::on_B3_back_to_setting_clicked()
 {
     switchToServiceEngArea();
+    TOUCH_BEEP();
 }
 
 void rental_info::switchToHome()
@@ -39,4 +40,5 @@ void rental_info::switchToHome()
 void rental_info::on_back_to_home_clicked()
 {
     switchToHome();
+    TOUCH_BEEP();
 }

@@ -96,6 +96,7 @@ Set_date_time::Set_date_time(QWidget *parent, Home *home)
     mainLayout->addWidget(applyBtn);
 
     connect(applyBtn, &QPushButton::clicked, this, [=]() {
+        TOUCH_BEEP();
         QDate selectedDate(m_year, m_month, m_day);
         QTime selectedTime(m_hour, m_minute, 0);
         if (selectedDate.isValid()) {
@@ -146,8 +147,8 @@ void Set_date_time::updateUIDisplays()
     if(m_lblMin)   m_lblMin->setText(QString("%1").arg(m_minute, 2, 10, QChar('0')));
 }
 
-void Set_date_time::on_back_to_home_clicked() { switchToHome(); }
-void Set_date_time::on_back_to_service_engineer_area_clicked() { switchToServiceEngArea(); }
+void Set_date_time::on_back_to_home_clicked() { switchToHome(); TOUCH_BEEP();}
+void Set_date_time::on_back_to_service_engineer_area_clicked() { switchToServiceEngArea(); TOUCH_BEEP();}
 void Set_date_time::switchToHome() { MainWindow::instance->switchPage(PAGE_HOME); }
 void Set_date_time::switchToServiceEngArea() { MainWindow::instance->switchPage(PAGE_SERVICEENGINEER); }
 void Set_date_time::showEvent(QShowEvent *event) { QWidget::showEvent(event); refreshPage(); }

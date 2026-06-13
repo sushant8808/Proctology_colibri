@@ -104,6 +104,7 @@ usage_area::usage_area(QWidget *parent, Home *home)
 
     connect(popup, &error_popup::yesClicked,
             this, [this]() {
+        TOUCH_BEEP();
         if(clear_data)
             clear_data_form_userdb();
         if(clear_page)
@@ -113,6 +114,7 @@ usage_area::usage_area(QWidget *parent, Home *home)
 
     connect(popup, &error_popup::noClicked,
             this, [this]() {
+        TOUCH_BEEP();
         clear_data = 0;
         clear_page = 0;
         qDebug() << "No";
@@ -121,6 +123,7 @@ usage_area::usage_area(QWidget *parent, Home *home)
 
     connect(popup, &error_popup::acknowledged,
             this,[](){
+        TOUCH_BEEP();
         qDebug() << "ok";
     });
 
@@ -134,6 +137,7 @@ usage_area::~usage_area()
 void usage_area::on_B3_back_to_setting_clicked()
 {
     MainWindow::instance->switchPage(PAGE_SETTING);
+    TOUCH_BEEP();
 }
 
 void usage_area::loadSurgerySummaryPage(int page)
@@ -247,6 +251,7 @@ void usage_area::on_prevButton_clicked()
         currentPage--;
         loadSurgerySummaryPage(currentPage);
     }
+    TOUCH_BEEP();
 }
 
 
@@ -254,6 +259,7 @@ void usage_area::on_nextButton_clicked()
 {
     currentPage++;
     loadSurgerySummaryPage(currentPage);
+    TOUCH_BEEP();
 }
 
 void usage_area::deleteSelectedRows()
@@ -325,6 +331,8 @@ void usage_area::on_B3_clear_data_clicked()
                 error_popup::Confirmation,
                 true
                 );
+
+    TOUCH_BEEP();
 
     clear_data = 1;
 }
@@ -405,6 +413,7 @@ void usage_area::on_pageDeleteButton_clicked()
                 error_popup::Confirmation,
                 true
                 );
+    TOUCH_BEEP();
 
     clear_page = 1;
 }
@@ -440,6 +449,8 @@ void usage_area::on_usage_reset_bt_clicked()
 {
     DatabaseInitializer dbinit;
     dbinit.clearUsageNoSurgeryDone(1);
+
+    TOUCH_BEEP();
 
     refreshPage();
 }

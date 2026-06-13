@@ -9,6 +9,8 @@ class RuntimeManager;
 
 extern RuntimeManager* g_runtimeManager;
 
+extern QString g_usbPath;
+
 extern QString version;
 extern QString model;
 extern QString serial_no;

@@ -68,6 +68,8 @@ void Calibration_screen::on_pre_power_1470_clicked()
 
     ui->DAC_change_1470->setText(QString::number(dacAValue));
 
+    TOUCH_BEEP();
+
 }
 
 
@@ -95,6 +97,8 @@ void Calibration_screen::on_next_power_1470_clicked()
     db.fetchDACByPower(power_1470,1470);
 
     ui->DAC_change_1470->setText(QString::number(dacAValue));
+
+    TOUCH_BEEP();
 }
 
 
@@ -102,6 +106,8 @@ void Calibration_screen::on_DAC_sub_1470_clicked()
 {
     dacAValue -= 1;
     ui->DAC_change_1470->setText(QString::number(dacAValue));
+
+    TOUCH_BEEP();
 }
 
 
@@ -109,6 +115,8 @@ void Calibration_screen::on_DAC_add_1470_clicked()
 {
     dacAValue += 1;
     ui->DAC_change_1470->setText(QString::number(dacAValue));
+
+    TOUCH_BEEP();
 }
 
 void Calibration_screen::on_pre_power_980_clicked()
@@ -135,6 +143,8 @@ void Calibration_screen::on_pre_power_980_clicked()
     db.fetchDACByPower(power_980,980);
 
     ui->DAC_change_980->setText(QString::number(dacBValue));
+
+    TOUCH_BEEP();
 }
 
 
@@ -164,6 +174,8 @@ void Calibration_screen::on_next_power_980_clicked()
     db.fetchDACByPower(power_980,980);
 
     ui->DAC_change_980->setText(QString::number(dacBValue));
+
+    TOUCH_BEEP();
 }
 
 
@@ -171,6 +183,8 @@ void Calibration_screen::on_DAC_sub_980_clicked()
 {
     dacBValue -= 1;
     ui->DAC_change_980->setText(QString::number(dacBValue));
+
+    TOUCH_BEEP();
 }
 
 
@@ -178,18 +192,24 @@ void Calibration_screen::on_DAC_add_980_clicked()
 {
     dacBValue += 1;
     ui->DAC_change_980->setText(QString::number(dacBValue));
+
+    TOUCH_BEEP();
 }
 
 
 void Calibration_screen::on_save_1470_clicked()
 {
     db.updateDACByPowerAndDiode(power_1470,1470,dacAValue);
+
+    SUCCESS_BEEP();
 }
 
 
 void Calibration_screen::on_save_980_clicked()
 {
     db.updateDACByPowerAndDiode(power_980,980,dacBValue);
+
+    SUCCESS_BEEP();
 }
 
 void Calibration_screen::switchToServiceEngArea()
@@ -201,18 +221,20 @@ void Calibration_screen::switchToServiceEngArea()
 void Calibration_screen::on_back_to_service_engineer_area_clicked()
 {
     switchToServiceEngArea();
+
+    TOUCH_BEEP();
 }
 
 
 void Calibration_screen::on_test_1470_clicked()
 {
-
+    TOUCH_BEEP();
 }
 
 
 void Calibration_screen::on_test_980_clicked()
 {
-
+    TOUCH_BEEP();
 }
 
 void Calibration_screen::switchToHome()
@@ -224,6 +246,8 @@ void Calibration_screen::switchToHome()
 void Calibration_screen::on_back_to_home_clicked()
 {
     switchToHome();
+
+    TOUCH_BEEP();
 }
 
 void Calibration_screen::refreshPage()

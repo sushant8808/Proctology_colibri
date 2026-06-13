@@ -67,16 +67,16 @@ void changepassword::appendDigit(const QString &digit)
 /* --------------------------------------------------
  * Number buttons
  * -------------------------------------------------- */
-void changepassword::on_B1_pass_0_clicked() { appendDigit("0"); }
-void changepassword::on_B1_pass_1_clicked() { appendDigit("1"); }
-void changepassword::on_B1_pass_2_clicked() { appendDigit("2"); }
-void changepassword::on_B1_pass_3_clicked() { appendDigit("3"); }
-void changepassword::on_B1_pass_4_clicked() { appendDigit("4"); }
-void changepassword::on_B1_pass_5_clicked() { appendDigit("5"); }
-void changepassword::on_B1_pass_6_clicked() { appendDigit("6"); }
-void changepassword::on_B1_pass_7_clicked() { appendDigit("7"); }
-void changepassword::on_B1_pass_8_clicked() { appendDigit("8"); }
-void changepassword::on_B1_pass_9_clicked() { appendDigit("9"); }
+void changepassword::on_B1_pass_0_clicked() { appendDigit("0"); TOUCH_BEEP();}
+void changepassword::on_B1_pass_1_clicked() { appendDigit("1"); TOUCH_BEEP();}
+void changepassword::on_B1_pass_2_clicked() { appendDigit("2"); TOUCH_BEEP();}
+void changepassword::on_B1_pass_3_clicked() { appendDigit("3"); TOUCH_BEEP();}
+void changepassword::on_B1_pass_4_clicked() { appendDigit("4"); TOUCH_BEEP();}
+void changepassword::on_B1_pass_5_clicked() { appendDigit("5"); TOUCH_BEEP();}
+void changepassword::on_B1_pass_6_clicked() { appendDigit("6"); TOUCH_BEEP();}
+void changepassword::on_B1_pass_7_clicked() { appendDigit("7"); TOUCH_BEEP();}
+void changepassword::on_B1_pass_8_clicked() { appendDigit("8"); TOUCH_BEEP();}
+void changepassword::on_B1_pass_9_clicked() { appendDigit("9"); TOUCH_BEEP();}
 
 /* --------------------------------------------------
  * Clear button
@@ -89,6 +89,8 @@ void changepassword::on_B1_pass_c_clicked()
         ui->new_pass->clear();
     else if (ui->confirm_new_pass->hasFocus())
         ui->confirm_new_pass->clear();
+
+    TOUCH_BEEP();
 }
 
 /* --------------------------------------------------
@@ -111,6 +113,8 @@ void changepassword::on_B1_pass_ok_clicked()
                     error_popup::Warning,
                     true
                     );
+
+        ERROR_BEEP();
         return;
     }
 
@@ -125,6 +129,7 @@ void changepassword::on_B1_pass_ok_clicked()
                     );
         ui->current_pass->clear();
         ui->current_pass->setFocus();
+        ERROR_BEEP();
         return;
     }
 
@@ -140,6 +145,7 @@ void changepassword::on_B1_pass_ok_clicked()
         ui->new_pass->clear();
         ui->confirm_new_pass->clear();
         ui->new_pass->setFocus();
+        ERROR_BEEP();
         return;
     }
 
@@ -167,6 +173,8 @@ void changepassword::on_B1_pass_ok_clicked()
                 true
                 );
 
+    SUCCESS_BEEP();
+
     success = 1;
 
 }
@@ -180,6 +188,7 @@ void changepassword::switchToSetting()
 void changepassword::on_B3_back_to_setting_clicked()
 {
     switchToSetting();
+    TOUCH_BEEP();
 }
 
 void changepassword::refreshPage()

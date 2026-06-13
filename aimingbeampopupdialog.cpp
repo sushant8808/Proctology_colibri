@@ -41,6 +41,7 @@ AimingBeamPopupDialog::AimingBeamPopupDialog(QWidget *parent)
 
 void AimingBeamPopupDialog::onSliderValueChanged(int value)
 {
+    TOUCH_BEEP();
     aimingbeamIntensity = value;
     HardwareManagerProvider::instance()->demoAimingBeam(value, g_stackIndex != PAGE_READYFORSURGERY);
     //qDebug()<<aimingbeamIntensity;

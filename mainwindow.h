@@ -6,6 +6,7 @@
 #include <QStackedWidget>
 #include <QLabel>
 #include <QProgressBar>
+#include <QFileSystemWatcher>
 
 #include "userlogin.h"
 #include "home.h"
@@ -52,6 +53,8 @@ private:
     Ui::MainWindow *ui;
 
     QStackedWidget* stackedWidget;
+
+    QFileSystemWatcher *usbWatcher;
 
 
 signals:

@@ -1,6 +1,7 @@
 #include "changevalue.h"
 #include "ui_changevalue.h"
 #include "global.h"
+#include "hardwaremanagerprovider.h"
 #include <cmath>
 
 
@@ -121,13 +122,17 @@ void changevalue::on_B2_980sub_clicked()
 
     power980 -= step;
 
-    if (power980 < 0.0)
+    if (power980 < 0.0) {
         power980 = 0.0;
+        WARNING_BEEP();
+    }
 
     power980 = std::round(power980 * 10.0) / 10.0;
 
     updatePower980Label();
     updateJouleLabel();
+
+    TOUCH_BEEP();
 }
 
 void changevalue::on_B2_980add_clicked()
@@ -144,13 +149,17 @@ void changevalue::on_B2_980add_clicked()
 
     power980 += step;
 
-    if (power980 > 15.0)
+    if (power980 >= 15.0) {
         power980 = 15.0;
+        WARNING_BEEP();
+    }
 
     power980 = std::round(power980 * 10.0) / 10.0;
 
     updatePower980Label();
     updateJouleLabel();
+
+    TOUCH_BEEP();
 }
 
 
@@ -166,13 +175,16 @@ void changevalue::on_B2_1470sub_clicked()
 
     power1470 -= step;
 
-    if (power1470 < 0.0)
+    if (power1470 < 0.0) {
         power1470 = 0.0;
+        WARNING_BEEP();
+    }
 
     power1470 = std::round(power1470 * 10.0) / 10.0;
 
     updatePower1470Label();
     updateJouleLabel();
+    TOUCH_BEEP();
 }
 
 void changevalue::on_B2_1470add_clicked()
@@ -189,13 +201,17 @@ void changevalue::on_B2_1470add_clicked()
 
     power1470 += step;
 
-    if (power1470 > 15.0)
+    if (power1470 >= 15.0) {
         power1470 = 15.0;
+        WARNING_BEEP();
+    }
 
     power1470 = std::round(power1470 * 10.0) / 10.0;
 
     updatePower1470Label();
     updateJouleLabel();
+
+    TOUCH_BEEP();
 }
 
 void changevalue::on_B2_timer_off_clicked()
@@ -204,6 +220,7 @@ void changevalue::on_B2_timer_off_clicked()
     new_totalEnergyDelivered = 0.0f;
     last_energyPerPedal = energyAtRelease;
     update_B2_timer_off();
+    TOUCH_BEEP();
 }
 
 void changevalue::update_B2_timer_off()
@@ -238,6 +255,7 @@ void changevalue::on_B2_timer_on_clicked()
     last_energyPerPedal = energyAtRelease;
     new_totalEnergyDelivered = 0.0f;
     update_B2_timer_on();
+    TOUCH_BEEP();
 }
 
 void changevalue::update_B2_timer_on()
@@ -269,9 +287,16 @@ void changevalue::update_B2_timer_on()
 void changevalue::on_B2_timer_sub_clicked()
 {
     if (ui->B2_timer_on->isChecked()) {
-        if (TimerSec > 1) TimerSec--;
+        if (TimerSec > 1) {
+            TimerSec--;
+        }
+        else {
+            WARNING_BEEP();
+        }
         updateTimerLabel();
         updateJouleLabel();
+
+        TOUCH_BEEP();
     }
 
 }
@@ -280,8 +305,10 @@ void changevalue::on_B2_timer_add_clicked()
 {
     if (ui->B2_timer_on->isChecked()) {
         if (TimerSec < 120) TimerSec++;
+        else WARNING_BEEP();
         updateTimerLabel();
         updateJouleLabel();
+        TOUCH_BEEP();
     }
 
 }
@@ -292,6 +319,7 @@ void changevalue::on_B2_timer_reset_clicked()
     new2_totalEnergyDelivered += new_totalEnergyDelivered;
     energyDelivered = new_totalEnergyDelivered + new2_totalEnergyDelivered - totalEnergyDelivered;
     setTimerResetState(timer_reset);
+    TOUCH_BEEP();
 }
 
 void changevalue::on_B2_timer_noreset_clicked()
@@ -299,6 +327,7 @@ void changevalue::on_B2_timer_noreset_clicked()
     last_energyPerPedal = energyAtRelease;
     timer_reset = 0;
     setTimerResetState(timer_reset);
+    TOUCH_BEEP();
 }
 
 void changevalue::setTimerResetState(bool reset)
@@ -356,6 +385,7 @@ void changevalue::on_B2_pulsemode_stateChanged(int arg1)
     ui->L2_off_pulse_show->setVisible(enabled);
 
     updatePulseLabels(pulseMode);
+    TOUCH_BEEP();
 }
 
 
@@ -364,6 +394,7 @@ void changevalue::on_B2_on_time_sub_clicked()
     pulseOnTime = decrementPulseValue(pulseOnTime);
 
     updatePulseLabels(pulseMode);
+    TOUCH_BEEP();
 }
 
 void changevalue::on_B2_on_time_add_clicked()
@@ -371,6 +402,7 @@ void changevalue::on_B2_on_time_add_clicked()
     pulseOnTime = incrementPulseValue(pulseOnTime);
 
     updatePulseLabels(pulseMode);
+    TOUCH_BEEP();
 }
 
 
@@ -379,6 +411,7 @@ void changevalue::on_B2_off_time_sub_clicked()
     pulseOffTime = decrementPulseValue(pulseOffTime);
 
     updatePulseLabels(pulseMode);
+    TOUCH_BEEP();
 }
 
 void changevalue::on_B2_off_time_add_clicked()
@@ -386,6 +419,7 @@ void changevalue::on_B2_off_time_add_clicked()
     pulseOffTime = incrementPulseValue(pulseOffTime);
 
     updatePulseLabels(pulseMode);
+    TOUCH_BEEP();
 }
 
 void changevalue::alarm_button_control()
@@ -507,6 +541,8 @@ void changevalue::on_B2_audioalarm_stateChanged(int arg1)
     audioMode = enabled;
 
     alarm_button_control();
+
+    TOUCH_BEEP();
 }
 
 void changevalue::on_B2_sec_alarm_clicked()
@@ -542,6 +578,8 @@ void changevalue::on_B2_sec_alarm_clicked()
 
     updateAlarmSecLabel();
     updateAlarmJouleLabel();
+
+    TOUCH_BEEP();
 }
 
 void changevalue::on_B2_joule_alarm_clicked()
@@ -570,6 +608,8 @@ void changevalue::on_B2_joule_alarm_clicked()
 
     updateAlarmSecLabel();
     updateAlarmJouleLabel();
+
+    TOUCH_BEEP();
 }
 
 void changevalue::on_B2_alarm_sec_sub_clicked()
@@ -580,6 +620,8 @@ void changevalue::on_B2_alarm_sec_sub_clicked()
         alarmSeconds -= 1;
 
     updateAlarmSecLabel();
+
+    TOUCH_BEEP();
 }
 
 void changevalue::on_B2_alarm_sec_add_clicked()
@@ -590,6 +632,8 @@ void changevalue::on_B2_alarm_sec_add_clicked()
         alarmSeconds += 1;
 
     updateAlarmSecLabel();
+
+    TOUCH_BEEP();
 }
 
 
@@ -607,6 +651,8 @@ void changevalue::on_B2_alarm_joule_sub_clicked()
     }
 
     updateAlarmJouleLabel();
+
+    TOUCH_BEEP();
 }
 
 void changevalue::on_B2_alarm_joule_add_clicked()
@@ -623,6 +669,8 @@ void changevalue::on_B2_alarm_joule_add_clicked()
     }
 
     updateAlarmJouleLabel();
+
+    TOUCH_BEEP();
 }
 
 void changevalue::updatePower980Label()

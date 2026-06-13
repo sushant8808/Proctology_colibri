@@ -8,6 +8,8 @@ QString serial_no = "HDD_001";
 
 RuntimeManager* g_runtimeManager = nullptr;
 
+QString g_usbPath;
+
 bool surgery_pause = 0;
 
 QString loginpass = "";

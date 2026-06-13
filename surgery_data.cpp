@@ -86,11 +86,13 @@ void Surgery_data::on_B4_save_clicked()
                     error_popup::Warning,
                     true
                     );
-
+        WARNING_BEEP();
         return;
     }
 
     startNewSurgery();
+
+    SUCCESS_BEEP();
 
     QString genderStr = genderMale ? "Male" : "Female";
 
@@ -145,6 +147,8 @@ void Surgery_data::on_B4_skip_clicked()
     }
 
     MainWindow::instance->switchPage(PAGE_READYFORSURGERY);
+
+    TOUCH_BEEP();
 }
 
 void Surgery_data::switchToHome()
@@ -155,6 +159,7 @@ void Surgery_data::switchToHome()
 void Surgery_data::on_B4_back_to_home_clicked()
 {
     switchToHome();
+    TOUCH_BEEP();
 }
 
 void Surgery_data::loadSurgeonNames()
@@ -182,10 +187,12 @@ void Surgery_data::loadSurgeonNames()
 void Surgery_data::on_B4_male_clicked()
 {
     ui->B4_female->setChecked(false);
+    TOUCH_BEEP();
 }
 void Surgery_data::on_B4_female_clicked()
 {
     ui->B4_male->setChecked(false);
+    TOUCH_BEEP();
 }
 
 void Surgery_data::showEvent(QShowEvent *event)

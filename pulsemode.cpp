@@ -28,6 +28,8 @@ void PulseMode::on_B3_back_to_setting_clicked()
     dbinit.savePulseRanges();
 
     MainWindow::instance->switchPage(PAGE_SETTING);
+
+    TOUCH_BEEP();
 }
 
 void PulseMode::on_dec_low_value_clicked()
@@ -53,6 +55,8 @@ void PulseMode::on_dec_low_value_clicked()
         pulseOffTime = pulseMinLimit;
 
     updateRangeLabels();
+
+    TOUCH_BEEP();
 }
 
 void PulseMode::on_inc_low_value_clicked()
@@ -74,6 +78,8 @@ void PulseMode::on_inc_low_value_clicked()
         pulseOffTime = pulseMinLimit;
 
     updateRangeLabels();
+
+    TOUCH_BEEP();
 }
 
 void PulseMode::on_dec_high_value_clicked()
@@ -95,6 +101,8 @@ void PulseMode::on_dec_high_value_clicked()
         pulseOffTime = pulseMaxLimit;
 
     updateRangeLabels();
+
+    TOUCH_BEEP();
 }
 
 void PulseMode::on_inc_high_value_clicked()
@@ -113,6 +121,8 @@ void PulseMode::on_inc_high_value_clicked()
     pulseMaxLimit = newValue;
 
     updateRangeLabels();
+
+    TOUCH_BEEP();
 }
 
 QString PulseMode::formatPulseTime(int valueUs)

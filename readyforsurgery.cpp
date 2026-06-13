@@ -21,7 +21,7 @@
 #include "hardwaremanager.h"
 #include "hardwaremanagerprovider.h"
 
-#define ADC_CH0 0
+#define ADC_CH0 2
 
 bool writeSysfsValue(const QString &path, const QString &value)
 {
@@ -259,15 +259,18 @@ ReadyForSurgery::ReadyForSurgery(QWidget *parent, Home *home)
 
     connect(popup, &error_popup::yesClicked, this, [this]() {
         end_surgery();
+        TOUCH_BEEP();
         qDebug() << "Yes";
     });
 
     connect(popup, &error_popup::noClicked, this, [this]() {
+        TOUCH_BEEP();
         qDebug() << "No";
     });
 
     connect(popup, &error_popup::acknowledged,
             this,[this](){
+        TOUCH_BEEP();
         if(surgery_pause)
             surgery_pause = 0;
 
@@ -491,10 +494,14 @@ void ReadyForSurgery::on_B5_to_standby_clicked()
                 error_popup::Confirmation,
                 true
                 );
+
+    TOUCH_BEEP();
 }
 
 void ReadyForSurgery::on_B5_change_clicked()
 {
+    TOUCH_BEEP();
+
     QWidget *overlay = new QWidget(this);
     overlay->setGeometry(0, 0, width(), height());
     overlay->setStyleSheet("background-color: rgba(0, 0, 0, 150);");
@@ -534,7 +541,9 @@ void ReadyForSurgery::on_B5_change_clicked()
 
 void ReadyForSurgery::on_B5_reset_clicked()
 {
+    float adcValue = m_adc.readVoltage(ADC_CH0);
 
+    qDebug()<<"adcvalue"<<adcValue;
 
 
     if (storedCount < 8) {
@@ -558,6 +567,8 @@ void ReadyForSurgery::on_B5_reset_clicked()
 
     energyDelivered = 0;
     ui->L5_energy_deliverd->setText(QString::number(energyDelivered, 'f', 0));
+
+    TOUCH_BEEP();
 }
 
 void ReadyForSurgery::updateEnergy()
@@ -687,6 +698,7 @@ void ReadyForSurgery::playNextAudio()
 void ReadyForSurgery::on_B5_pause_clicked()
 {
     surgery_pause_popup();
+    TOUCH_BEEP();
 }
 
 void ReadyForSurgery::surgery_pause_popup()

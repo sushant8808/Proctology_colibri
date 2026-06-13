@@ -40,6 +40,7 @@ BrightnessPopupDialog::BrightnessPopupDialog(QWidget *parent)
 
 void BrightnessPopupDialog::onSliderValueChanged(int value)
 {
+    TOUCH_BEEP();
     brightnessIntensity = value;
     HardwareManagerProvider::instance()->setBrightness(value);
     //qDebug()<<brightnessIntensity;

@@ -34,12 +34,14 @@ Setting::Setting(QWidget *parent, Home *home)
 
     connect(popup, &error_popup::yesClicked,
             this, [this]() {
+        TOUCH_BEEP();
         clear_data_form_userdb();
         qDebug() << "Yes";
     });
 
     connect(popup, &error_popup::noClicked,
             this, [this]() {
+        TOUCH_BEEP();
         clear_data = 0;
         qDebug() << "No";
     });
@@ -47,6 +49,7 @@ Setting::Setting(QWidget *parent, Home *home)
 
     connect(popup, &error_popup::acknowledged,
             this,[](){
+        TOUCH_BEEP();
         qDebug() << "ok";
     });
 
@@ -73,6 +76,7 @@ void Setting::switchTonewprotocol()
 void Setting::on_B3_back_to_home_clicked()
 {
     switchToHome();
+    TOUCH_BEEP();
 }
 
 
@@ -82,6 +86,7 @@ void Setting::on_B3_simplified_clicked()
         home->setSimplifiedMode();
     }
     update_simp_adva_mode();
+    TOUCH_BEEP();
 
 }
 
@@ -93,6 +98,7 @@ void Setting::on_B3_advanced_clicked()
         home->setAdvancedMode();
     }
     update_simp_adva_mode();
+    TOUCH_BEEP();
 
 }
 
@@ -142,6 +148,7 @@ void Setting::update_simp_adva_mode(void)
 void Setting::on_B3_pulse_mode_clicked()
 {
     switchTonewPulseMode();
+    TOUCH_BEEP();
 }
 
 void Setting::switchTonewPulseMode()
@@ -157,11 +164,13 @@ void Setting::on_B3_custom_clicked()
     new_protocol = true;
     modify_protocol = false;
     switchTonewprotocol();
+    TOUCH_BEEP();
 }
 
 void Setting::on_B3_pass_enable_clicked()
 {
     toggle_pass_enable();
+    TOUCH_BEEP();
 }
 
 void Setting::toggle_pass_enable(void)
@@ -189,6 +198,7 @@ void Setting::toggle_pass_enable(void)
 void Setting::on_B3_pass_change_clicked()
 {
     MainWindow::instance->switchPage(PAGE_CHANGEPASSWORD);
+    TOUCH_BEEP();
 }
 
 
@@ -213,11 +223,14 @@ void Setting::toggle_interlockkey_enable(void)
         ui->B3_interlockkey_enable->setText("Enable");
     }
 
+    TOUCH_BEEP();
 }
 
 
 void Setting::on_B3_dark_light_clicked()
 {
+    TOUCH_BEEP();
+
     Adv_Sim_fromSetting = 1;
     qDebug()<<dark;
 
@@ -243,6 +256,7 @@ void Setting::on_B3_usage_area_clicked()
     user_admin_mode = 2;
 
     MainWindow::instance->switchPage(PAGE_LOGIN);
+    TOUCH_BEEP();
 }
 
 
@@ -251,6 +265,7 @@ void Setting::on_B3_service_engineer_area_clicked()
     user_admin_mode = 1;
 
     MainWindow::instance->switchPage(PAGE_LOGIN);
+    TOUCH_BEEP();
 
 }
 
@@ -263,6 +278,7 @@ void Setting::on_B3_clear_data_clicked()
                 error_popup::Confirmation,
                 true
                 );
+    TOUCH_BEEP();
 
     clear_data = 1;
 }
@@ -280,6 +296,7 @@ void Setting::clear_data_form_userdb()
 void Setting::on_B3_patientdata_enable_clicked()
 {
     toggle_patientdata_enable();
+    TOUCH_BEEP();
 }
 
 void Setting::toggle_patientdata_enable()
@@ -303,8 +320,11 @@ void Setting::toggle_patientdata_enable()
 
 void Setting::on_B3_patientdata_export_clicked()
 {
-    bool ok1 = exportPatientDataToCSV();    // master CSV
-    bool ok2 = exportPatientWiseCSV();      // patient-wise
+    bool ok1 = exportPatientDataToCSV();
+    qDebug() << "exportPatientDataToCSV =" << ok1;
+
+    bool ok2 = exportPatientWiseCSV();
+    qDebug() << "exportPatientWiseCSV =" << ok2;
 
     if (ok1 && ok2) {
         popup->showMessage(
@@ -321,6 +341,7 @@ void Setting::on_B3_patientdata_export_clicked()
                     true
                     );
     }
+    TOUCH_BEEP();
 }
 
 void Setting::export_status(int ex_st)
@@ -350,14 +371,44 @@ void Setting::export_status(int ex_st)
 bool Setting::exportPatientDataToCSV()
 {
     // 1️⃣ Fixed base path (YOUR PATH)
-    QString baseDir =
-            "D:/OneDrive - Udyamlabs LLP/Qt projects/laser_ui_2/Patient_Export";
+//    QString baseDir =
+//            "D:/OneDrive - Udyamlabs LLP/Qt projects/laser_ui_2/Patient_Export";
+
+    extern QString g_usbPath;
+
+    if(g_usbPath.isEmpty())
+    {
+        qDebug() << "USB not connected";
+        return false;
+    }
+
+    qDebug() << "USB Path =" << g_usbPath;
+
+    QFile testFile(g_usbPath + "/test.txt");
+
+    if(testFile.open(QIODevice::WriteOnly))
+    {
+        qDebug() << "USB WRITE OK";
+        testFile.write("test");
+        testFile.close();
+    }
+    else
+    {
+        qDebug() << "USB WRITE FAILED";
+        qDebug() << "Reason =" << testFile.errorString();
+    }
+
+    QString baseDir = g_usbPath + "/Patient_Export";
 
     // 2️⃣ Create directory if it does not exist
     QDir dir(baseDir);
-    if (!dir.exists()) {
-        if (!dir.mkpath(".")) {
-            qDebug() << "❌ Failed to create export directory:" << baseDir;
+    if (!dir.exists())
+    {
+        qDebug() << "Creating directory:" << baseDir;
+
+        if (!dir.mkpath("."))
+        {
+            qDebug() << "❌ Failed to create export directory";
             return false;
         }
     }
@@ -369,8 +420,15 @@ bool Setting::exportPatientDataToCSV()
             + ".csv";
 
     QFile file(filePath);
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        qDebug() << "❌ Failed to create export file:" << filePath;
+    qDebug() << "USB Path =" << g_usbPath;
+    qDebug() << "Base Dir =" << baseDir;
+    qDebug() << "File Path =" << filePath;
+
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        qDebug() << "❌ Failed to create export file";
+        qDebug() << "File :" << filePath;
+        qDebug() << "Error:" << file.errorString();
         return false;
     }
 
@@ -436,8 +494,18 @@ bool Setting::exportPatientDataToCSV()
 
 bool Setting::exportPatientWiseCSV()
 {
-    QString baseDir =
-            "D:/OneDrive - Udyamlabs LLP/Qt projects/laser_ui_2/Patient_Export";
+//    QString baseDir =
+//            "D:/OneDrive - Udyamlabs LLP/Qt projects/laser_ui_2/Patient_Export";
+
+    extern QString g_usbPath;
+
+    if(g_usbPath.isEmpty())
+    {
+        qDebug() << "USB not connected";
+        return false;
+    }
+
+    QString baseDir = g_usbPath + "/Patient_Export";
 
     QDir dir(baseDir);
     if (!dir.exists() && !dir.mkpath(".")) {
@@ -495,7 +563,11 @@ bool Setting::exportPatientWiseCSV()
 
             file.setFileName(filePath);
             if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+            {
+                qDebug() << "Failed :" << filePath;
+                qDebug() << "Reason :" << file.errorString();
                 continue;
+            }
 
             out.setDevice(&file);
 

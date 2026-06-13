@@ -3,6 +3,7 @@
 #include <QHBoxLayout>
 #include <QApplication>
 #include <QScreen>
+#include "hardwaremanagerprovider.h"
 #include "global.h"
 
 error_popup::error_popup(QWidget *parent)
@@ -149,17 +150,20 @@ error_popup::error_popup(QWidget *parent)
     connect(ackButton, &QPushButton::clicked, this, [=]() {
         if (canAcknowledge)
         {
+            TOUCH_BEEP();
             emit acknowledged();
             hide();
         }
     });
 
     connect(yesButton, &QPushButton::clicked, this, [=]() {
+        TOUCH_BEEP();
         emit yesClicked();
         hide();
     });
 
     connect(noButton, &QPushButton::clicked, this, [=]() {
+        TOUCH_BEEP();
         emit noClicked();
         hide();
     });

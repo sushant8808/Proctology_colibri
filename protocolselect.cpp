@@ -58,18 +58,21 @@ protocolselect::protocolselect(QWidget *parent, Home *home)
 
     connect(btnModify, &QPushButton::clicked, this, [=]() {
         qDebug() << "Modify clicked";
+        TOUCH_BEEP();
         mode = ModifyMode;
         btnConfirm->show();
     });
 
     connect(btnDelete, &QPushButton::clicked, this, [=]() {
         qDebug() << "Delete clicked";
+        TOUCH_BEEP();
         mode = DeleteMode;
         btnConfirm->show();
     });
 
     connect(btnConfirm, &QPushButton::clicked, this, [=]() {
         qDebug() << "Confirm clicked";
+        TOUCH_BEEP();
         if(mode == DeleteMode)
         {
             DatabaseInitializer dbinit;
@@ -274,6 +277,8 @@ void protocolselect::loadProtocols(const QString &tableName, QWidget *tabWidget)
                                   id);
 
             qDebug() << "protocol emit";
+
+            TOUCH_BEEP();
 
             emit protocolSelected(name);
 

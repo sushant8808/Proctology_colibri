@@ -78,6 +78,8 @@ void newcustomprotocol::on_B2_980sub_clicked()
 
     updatePower980Label();
     updateJouleLabel();
+    TOUCH_BEEP();
+
 }
 
 
@@ -102,6 +104,8 @@ void newcustomprotocol::on_B2_980add_clicked()
 
     updatePower980Label();
     updateJouleLabel();
+    TOUCH_BEEP();
+
 }
 
 
@@ -124,6 +128,8 @@ void newcustomprotocol::on_B2_1470sub_clicked()
 
     updatePower1470Label();
     updateJouleLabel();
+    TOUCH_BEEP();
+
 }
 
 
@@ -148,12 +154,16 @@ void newcustomprotocol::on_B2_1470add_clicked()
 
     updatePower1470Label();
     updateJouleLabel();
+    TOUCH_BEEP();
+
 }
 
 
 void newcustomprotocol::on_B2_timer_off_clicked()
 {
     update_B2_timer_off();
+    TOUCH_BEEP();
+
 }
 
 void newcustomprotocol::update_B2_timer_off()
@@ -186,12 +196,16 @@ void newcustomprotocol::update_B2_timer_off()
 
     updateTimerLabel();
     updateJouleLabel();
+    TOUCH_BEEP();
+
 }
 
 
 void newcustomprotocol::on_B2_timer_on_clicked()
 {
     update_B2_timer_on();
+    TOUCH_BEEP();
+
 }
 
 void newcustomprotocol::update_B2_timer_on()
@@ -218,6 +232,8 @@ void newcustomprotocol::update_B2_timer_on()
                 "}");
     }
     updateTimerLabel();
+    TOUCH_BEEP();
+
 }
 
 void newcustomprotocol::on_B2_timer_sub_clicked()
@@ -226,6 +242,8 @@ void newcustomprotocol::on_B2_timer_sub_clicked()
         if (l_TimerSec > 1) l_TimerSec--;
         updateTimerLabel();
         updateJouleLabel();
+        TOUCH_BEEP();
+
     }
 }
 
@@ -236,6 +254,8 @@ void newcustomprotocol::on_B2_timer_add_clicked()
         if (l_TimerSec < 120) l_TimerSec++;
         updateTimerLabel();
         updateJouleLabel();
+        TOUCH_BEEP();
+
     }
 }
 
@@ -244,6 +264,8 @@ void newcustomprotocol::on_B2_timer_reset_clicked()
 {
     l_timer_reset = 1;
     setTimerResetState(l_timer_reset);
+    TOUCH_BEEP();
+
 }
 
 
@@ -251,6 +273,8 @@ void newcustomprotocol::on_B2_timer_noreset_clicked()
 {
     l_timer_reset = 0;
     setTimerResetState(l_timer_reset);
+    TOUCH_BEEP();
+
 }
 
 void newcustomprotocol::setTimerResetState(bool reset)
@@ -308,6 +332,8 @@ void newcustomprotocol::on_B2_pulsemode_stateChanged(int arg1)
     ui->L2_off_pulse_show->setVisible(enabled);
 
     updatePulseLabels(l_pulseMode);
+    TOUCH_BEEP();
+
 }
 
 void newcustomprotocol::on_B2_on_time_sub_clicked()
@@ -315,6 +341,8 @@ void newcustomprotocol::on_B2_on_time_sub_clicked()
     l_pulseOnTime = decrementPulseValue(l_pulseOnTime);
 
     updatePulseLabels(l_pulseMode);
+    TOUCH_BEEP();
+
 }
 
 
@@ -323,6 +351,8 @@ void newcustomprotocol::on_B2_on_time_add_clicked()
     l_pulseOnTime = incrementPulseValue(l_pulseOnTime);
 
     updatePulseLabels(l_pulseMode);
+    TOUCH_BEEP();
+
 }
 
 void newcustomprotocol::on_B2_off_time_sub_clicked()
@@ -330,6 +360,8 @@ void newcustomprotocol::on_B2_off_time_sub_clicked()
     l_pulseOffTime = decrementPulseValue(l_pulseOffTime);
 
     updatePulseLabels(l_pulseMode);
+    TOUCH_BEEP();
+
 }
 
 
@@ -338,12 +370,16 @@ void newcustomprotocol::on_B2_off_time_add_clicked()
     l_pulseOffTime = incrementPulseValue(l_pulseOffTime);
 
     updatePulseLabels(l_pulseMode);
+    TOUCH_BEEP();
+
 }
 
 
 void newcustomprotocol::on_B2_cancel_clicked()
 {
     switchToHome();
+    TOUCH_BEEP();
+
 }
 
 
@@ -398,6 +434,8 @@ void newcustomprotocol::on_B2_save_clicked()
         custom_modify = 0;
         switchToHome();   // optional UX
     }
+    TOUCH_BEEP();
+
 }
 
 void newcustomprotocol::updatePower980Label()
@@ -530,12 +568,16 @@ void newcustomprotocol::on_B3_back_to_setting_clicked()
     {
         switchToSetting();
     }
+    TOUCH_BEEP();
+
 }
 
 
 void newcustomprotocol::on_B2_back_to_home_clicked()
 {
     switchToHome();
+    TOUCH_BEEP();
+
 }
 
 void newcustomprotocol::on_Surgery_name_textChanged(const QString &text)

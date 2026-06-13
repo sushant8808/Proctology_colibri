@@ -9,6 +9,8 @@
 #include <QVBoxLayout>
 #include "hardwaremanagerprovider.h"
 #include "error_popup.h"
+#include <QFileSystemWatcher>
+#include <QDir>
 
 
 MainWindow* MainWindow::instance = nullptr;
@@ -23,6 +25,37 @@ MainWindow::MainWindow(QWidget *parent, QLabel *statusLabel, QProgressBar *progr
     this->setWindowFlags(Qt::FramelessWindowHint);
 
     instance = this;
+
+
+
+    usbWatcher = new QFileSystemWatcher(this);
+
+    usbWatcher->addPath("/media");
+
+    connect(usbWatcher, &QFileSystemWatcher::directoryChanged,
+            this, [=](const QString &path)
+    {
+        qDebug() << "USB state changed";
+
+        QDir media(path);
+        QStringList drives =
+                media.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+
+        if(!drives.isEmpty())
+        {
+            g_usbPath = media.absoluteFilePath(drives.first());
+
+            qDebug() << "USB Connected";
+            qDebug() << "USB Path:" << g_usbPath;
+        }
+        else
+        {
+            g_usbPath.clear();
+            qDebug() << "USB Removed";
+        }
+    });
+
+
 
     popup1 = new error_popup(this);
 

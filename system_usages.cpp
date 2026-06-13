@@ -26,12 +26,14 @@ system_usages::~system_usages()
 void system_usages::on_back_to_home_clicked()
 {
     switchToHome();
+    TOUCH_BEEP();
 }
 
 
 void system_usages::on_back_to_service_engineer_area_clicked()
 {
     switchToServiceEngArea();
+    TOUCH_BEEP();
 }
 
 void system_usages::update_UI()

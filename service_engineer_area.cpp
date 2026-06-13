@@ -25,6 +25,7 @@ service_engineer_area::~service_engineer_area()
 void service_engineer_area::on_calibration_clicked()
 {
     MainWindow::instance->switchPage(PAGE_CALIBRATION);
+    TOUCH_BEEP();
 }
 
 
@@ -37,17 +38,20 @@ void service_engineer_area::switchToSetting()
 void service_engineer_area::on_back_to_setting_clicked()
 {
     switchToSetting();
+    TOUCH_BEEP();
 }
 
 void service_engineer_area::on_set_date_time_clicked()
 {
     MainWindow::instance->switchPage(PAGE_SETDATETIME);
+    TOUCH_BEEP();
 }
 
 
 void service_engineer_area::on_system_usage_clicked()
 {
     MainWindow::instance->switchPage(PAGE_SYSTEMUSAGES);
+    TOUCH_BEEP();
 }
 
 void service_engineer_area::showEvent(QShowEvent *event)

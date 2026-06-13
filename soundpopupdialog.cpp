@@ -5,6 +5,7 @@
 #include <QTimer>
 #include "global.h"
 #include "tickedslider.h"
+#include "hardwaremanagerprovider.h"
 
 SoundPopupDialog::SoundPopupDialog(QWidget *parent)
     : QDialog(parent)
@@ -64,11 +65,13 @@ SoundPopupDialog::SoundPopupDialog(QWidget *parent)
 // ---- First Slider Handler ----
 void SoundPopupDialog::onSliderValueChanged(int value)
 {
+    TOUCH_BEEP();
     soundIntensity = value;
 }
 
 // ---- Second Slider Handler ----
 void SoundPopupDialog::onSlider2ValueChanged(int value)
 {
+    TOUCH_BEEP();
     beepIntensity = value;
 }
