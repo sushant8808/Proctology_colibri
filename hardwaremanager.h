@@ -19,6 +19,23 @@ public:
 
     bool gpioValue(int sodimmPin) const;
 
+    // PWM
+    QString m_pwmPath;
+
+    struct PwmChannel {
+            QString chipPath;   // /sys/class/pwm/pwmchipX
+            QString pwmPath;    // /sys/class/pwm/pwmchipX/pwm0
+        };
+
+    QMap<char, PwmChannel> m_pwms; // A,B,C,D,E
+
+    bool exportPwm(const QString &chipPath);
+    void setPwm(const PwmChannel &pwm, int dutyNs, int periodNs);
+//    void startPwm(int dutyNs, int periodNs, int durationMs);
+    void setPwmSafe(const PwmChannel &pwm,
+                    int dutyNs,
+                    int periodNs);
+
     // Buzzer
     enum BuzzerType {
         TouchBeep,
@@ -53,22 +70,22 @@ private:
 
     QMap<int, GpioInfo> m_gpios;
 
-    // PWM
-    QString m_pwmPath;
+//    // PWM
+//    QString m_pwmPath;
 
-    struct PwmChannel {
-            QString chipPath;   // /sys/class/pwm/pwmchipX
-            QString pwmPath;    // /sys/class/pwm/pwmchipX/pwm0
-        };
+//    struct PwmChannel {
+//            QString chipPath;   // /sys/class/pwm/pwmchipX
+//            QString pwmPath;    // /sys/class/pwm/pwmchipX/pwm0
+//        };
 
-    QMap<char, PwmChannel> m_pwms; // A,B,C,D,E
+//    QMap<char, PwmChannel> m_pwms; // A,B,C,D,E
 
-    bool exportPwm(const QString &chipPath);
-    void setPwm(const PwmChannel &pwm, int dutyNs, int periodNs);
-//    void startPwm(int dutyNs, int periodNs, int durationMs);
-    void setPwmSafe(const PwmChannel &pwm,
-                    int dutyNs,
-                    int periodNs);
+//    bool exportPwm(const QString &chipPath);
+////    void setPwm(const PwmChannel &pwm, int dutyNs, int periodNs);
+////    void startPwm(int dutyNs, int periodNs, int durationMs);
+//    void setPwmSafe(const PwmChannel &pwm,
+//                    int dutyNs,
+//                    int periodNs);
 };
 
 #endif // HARDWAREMANAGER_H

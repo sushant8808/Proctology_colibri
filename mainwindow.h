@@ -24,6 +24,7 @@
 #include "set_date_time.h"
 #include "changepassword.h"
 #include "error_popup.h"
+#include "peltier_control.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -55,6 +56,8 @@ private:
     QStackedWidget* stackedWidget;
 
     QFileSystemWatcher *usbWatcher;
+
+    peltier_control *m_peltierControl;
 
 
 signals:

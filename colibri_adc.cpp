@@ -13,8 +13,12 @@ int Colibri_ADC::readRaw(int channel)
                 return -1;
             }
 
+//            QString path =
+//                QString("/sys/bus/iio/devices/iio:device0/in_voltage%1_raw")
+//                .arg(channel);
+
             QString path =
-                QString("/sys/bus/iio/devices/iio:device0/in_voltage%1_raw")
+                QString("/dev/colibri-ain%1")
                 .arg(channel);
 
             QFile file(path);

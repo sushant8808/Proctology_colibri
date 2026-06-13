@@ -37,6 +37,7 @@ SOURCES += \
     mainwindow.cpp \
     mqs_audio.cpp \
     newcustomprotocol.cpp \
+    peltier_control.cpp \
     protocolitemwidget.cpp \
     protocolselect.cpp \
     pulsemode.cpp \
@@ -83,6 +84,7 @@ HEADERS += \
     mqs_audio.h \
     newcustomprotocol.h \
     pageindex.h \
+    peltier_control.h \
     protocolitemwidget.h \
     protocolselect.h \
     pulsemode.h \

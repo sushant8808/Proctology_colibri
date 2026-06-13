@@ -21,7 +21,7 @@
 #include "hardwaremanager.h"
 #include "hardwaremanagerprovider.h"
 
-#define ADC_CH0 2
+#define ADC_CH0 1
 
 bool writeSysfsValue(const QString &path, const QString &value)
 {

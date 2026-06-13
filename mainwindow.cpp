@@ -27,6 +27,12 @@ MainWindow::MainWindow(QWidget *parent, QLabel *statusLabel, QProgressBar *progr
     instance = this;
 
 
+    m_peltierControl = new peltier_control(this);
+
+    m_peltierControl->setTemperature(23.0f);
+
+    m_peltierControl->start();
+
 
     usbWatcher = new QFileSystemWatcher(this);
 
