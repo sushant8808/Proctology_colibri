@@ -368,7 +368,31 @@ QString ReadyForSurgery::getPulseUnit(int valueUs)
 
 void ReadyForSurgery::updateJouleLabel()
 {
-    currentJoule = TimerSec * (power980 + power1470);
+//    currentJoule = TimerSec * (power980 + power1470);
+
+    if(pulseMode)
+    {
+        //        currentAvgPower = (static_cast<double>(pulseOnTime) / (pulseOnTime + pulseOffTime)) * (power980 + power1470);
+
+        int total = pulseOnTime + pulseOffTime;
+
+        if(total == 0)
+        {
+            currentJoule = 0;
+        }
+        else
+        {
+            currentJoule =
+                    ((double)pulseOnTime / total) *
+                    (power980 + power1470) * TimerSec;
+        }
+
+    }
+    else
+    {
+        currentJoule= TimerSec * (power980+power1470);
+    }
+
     ui->L5_energy->setText(QString::number(currentJoule));
 }
 

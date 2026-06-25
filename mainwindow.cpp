@@ -52,12 +52,18 @@ MainWindow::MainWindow(QWidget *parent, QLabel *statusLabel, QProgressBar *progr
             g_usbPath = media.absoluteFilePath(drives.first());
 
             qDebug() << "USB Connected";
+            homePage->updateUSBicon(1);
+            usb_status = 1;
+
             qDebug() << "USB Path:" << g_usbPath;
         }
         else
         {
             g_usbPath.clear();
             qDebug() << "USB Removed";
+            homePage->updateUSBicon(0);
+            usb_status = 0;
+
         }
     });
 

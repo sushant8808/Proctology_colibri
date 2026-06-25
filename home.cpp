@@ -130,12 +130,12 @@ Home::Home(QWidget *parent)
         MainWindow::instance->interlock_popup(status);
     });
 
-//    QTimer::singleShot(50, this, [this]() {
-//        bool currentStatus = HardwareManagerProvider::instance()->gpioValue(133);
-//        qDebug() << "Initial Interlock status processed via explicit query:" << currentStatus;
-//        updateInterlockUi(currentStatus);
-//        MainWindow::instance->interlock_popup(currentStatus);
-//    });
+    //    QTimer::singleShot(50, this, [this]() {
+    //        bool currentStatus = HardwareManagerProvider::instance()->gpioValue(133);
+    //        qDebug() << "Initial Interlock status processed via explicit query:" << currentStatus;
+    //        updateInterlockUi(currentStatus);
+    //        MainWindow::instance->interlock_popup(currentStatus);
+    //    });
 
 }
 
@@ -275,6 +275,10 @@ void Home::updatePower1470Label()
 void Home::on_B2_timer_on_clicked()
 {
     TOUCH_BEEP();
+
+    if(!timerFlag && TimerSec == 0)
+        TimerSec = 1;
+
     update_B2_timer_on();
     markProtocolModified(Q_FUNC_INFO);
 }
@@ -282,7 +286,7 @@ void Home::on_B2_timer_on_clicked()
 void Home::update_B2_timer_on(void)
 {
     timerFlag = true;
-    TimerSec = 1;
+    //    TimerSec = 1;
     ui->L2_energy_show->show();
     ui->L2_timer_show->show();
     ui->B2_timer_add->setEnabled(true);
@@ -390,8 +394,31 @@ void Home::updateTimerLabel()
 
 void Home::updateJouleLabel()
 {
-    currentJoule= TimerSec * (power980+power1470);
+//    currentJoule= TimerSec * (power980+power1470);
     //    ui->L2_energy_show->setText(QString::number(currentJoule,'f', 1));
+
+    if(pulseMode)
+    {
+        //        currentAvgPower = (static_cast<double>(pulseOnTime) / (pulseOnTime + pulseOffTime)) * (power980 + power1470);
+
+        int total = pulseOnTime + pulseOffTime;
+
+        if(total == 0)
+        {
+            currentJoule = 0;
+        }
+        else
+        {
+            currentJoule =
+                    ((double)pulseOnTime / total) *
+                    (power980 + power1470) * TimerSec;
+        }
+
+    }
+    else
+    {
+        currentJoule= TimerSec * (power980+power1470);
+    }
     QString formattedJoule = QString::number(currentJoule, 'f', 1);
 
     ui->L2_energy_show->setText(
@@ -408,6 +435,7 @@ void Home::on_B2_pulsemode_stateChanged(int arg1)
     pulseMode = enabled;
 
     updateAvgEnergyLabel();
+    updateJouleLabel();
 
     ui->B2_on_time_add->setEnabled(enabled);
     ui->B2_on_time_sub->setEnabled(enabled);
@@ -435,6 +463,7 @@ void Home::on_B2_on_time_add_clicked()
 
     updatePulseLabels(pulseMode);
     updateAvgEnergyLabel();
+    updateJouleLabel();
 
     markProtocolModified(Q_FUNC_INFO);
 }
@@ -447,6 +476,7 @@ void Home::on_B2_on_time_sub_clicked()
 
     updatePulseLabels(pulseMode);
     updateAvgEnergyLabel();
+    updateJouleLabel();
 
     markProtocolModified(Q_FUNC_INFO);
 }
@@ -459,6 +489,7 @@ void Home::on_B2_off_time_add_clicked()
 
     updatePulseLabels(pulseMode);
     updateAvgEnergyLabel();
+    updateJouleLabel();
 
     markProtocolModified(Q_FUNC_INFO);
 }
@@ -471,6 +502,7 @@ void Home::on_B2_off_time_sub_clicked()
 
     updatePulseLabels(pulseMode);
     updateAvgEnergyLabel();
+    updateJouleLabel();
 
     markProtocolModified(Q_FUNC_INFO);
 }
@@ -1240,9 +1272,27 @@ void Home::showEvent(QShowEvent *event)
 void Home::updateAvgEnergyLabel()
 {
     if(pulseMode)
-        currentAvgPower = (static_cast<double>(pulseOnTime) / (pulseOnTime + pulseOffTime)) * (power980 + power1470);
+    {
+        //        currentAvgPower = (static_cast<double>(pulseOnTime) / (pulseOnTime + pulseOffTime)) * (power980 + power1470);
+
+        int total = pulseOnTime + pulseOffTime;
+
+        if(total == 0)
+        {
+            currentAvgPower = 0;
+        }
+        else
+        {
+            currentAvgPower =
+                    (double)pulseOnTime / total *
+                    (power980 + power1470);
+        }
+
+    }
     else
+    {
         currentAvgPower = (power980 + power1470);
+    }
 
     //    ui->L2_avg_power_show->setText(QString::number(currentAvgPower, 'f', 1));
 
@@ -1251,7 +1301,7 @@ void Home::updateAvgEnergyLabel()
     // 2. Combine it into the HTML string with different sizes
     ui->L2_avg_power_show->setText(
                 QString("<span style='font-size: 48pt; color: #00FF00;'>%1</span>"
-                "<span style='font-size: 20pt; color: #FFFFFF;'> J</span>")
+                "<span style='font-size: 20pt; color: #FFFFFF;'> W</span>")
                 .arg(formattedAvgJoule)
                 );
 
@@ -1281,19 +1331,19 @@ void Home::updateFromGlobals()
 
     ui->B2_audioalarm->setChecked(audioMode);
 
-    ui->B2_sec_alarm->setChecked((alarmSeconds > 0) & audioMode);
-    ui->B2_joule_alarm->setChecked((alarmJoules > 0) & audioMode);
+    ui->B2_sec_alarm->setChecked((alarmSeconds > 0) && audioMode);
+    ui->B2_joule_alarm->setChecked((alarmJoules > 0) && audioMode);
 
     ui->B2_sec_alarm->setEnabled(audioMode);
     ui->B2_joule_alarm->setEnabled(audioMode);
 
-    ui->L2_alarm_sec_show->setVisible((alarmSeconds > 0) & audioMode);
-    ui->B2_alarm_sec_add->setEnabled((alarmSeconds > 0) & audioMode);
-    ui->B2_alarm_sec_sub->setEnabled((alarmSeconds > 0) & audioMode);
+    ui->L2_alarm_sec_show->setVisible((alarmSeconds > 0) && audioMode);
+    ui->B2_alarm_sec_add->setEnabled((alarmSeconds > 0) && audioMode);
+    ui->B2_alarm_sec_sub->setEnabled((alarmSeconds > 0) && audioMode);
 
-    ui->L2_alarm_joule_show->setVisible((alarmJoules > 0) & audioMode);
-    ui->B2_alarm_joule_add->setEnabled((alarmJoules > 0) & audioMode);
-    ui->B2_alarm_joule_sub->setEnabled((alarmJoules > 0) & audioMode);
+    ui->L2_alarm_joule_show->setVisible((alarmJoules > 0) && audioMode);
+    ui->B2_alarm_joule_add->setEnabled((alarmJoules > 0) && audioMode);
+    ui->B2_alarm_joule_sub->setEnabled((alarmJoules > 0) && audioMode);
 
     setTimerResetState(timer_reset);
 
@@ -1371,7 +1421,7 @@ void Home::on_B2_timer_noreset_clicked()
 void Home::setupHoldButton(QPushButton *button, QTimer *&timer, const std::function<void()> &slotFunc)
 {
     timer = new QTimer(this);
-    timer->setInterval(500);
+    timer->setInterval(200);
     connect(timer, &QTimer::timeout, slotFunc);
     connect(button, &QPushButton::pressed, timer, QOverload<>::of(&QTimer::start));
     connect(button, &QPushButton::released, timer, &QTimer::stop);
@@ -1559,10 +1609,14 @@ void Home::refreshPage()
                 ->currentDateTime()
                 .toString("dd-MM-yy HH:mm:ss"));
 
+    updateUSBicon(usb_status);
+
     this->update();
 
     startup_done = false;
     protocolModified = false;
+
+
 
     qDebug() << "Home Refresh Complete";
 }
@@ -1576,6 +1630,8 @@ void Home::switchTonewprotocol()
 void Home::on_B2_modify_protocol_clicked()
 {
     TOUCH_BEEP();
+    selectedCustomId = current_id;
+    custom_modify = 1;
     new_protocol = false;
     modify_protocol = true;
     switchTonewprotocol();
@@ -1608,6 +1664,17 @@ void Home::updateInterlockUi(bool status)
             ui->Interlock_key->setStyleSheet(dark ? "background-image:url(:/icons/interlock_disconnected_dark.png);"
                                               : "background-image:url(:/icons/interlock_disconnected_light.png);");
         }
+    }
+}
+
+void Home::updateUSBicon(bool status)
+{
+    if (status) {
+        ui->USB->setStyleSheet(dark ? "background-image:url(:/icons/usb_connected_dark.png);"
+                                          : "background-image:url(:/icons/usb_connected_light.png);");
+    } else {
+        ui->USB->setStyleSheet(dark ? "background-image:url(:/icons/usb_disconnected_dark.png);"
+                                          : "background-image:url(:/icons/usb_disconnected_light.png);");
     }
 }
 

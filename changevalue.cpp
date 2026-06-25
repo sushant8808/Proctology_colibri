@@ -36,19 +36,19 @@ changevalue::changevalue(QWidget *parent)
 
     ui->B2_audioalarm->setChecked(audioMode);
 
-    ui->B2_sec_alarm->setChecked((alarmSeconds > 0) & audioMode);
-    ui->B2_joule_alarm->setChecked((alarmJoules > 0) & audioMode);
+    ui->B2_sec_alarm->setChecked((alarmSeconds > 0) && audioMode);
+    ui->B2_joule_alarm->setChecked((alarmJoules > 0) && audioMode);
 
     ui->B2_sec_alarm->setEnabled(audioMode);
     ui->B2_joule_alarm->setEnabled(audioMode);
 
-    ui->L2_alarm_sec_show->setVisible((alarmSeconds > 0) & audioMode);
-    ui->B2_alarm_sec_add->setEnabled((alarmSeconds > 0) & audioMode);
-    ui->B2_alarm_sec_sub->setEnabled((alarmSeconds > 0) & audioMode);
+    ui->L2_alarm_sec_show->setVisible((alarmSeconds > 0) && audioMode);
+    ui->B2_alarm_sec_add->setEnabled((alarmSeconds > 0) && audioMode);
+    ui->B2_alarm_sec_sub->setEnabled((alarmSeconds > 0) && audioMode);
 
-    ui->L2_alarm_joule_show->setVisible((alarmJoules > 0) & audioMode);
-    ui->B2_alarm_joule_add->setEnabled((alarmJoules > 0) & audioMode);
-    ui->B2_alarm_joule_sub->setEnabled((alarmJoules > 0) & audioMode);
+    ui->L2_alarm_joule_show->setVisible((alarmJoules > 0) && audioMode);
+    ui->B2_alarm_joule_add->setEnabled((alarmJoules > 0) && audioMode);
+    ui->B2_alarm_joule_sub->setEnabled((alarmJoules > 0) && audioMode);
 
 
 
@@ -254,6 +254,7 @@ void changevalue::on_B2_timer_on_clicked()
     new2_totalEnergyDelivered += new_totalEnergyDelivered;
     last_energyPerPedal = energyAtRelease;
     new_totalEnergyDelivered = 0.0f;
+
     update_B2_timer_on();
     TOUCH_BEEP();
 }
@@ -690,7 +691,30 @@ void changevalue::updateTimerLabel()
 
 void changevalue::updateJouleLabel()
 {
-    currentJoule= TimerSec * (power980+power1470);
+    //    currentJoule= TimerSec * (power980+power1470);
+
+    if(pulseMode)
+    {
+        //        currentAvgPower = (static_cast<double>(pulseOnTime) / (pulseOnTime + pulseOffTime)) * (power980 + power1470);
+
+        int total = pulseOnTime + pulseOffTime;
+
+        if(total == 0)
+        {
+            currentJoule = 0;
+        }
+        else
+        {
+            currentJoule =
+                    ((double)pulseOnTime / total) *
+                    (power980 + power1470) * TimerSec;
+        }
+
+    }
+    else
+    {
+        currentJoule= TimerSec * (power980+power1470);
+    }
 }
 
 void changevalue::updatePulseLabels(bool enabled)

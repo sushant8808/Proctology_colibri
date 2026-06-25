@@ -148,7 +148,7 @@ void CustomKeyboard::createKeyboard()
             row1->addWidget(btn);
         }
 
-        QPushButton *backBtn = createButton("⌫", 90, 40);
+        QPushButton *backBtn = createButton("Back", 90, 40);
 
         backBtn->setProperty("keyboardSpecial", true);
 
@@ -213,7 +213,7 @@ void CustomKeyboard::createKeyboard()
 
         QHBoxLayout *row4 = new QHBoxLayout;
 
-        shiftButton = createButton("🡅 Shift", 90, 40);
+        shiftButton = createButton("Shift", 90, 40);
 
         shiftButton->setProperty("keyboardSpecial", true);
 
@@ -272,7 +272,7 @@ void CustomKeyboard::createKeyboard()
 
         row5->addWidget(capsButton);
 
-        QPushButton *spaceBtn = createButton("Space ⎵", 420, 40);
+        QPushButton *spaceBtn = createButton("Space", 420, 40);
 
         spaceBtn->setProperty("keyboardSpace", true);
 

@@ -27,6 +27,7 @@ public:
     void setSimplifiedMode();
     void setAdvancedMode();
     void updatedatabase();
+    void updateUSBicon(bool status);
 
     int getStepForValue(int valueUs);
     int incrementPulseValue(int valueUs);

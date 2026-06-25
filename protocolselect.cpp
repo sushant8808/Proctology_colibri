@@ -269,6 +269,8 @@ void protocolselect::loadProtocols(const QString &tableName, QWidget *tabWidget)
 
             db.fetchProtocol(sourceTable, id);
 
+            current_id = id;
+
             no_protocol_used++;
 
             db.updateSingleColumn(sourceTable,

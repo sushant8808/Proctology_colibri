@@ -284,7 +284,7 @@ void newcustomprotocol::setTimerResetState(bool reset)
     if (reset)
     {
         ui->B2_timer_reset->setStyleSheet(
-            "color: rgb(255, 97, 34);"
+                    "color: rgb(255, 97, 34);"
             "border: 0px solid;"
             "border-top-left-radius: 15px;"
             "border-bottom-left-radius: 15px;"
@@ -292,7 +292,7 @@ void newcustomprotocol::setTimerResetState(bool reset)
             );
 
         ui->B2_timer_noreset->setStyleSheet(
-            "border: 0px solid;"
+                    "border: 0px solid;"
             "border-top-right-radius: 15px;"
             "border-bottom-right-radius: 15px;"
             "font-size: 14pt;"
@@ -301,7 +301,7 @@ void newcustomprotocol::setTimerResetState(bool reset)
     else
     {
         ui->B2_timer_noreset->setStyleSheet(
-            "color: rgb(255, 97, 34);"
+                    "color: rgb(255, 97, 34);"
             "border: 0px solid;"
             "border-top-right-radius: 15px;"
             "border-bottom-right-radius: 15px;"
@@ -309,7 +309,7 @@ void newcustomprotocol::setTimerResetState(bool reset)
             );
 
         ui->B2_timer_reset->setStyleSheet(
-            "border: 0px solid;"
+                    "border: 0px solid;"
             "border-top-left-radius: 15px;"
             "border-bottom-left-radius: 15px;"
             "font-size: 14pt;"
@@ -388,6 +388,12 @@ void newcustomprotocol::on_B2_save_clicked()
     if (l_name.isEmpty())
         return;   // safety, button should already be disabled
 
+    if (isProtocolNameExists(l_name))
+    {
+        ui->B2_save->setEnabled(false);
+        return;
+    }
+
     DatabaseInitializer dbinit;   // ✅ local instance
 
     int newId = dbinit.getNextAvailableId("protocol_custom");
@@ -397,34 +403,35 @@ void newcustomprotocol::on_B2_save_clicked()
 
     if(custom_modify == 1)
     {
-        ok = dbinit.updatePresetProtocol(
-            "protocol_custom",
-            l_name,
-            l_power980,
-            l_power1470,
-            l_TimerSec,
-            l_timer_reset,
-            l_timerFlag,
-            l_pulseOnTime,
-            l_pulseOffTime,
-            l_pulseMode,
-            0);
+        ok = dbinit.updatePresetProtocol_custom(
+                    "protocol_custom",
+                    selectedCustomId,      // <-- use ID
+                    l_name,
+                    l_power980,
+                    l_power1470,
+                    l_TimerSec,
+                    l_timer_reset,
+                    l_timerFlag,
+                    l_pulseOnTime,
+                    l_pulseOffTime,
+                    l_pulseMode,
+                    0);
     }else
     {
         ok = dbinit.insertPresetProtocol(
-            "protocol_custom",
-            newId,
-            l_name,
-            l_power980,
-            l_power1470,
-            l_TimerSec,
-            l_timer_reset,
-            l_timerFlag,
-            l_pulseOnTime,
-            l_pulseOffTime,
-            l_pulseMode,
-            0
-            );
+                    "protocol_custom",
+                    newId,
+                    l_name,
+                    l_power980,
+                    l_power1470,
+                    l_TimerSec,
+                    l_timer_reset,
+                    l_timerFlag,
+                    l_pulseOnTime,
+                    l_pulseOffTime,
+                    l_pulseMode,
+                    0
+                    );
     }
 
     if (!ok) {
@@ -432,6 +439,13 @@ void newcustomprotocol::on_B2_save_clicked()
     } else {
         //qDebug() << "Custom protocol saved successfully";
         custom_modify = 0;
+        DatabaseInitializer db;
+        if(custom_modify == 1)
+        db.fetchProtocol("protocol_custom", selectedCustomId);
+        else
+            db.fetchProtocol("protocol_custom", newId);
+        emit protocolSelected(l_name);
+        home->updatedatabase();
         switchToHome();   // optional UX
     }
     TOUCH_BEEP();
@@ -526,17 +540,17 @@ void newcustomprotocol::updatePulseLabels(bool enabled)
     }
     // ON time
     ui->L2_on_pulse_show->setText(
-        formatPulseTime(l_pulseOnTime));
+                formatPulseTime(l_pulseOnTime));
 
     ui->L2_on_pulse_unit->setText(
-        getPulseUnit(l_pulseOnTime));
+                getPulseUnit(l_pulseOnTime));
 
     // OFF time
     ui->L2_off_pulse_show->setText(
-        formatPulseTime(l_pulseOffTime));
+                formatPulseTime(l_pulseOffTime));
 
     ui->L2_off_pulse_unit->setText(
-        getPulseUnit(l_pulseOffTime));
+                getPulseUnit(l_pulseOffTime));
 }
 
 void newcustomprotocol::setupHoldButton(QPushButton *button, QTimer *&timer, const std::function<void()> &slotFunc)
@@ -587,17 +601,24 @@ void newcustomprotocol::on_Surgery_name_textChanged(const QString &text)
     if (l_name.isEmpty())
     {
         ui->B2_save->setEnabled(false);
+        ui->B2_save->setStyleSheet("background-color:gray;");
+        ui->Surgery_name->setStyleSheet("border: 2px solid red;");
         return;
     }
 
     if (isProtocolNameExists(l_name))
     {
-        ui->B2_save->setEnabled(false);
-        ui->Surgery_name->setStyleSheet("border: 2px solid red;");
+        if(modify_protocol == false)
+        {
+            ui->B2_save->setEnabled(false);
+            ui->B2_save->setStyleSheet("background-color:gray;");
+            ui->Surgery_name->setStyleSheet("border: 2px solid red;");
+        }
     }
     else
     {
         ui->B2_save->setEnabled(true);
+        ui->B2_save->setStyleSheet("");
         ui->Surgery_name->setStyleSheet("");
     }
 }
@@ -612,12 +633,14 @@ bool newcustomprotocol::isProtocolNameExists(const QString &name)
         query.prepare("SELECT COUNT(*) FROM protocol_custom WHERE name = ? AND id != ?");
         query.addBindValue(name);
         query.addBindValue(selectedCustomId);   // important!
+        qDebug()<<"in 1";
     }
     else
     {
         // In new mode, block any duplicate
         query.prepare("SELECT COUNT(*) FROM protocol_custom WHERE name = ?");
         query.addBindValue(name);
+        qDebug()<<"in 2";
     }
 
     if (!query.exec())
@@ -877,7 +900,18 @@ void newcustomprotocol::refreshPage()
     // Save Button Validation
     // ---------------------------------
 
-    ui->B2_save->setEnabled(!l_name.trimmed().isEmpty());
+    if(l_name.trimmed().isEmpty())
+    {
+        ui->B2_save->setEnabled(false);
+        ui->B2_save->setStyleSheet("background-color:gray;");
+        ui->Surgery_name->setStyleSheet("border: 2px solid red;");
+    }
+    else
+    {
+        ui->B2_save->setEnabled(true);
+        ui->B2_save->setStyleSheet("");
+        ui->Surgery_name->setStyleSheet("");
+    }
 
     qDebug() << "Custom Protocol Refresh Complete";
 }

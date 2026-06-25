@@ -38,6 +38,7 @@ extern bool timer_reset;
 extern bool pulseMode;
 extern QString current_protocol;
 extern bool advancedmode;
+extern int current_id;
 
 // NEW variables
 extern bool timerFlag;
@@ -67,6 +68,7 @@ extern bool Adv_Sim_fromSetting;
 extern bool surgery_pause_bt;
 extern bool last_theme_status;
 extern int override_popup;
+extern bool usb_status;
 
 extern float energyAtPress;
 extern float energyPerPedal;

@@ -229,7 +229,7 @@ void Setting::toggle_interlockkey_enable(void)
 
 void Setting::on_B3_dark_light_clicked()
 {
-    TOUCH_BEEP();
+//    TOUCH_BEEP();
 
     Adv_Sim_fromSetting = 1;
     qDebug()<<dark;

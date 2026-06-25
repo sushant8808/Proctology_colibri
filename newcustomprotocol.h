@@ -73,6 +73,9 @@ private slots:
 
     bool isProtocolNameExists(const QString &name);
 
+signals:
+    void protocolSelected(const QString &protocolName);
+
 private:
     Ui::newcustomprotocol *ui;
     Home *home;

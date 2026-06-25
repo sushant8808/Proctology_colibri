@@ -1,5 +1,4 @@
 #include "hardwaremanager.h"
-
 #include <QFile>
 #include <QTextStream>
 #include <QTimer>
@@ -75,6 +74,7 @@ bool HardwareManager::initGPIO()
         {73,  "gpiochip1", 4},   //SS-1
         {75,  "gpiochip3", 17},
         {77,  "gpiochip0", 25},
+        {96,  "gpiochip3", 18},
     };
 
     for (const auto &m : mappings) {
@@ -137,6 +137,11 @@ void HardwareManager::handleGpioEvent(int fd)
                 emit interlockChanged(value);
                 qDebug() << Q_FUNC_INFO << g.sodimmPin << value << "Interlock status changed";
             }
+
+            if (g.sodimmPin == 96) {
+                qDebug() << Q_FUNC_INFO << g.sodimmPin << value << "sma status changed";
+            }
+
 
             //            qDebug()<<Q_FUNC_INFO<<g.sodimmPin<<value;
             break;

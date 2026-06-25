@@ -453,6 +453,55 @@ bool DatabaseInitializer::updatePresetProtocol(
     return true;
 }
 
+bool DatabaseInitializer::updatePresetProtocol_custom(
+    const QString& tableName,
+    int id,
+    const QString& name,
+    double power980,
+    double power1470,
+    double timerSec,
+    bool timer_reset,
+    bool timer_flag,
+    double pulseOnTimeMs,
+    double pulseOffTimeMs,
+    bool pulse_mode,
+    double no_protocol_used
+)
+{
+    QSqlQuery query(DatabaseManager::instance().db());
+
+    QString sql = QString(R"(
+        UPDATE %1 SET
+            name = :name,
+            "980_power" = :power980,
+            "1470_power" = :power1470,
+            timer_sec = :timerSec,
+            timer_reset = :timerReset,
+            timer_flag = :timerFlag,
+            pulse_on_time_ms = :pulseOnTimeMs,
+            pulse_off_time_ms = :pulseOffTimeMs,
+            pulse_mode = :pulseMode,
+            no_protocol_used = :no_protocol_used
+        WHERE id = :id
+    )").arg(tableName);
+
+    query.prepare(sql);
+
+    query.bindValue(":id", id);
+    query.bindValue(":name", name);
+    query.bindValue(":power980", power980);
+    query.bindValue(":power1470", power1470);
+    query.bindValue(":timerSec", timerSec);
+    query.bindValue(":timerReset", timer_reset ? 1 : 0);
+    query.bindValue(":timerFlag", timer_flag ? 1 : 0);
+    query.bindValue(":pulseOnTimeMs", pulseOnTimeMs);
+    query.bindValue(":pulseOffTimeMs", pulseOffTimeMs);
+    query.bindValue(":pulseMode", pulse_mode ? 1 : 0);
+    query.bindValue(":no_protocol_used", no_protocol_used);
+
+    return query.exec();
+}
+
 bool DatabaseInitializer::deletePresetProtocol(
     const QString& tableName,
     const QString& name

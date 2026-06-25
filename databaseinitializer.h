@@ -86,6 +86,21 @@ public:
         double no_protocol_used
         );
 
+    bool updatePresetProtocol_custom(
+        const QString& tableName,
+        int id,
+        const QString& name,
+        double power980,
+        double power1470,
+        double timerSec,
+        bool timer_reset,
+        bool timer_flag,
+        double pulseOnTimeMs,
+        double pulseOffTimeMs,
+        bool pulse_mode,
+        double no_protocol_used
+    );
+
 
     void fetchProtocol(const QString& tableName, int id);
 

@@ -1013,9 +1013,9 @@ border-radius: 25px;</string>
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>20</y>
+     <y>18</y>
      <width>271</width>
-     <height>30</height>
+     <height>34</height>
     </rect>
    </property>
    <property name="text">

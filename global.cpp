@@ -32,6 +32,7 @@ int aimingbeamIntensity = 1;
 bool timer_reset = false;
 bool pulseMode = false;
 QString current_protocol = "";
+int current_id = 0;
 
 // NEW variables
 bool timerFlag = false;
@@ -59,6 +60,7 @@ bool Adv_Sim_fromSetting = 0;
 bool surgery_pause_bt = 0;
 bool last_theme_status = 0;
 int override_popup = 0;
+bool usb_status = 0;
 
 float energyAtPress = 0.0f;
 float energyPerPedal = 0.0f;
