@@ -196,7 +196,6 @@ void ThemeManager::applyDarkTheme()
                       "#T2_home QTabBar::tab:selected {"
                       " color:" + accentColor + ";"
                         " background-color:" + primaryBg + ";"
-                        " border:2px solid " + accentColor + ";"
                       "}"
 
                       "#T2_home::pane {"
@@ -225,7 +224,6 @@ void ThemeManager::applyDarkTheme()
                       " border-radius:20px;"
                       " border-bottom-left-radius:0px;"
                       " border-bottom-right-radius:0px;"
-                      " border:2px solid " + accentColor + ";"
                       "}"
 
                       "#Main_Tab QTabBar::tab:!selected {"
@@ -238,6 +236,7 @@ void ThemeManager::applyDarkTheme()
                    "border: 2px solid " + primaryBg + ";"
                       " border-bottom-left-radius:20px;"
                       " border-bottom-right-radius:20px;"
+                        " border-top-right-radius:20px;"
                       "}"
 
                       // Sub Tab
@@ -251,7 +250,7 @@ void ThemeManager::applyDarkTheme()
                        " background-color:" + mainBg + ";"
                        " border:0px solid " + primaryBg + ";"
                       " border-top-left-radius: 0px;"
-                      " border-top-right-radius: 0px;"
+                      " border-top-right-radius: 30px;"
                       "}"
 
                       "#Sub_Tab QTabBar::tab:selected {"
@@ -425,7 +424,12 @@ void ThemeManager::applyDarkTheme()
                       " color: black;"
                       "}"
 
-                      "QPushButton[keyboardSpecial=\"true\"] {"
+                      "QPushButton[keyboardButton=\"true\"][flash=\"true\"] {"
+                      "background-color: rgb(255,97,34);"
+                      "color: black;"
+                      "}"
+
+    "QPushButton[keyboardSpecial=\"true\"] {"
                       " background-color: rgb(60,60,60);"
                       " color: white;"
                       " border: 1px solid rgb(90,90,90);"
@@ -438,6 +442,11 @@ void ThemeManager::applyDarkTheme()
                       "QPushButton[keyboardSpecial=\"true\"]:checked {"
                       " background-color: rgb(255,97,34);"
                       " color: black;"
+                      "}"
+
+                      "QPushButton[keyboardSpecial=\"true\"][flash=\"true\"] {"
+                      "background-color: rgb(255,97,34);"
+                      "color: black;"
                       "}"
 
                       "QPushButton[keyboardEnter=\"true\"] {"
@@ -714,7 +723,6 @@ void ThemeManager::applyLightTheme()
                       "#T2_home QTabBar::tab:selected {"
                       " color:" + accentColor + ";"
                         " background-color:" + primaryBg + ";"
-                        " border:2px solid " + accentColor + ";"
                       "}"
 
                       "#T2_home::pane {"
@@ -742,7 +750,6 @@ void ThemeManager::applyLightTheme()
                       " border-radius:20px;"
                       " border-bottom-left-radius:0px;"
                       " border-bottom-right-radius:0px;"
-                        " border:2px solid " + accentColor + ";"
                       "}"
 
                       "#Main_Tab QTabBar::tab:!selected {"
@@ -755,6 +762,7 @@ void ThemeManager::applyLightTheme()
                    "border: 2px solid " + primaryBg + ";"
                       " border-bottom-left-radius:20px;"
                       " border-bottom-right-radius:20px;"
+                      " border-top-right-radius:20px;"
                       "}"
 
                       // Sub Tab
@@ -768,7 +776,7 @@ void ThemeManager::applyLightTheme()
                        " background-color:" + mainBg + ";"
                        " border:0px solid " + primaryBg + ";"
                       " border-top-left-radius: 0px;"
-                      " border-top-right-radius: 0px;"
+                      " border-top-right-radius: 30px;"
                       "}"
 
                       "#Sub_Tab QTabBar::tab:selected {"

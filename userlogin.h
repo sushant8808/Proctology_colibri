@@ -47,6 +47,7 @@ private:
     void switchToHome();
     void switchToServiceEngArea();
     void switchToUsageArea();
+    void switchToSetting();
     void appendDigit(const QString &digit);
 
     ThemeManager theme;

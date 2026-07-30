@@ -27,7 +27,7 @@ SoundPopupDialog::SoundPopupDialog(QWidget *parent)
             this, &SoundPopupDialog::onSliderValueChanged);
 
     // ---- Second Slider (e.g., Tone / Beep Level) ----
-    label2 = new QLabel("Buzzer volume", this);
+    label2 = new QLabel("Buzzer Volume", this);
     label2->setAlignment(Qt::AlignCenter);
     label2->setStyleSheet("font-size: 28px;");
 

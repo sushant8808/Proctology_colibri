@@ -43,6 +43,8 @@ private:
 
     void updateKeyCase();
 
+    void flashButton(QPushButton *btn);
+
 private:
     QLineEdit *display;
     QLineEdit *targetLineEdit;

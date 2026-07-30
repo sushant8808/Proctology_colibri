@@ -77,7 +77,7 @@ font-size: 14pt;</string>
    <property name="geometry">
     <rect>
      <x>45</x>
-     <y>412</y>
+     <y>410</y>
      <width>251</width>
      <height>60</height>
     </rect>
@@ -1043,7 +1043,7 @@ font-size: 48pt;</string>
    <property name="geometry">
     <rect>
      <x>45</x>
-     <y>412</y>
+     <y>410</y>
      <width>231</width>
      <height>60</height>
     </rect>

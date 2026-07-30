@@ -146,11 +146,6 @@ QString PulseMode::formatPulseTime(int valueUs)
 
     double sec = valueUs / 1000000.0;
 
-    if (sec == static_cast<int>(sec))
-    {
-        return QString::number(static_cast<int>(sec));
-    }
-
     return QString::number(sec, 'f', 1);
 }
 

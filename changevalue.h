@@ -80,6 +80,10 @@ private slots:
 
     void on_B2_joule_alarm_clicked();
 
+    void on_B4_save_clicked();
+
+    void on_B4_cancel_clicked();
+
 private:
     Ui::changevalue *ui;
 
@@ -108,6 +112,21 @@ private:
     QTimer *timer_alarmSecSub;
     QTimer *timer_alarmJouleAdd;
     QTimer *timer_alarmJouleSub;
+
+    double m_power980;
+    double m_power1470;
+
+    int m_timerSec;
+    bool m_timerFlag;
+    bool m_timerReset;
+
+    bool m_pulseMode;
+    int m_pulseOnTime;
+    int m_pulseOffTime;
+
+    bool m_audioMode;
+    int m_alarmSeconds;
+    int m_alarmJoules;
 };
 
 #endif // CHANGEVALUE_H

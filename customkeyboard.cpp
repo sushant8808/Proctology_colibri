@@ -2,6 +2,8 @@
 
 #include <QApplication>
 #include <QScreen>
+#include <QTimer>
+#include <QStyle>
 
 CustomKeyboard::CustomKeyboard(QWidget *parent, KeyboardMode mode)
     : QDialog(parent)
@@ -51,6 +53,10 @@ void CustomKeyboard::setTarget(QLineEdit *target)
     if(target)
     {
         display->setText(target->text());
+
+        display->setCursorPosition(display->text().length());
+
+        display->setFocus(Qt::OtherFocusReason);
     }
 }
 
@@ -65,6 +71,9 @@ QPushButton* CustomKeyboard::createButton(
 
     btn->setProperty("keyboardButton", true);
 
+    // Don't let buttons steal focus
+    btn->setFocusPolicy(Qt::NoFocus);
+
     return btn;
 }
 
@@ -76,7 +85,8 @@ void CustomKeyboard::createKeyboard()
     mainLayout->setContentsMargins(8,8,8,8);
 
     display = new QLineEdit;
-    display->setReadOnly(true);
+    display->setReadOnly(false);
+    display->setFocus();
 
     display->setObjectName("KeyboardDisplay");
 
@@ -316,6 +326,8 @@ void CustomKeyboard::handleKeyPress()
 
     display->insert(btn->text());
 
+    flashButton(btn);
+
     // After one uppercase press,
     // return to lowercase automatically
     if(shiftEnabled)
@@ -397,5 +409,23 @@ void CustomKeyboard::updateKeyCase()
         else
             btn->setText(lower.toLower());
     }
+}
+
+void CustomKeyboard::flashButton(QPushButton *btn)
+{
+    btn->setProperty("flash", true);
+
+    btn->style()->unpolish(btn);
+    btn->style()->polish(btn);
+    btn->update();
+
+    QTimer::singleShot(70, btn, [btn]()
+    {
+        btn->setProperty("flash", false);
+
+        btn->style()->unpolish(btn);
+        btn->style()->polish(btn);
+        btn->update();
+    });
 }
 

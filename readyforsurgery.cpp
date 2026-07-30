@@ -368,7 +368,7 @@ QString ReadyForSurgery::getPulseUnit(int valueUs)
 
 void ReadyForSurgery::updateJouleLabel()
 {
-//    currentJoule = TimerSec * (power980 + power1470);
+    //    currentJoule = TimerSec * (power980 + power1470);
 
     if(pulseMode)
     {
@@ -393,7 +393,7 @@ void ReadyForSurgery::updateJouleLabel()
         currentJoule= TimerSec * (power980+power1470);
     }
 
-    ui->L5_energy->setText(QString::number(currentJoule));
+    ui->L5_energy->setText(QString::number(currentJoule, 'f', 1));
 }
 
 void ReadyForSurgery::on_B5_aimingbeam_clicked()
@@ -534,7 +534,7 @@ void ReadyForSurgery::on_B5_change_clicked()
 
     QDialog popup(this);
     popup.setModal(true);
-    popup.setFixedSize(784, 337);
+    popup.setFixedSize(784, 400);
     popup.setWindowFlags(Qt::Popup);
 
     changevalue *cv = new changevalue(&popup);
@@ -549,17 +549,33 @@ void ReadyForSurgery::on_B5_change_clicked()
     popup.exec();
 
     overlay->deleteLater();
-    updatePower980Label();
-    updatePower1470Label();
-    updateTimerSecLabel();
-    updateTimerStateLabel();
-    updatePulseLabels();
-    updateJouleLabel();
-    timerRing->setTargetValue(TimerSec);
+    //    updatePower980Label();
+    //    updatePower1470Label();
+    //    updateTimerSecLabel();
+    //    updateTimerStateLabel();
+    //    updatePulseLabels();
+    //    updateJouleLabel();
+    //    timerRing->setTargetValue(TimerSec);
 
-    DatabaseInitializer dbinit;
-    dbinit.fetchDACByPower(power980,980);
-    dbinit.fetchDACByPower(power1470,1470);
+    //    DatabaseInitializer dbinit;
+    //    dbinit.fetchDACByPower(power980,980);
+    //    dbinit.fetchDACByPower(power1470,1470);
+
+    if(popup.result() == QDialog::Accepted)
+    {
+        updatePower980Label();
+        updatePower1470Label();
+        updateTimerSecLabel();
+        updateTimerStateLabel();
+        updatePulseLabels();
+        updateJouleLabel();
+
+        timerRing->setTargetValue(TimerSec);
+
+        DatabaseInitializer dbinit;
+        dbinit.fetchDACByPower(power980,980);
+        dbinit.fetchDACByPower(power1470,1470);
+    }
 }
 
 

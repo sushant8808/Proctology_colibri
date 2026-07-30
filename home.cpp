@@ -82,8 +82,9 @@ Home::Home(QWidget *parent)
     setupHoldButton(ui->B2_alarm_joule_add, timer_alarmJouleAdd, [this]() { on_B2_alarm_joule_add_clicked(); });
     setupHoldButton(ui->B2_alarm_joule_sub, timer_alarmJouleSub, [this]() { on_B2_alarm_joule_sub_clicked(); });
 
-    setupHoldButton(ui->B2_timer_add, timer_onTimeAdd, [this]() { on_B2_timer_add_clicked(); });
-    setupHoldButton(ui->B2_timer_sub, timer_onTimeSub, [this]() { on_B2_timer_sub_clicked(); });
+    setupHoldButton(ui->B2_timer_add, timer_timerAdd, [this]() { on_B2_timer_add_clicked(); });
+    setupHoldButton(ui->B2_timer_sub, timer_timerSub, [this]() { on_B2_timer_sub_clicked(); });
+
 
 
     startup_done = false;
@@ -151,6 +152,8 @@ void Home::switchToLogin()
 
 void Home::on_B2_980add_clicked()
 {
+
+    qDebug() << "on_B2_980add_clicked()";
     //qDebug() << Q_FUNC_INFO;
     double step;
     if (power980 < 1.0)
@@ -394,7 +397,7 @@ void Home::updateTimerLabel()
 
 void Home::updateJouleLabel()
 {
-//    currentJoule= TimerSec * (power980+power1470);
+    //    currentJoule= TimerSec * (power980+power1470);
     //    ui->L2_energy_show->setText(QString::number(currentJoule,'f', 1));
 
     if(pulseMode)
@@ -457,6 +460,8 @@ void Home::on_B2_pulsemode_stateChanged(int arg1)
 
 void Home::on_B2_on_time_add_clicked()
 {
+
+    qDebug() << "on_B2_on_time_add_clicked()";
     pulseOnTime = incrementPulseValue(pulseOnTime);
 
     TOUCH_BEEP();
@@ -669,11 +674,6 @@ QString Home::formatPulseTime(int valueUs)
     }
 
     double sec = valueUs / 1000000.0;
-
-    if (sec == static_cast<int>(sec))
-    {
-        return QString::number(static_cast<int>(sec));
-    }
 
     return QString::number(sec, 'f', 1);
 }
@@ -1243,7 +1243,13 @@ void Home::on_B2_ready_for_surgery_clicked()
 {
     TOUCH_BEEP();
     updatedatabase();
-    switchTosurgerydata();
+    if(patient_data)
+    {
+        MainWindow::instance->switchPage(PAGE_READYFORSURGERY);
+    }else
+    {
+        switchTosurgerydata();
+    }
 }
 
 void Home::showEvent(QShowEvent *event)
@@ -1418,13 +1424,87 @@ void Home::on_B2_timer_noreset_clicked()
 }
 
 
-void Home::setupHoldButton(QPushButton *button, QTimer *&timer, const std::function<void()> &slotFunc)
+//void Home::setupHoldButton(QPushButton *button, QTimer *&timer, const std::function<void()> &slotFunc)
+//{
+//    //    timer = new QTimer(this);
+//    //    timer->setInterval(500);
+//    //    connect(timer, &QTimer::timeout, slotFunc);
+//    //    connect(button, &QPushButton::pressed, timer, QOverload<>::of(&QTimer::start));
+//    //    connect(button, &QPushButton::released, timer, &QTimer::stop);
+
+//    timer = new QTimer(this);
+//    timer->setInterval(500);
+
+//    connect(timer, &QTimer::timeout, slotFunc);
+
+//    connect(button, &QPushButton::pressed, this,
+//            [timer, slotFunc]()
+//    {
+//        //            qDebug() << "Pressed";
+//        slotFunc();
+//        timer->start();
+//    });
+
+//    connect(button, &QPushButton::released, this,
+//            [timer]()
+//    {
+//        //            qDebug() << "Released";
+//        timer->stop();
+//    });
+
+//    connect(button, &QPushButton::clicked, this,
+//            []()
+//    {
+//        //            qDebug() << "Clicked";
+//    });
+//}
+
+void Home::setupHoldButton(QPushButton *button,
+                           QTimer *&timer,
+                           const std::function<void()> &slotFunc)
 {
     timer = new QTimer(this);
-    timer->setInterval(200);
-    connect(timer, &QTimer::timeout, slotFunc);
-    connect(button, &QPushButton::pressed, timer, QOverload<>::of(&QTimer::start));
-    connect(button, &QPushButton::released, timer, &QTimer::stop);
+    timer->setInterval(100);
+
+    QTimer *holdTimer = new QTimer(this);
+    holdTimer->setSingleShot(true);
+    holdTimer->setInterval(500);
+
+    connect(button, &QPushButton::pressed, this,
+            [button, holdTimer]()
+    {
+        qDebug() << button->objectName() << "PRESSED";
+        holdTimer->start();
+    });
+
+    connect(button, &QPushButton::released, this,
+            [button, holdTimer, timer]()
+    {
+        qDebug() << button->objectName() << "RELEASED";
+
+        holdTimer->stop();
+        timer->stop();
+    });
+
+    connect(button, &QPushButton::clicked, this,
+            [button]()
+    {
+        qDebug() << button->objectName() << "CLICKED";
+    });
+
+    connect(holdTimer, &QTimer::timeout, this,
+            [button, timer]()
+    {
+        qDebug() << button->objectName() << "LONG PRESS DETECTED";
+        timer->start();
+    });
+
+    connect(timer, &QTimer::timeout, this,
+            [button, slotFunc]()
+    {
+        qDebug() << button->objectName() << "REPEAT";
+        slotFunc();
+    });
 }
 
 
@@ -1439,7 +1519,7 @@ void Home::openProtocolSelection()
 void Home::markProtocolModified(QString fromFunction)
 {
     // qDebug()<<Q_FUNC_INFO<<fromFunction;
-    updatedatabase();
+//    updatedatabase();
 
     if (!protocolModified) {
         protocolModified = true;

@@ -8,11 +8,13 @@
 #include "mainwindow.h"
 #include "pageindex.h"
 #include "hardwaremanagerprovider.h"
+#include "userdatabasemanager.h"
+#include "userdatabaseinitializer.h"
 
 Userlogin::Userlogin(QWidget *parent, Home *home)
     : QWidget(parent)
     , ui(new Ui::Userlogin)
-, home(home)
+    , home(home)
 {
     ui->setupUi(this);
 
@@ -38,6 +40,11 @@ void Userlogin::switchToServiceEngArea()
 void Userlogin::switchToUsageArea()
 {
     MainWindow::instance->switchPage(PAGE_USAGEAREA);
+}
+
+void Userlogin::switchToSetting()
+{
+    MainWindow::instance->switchPage(PAGE_SETTING);
 }
 
 
@@ -73,18 +80,28 @@ void Userlogin::on_B1_pass_ok_clicked()
 
     if ((enteredPassword == loginpass) && (user_admin_mode == 0)) {
         ui->L1_passcheck->setText("Correct");
-        SUCCESS_BEEP()
-        QTimer::singleShot(0, this, &Userlogin::switchToHome);
+        SUCCESS_BEEP();
+
+        if(clear_data == 1)
+        {
+            UserDatabaseInitializer user_db;
+            user_db.deleteAllUserData();
+            QTimer::singleShot(0, this, &Userlogin::switchToSetting);
+            clear_data = 0;
+        }else
+        {
+            QTimer::singleShot(0, this, &Userlogin::switchToHome);
+        }
     }else if((enteredPassword == adminpass) && (user_admin_mode == 1))
     {
         ui->L1_passcheck->setText("Correct");
         SUCCESS_BEEP()
-        QTimer::singleShot(0, this, &Userlogin::switchToServiceEngArea);
+                QTimer::singleShot(0, this, &Userlogin::switchToServiceEngArea);
     }else if((enteredPassword == userpass) && (user_admin_mode == 2))
     {
         ui->L1_passcheck->setText("Correct");
         SUCCESS_BEEP()
-        QTimer::singleShot(0, this, &Userlogin::switchToUsageArea);
+                QTimer::singleShot(0, this, &Userlogin::switchToUsageArea);
     }else {
         ui->L1_passcheck->setText("Incorrect password");
         WARNING_BEEP();

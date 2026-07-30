@@ -287,9 +287,14 @@ void Setting::clear_data_form_userdb()
 {
     if(clear_data == 1)
     {
-        UserDatabaseInitializer user_db;
-        user_db.deleteAllUserData();
-        clear_data = 0;
+//        UserDatabaseInitializer user_db;
+//        user_db.deleteAllUserData();
+
+        user_admin_mode = 0;
+
+        MainWindow::instance->switchPage(PAGE_LOGIN);
+
+//        clear_data = 0;
     }
 }
 

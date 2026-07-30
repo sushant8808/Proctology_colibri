@@ -173,6 +173,8 @@ private:
     QTimer *timer_alarmSecSub;
     QTimer *timer_alarmJouleAdd;
     QTimer *timer_alarmJouleSub;
+    QTimer *timer_timerAdd;
+    QTimer *timer_timerSub;
 
     void setupHoldButton(QPushButton *button, QTimer *&timer, const std::function<void()> &slotFunc);
 

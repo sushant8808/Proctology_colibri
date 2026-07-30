@@ -3,6 +3,7 @@
 #include "global.h"
 #include "hardwaremanagerprovider.h"
 #include <cmath>
+#include <QDialog>
 
 
 changevalue::changevalue(QWidget *parent)
@@ -13,16 +14,31 @@ changevalue::changevalue(QWidget *parent)
 
     this->setWindowFlags(Qt::FramelessWindowHint);
 
-    if(timerFlag)
+    m_power980      = power980;
+    m_power1470     = power1470;
+
+    m_timerSec      = TimerSec;
+    m_timerFlag     = timerFlag;
+    m_timerReset    = timer_reset;
+
+    m_pulseMode     = pulseMode;
+    m_pulseOnTime   = pulseOnTime;
+    m_pulseOffTime  = pulseOffTime;
+
+    m_audioMode     = audioMode;
+    m_alarmSeconds  = alarmSeconds;
+    m_alarmJoules   = alarmJoules;
+
+    if(m_timerFlag)
     {
-        ui->B2_timer_on->setChecked(timerFlag);
-        ui->B2_timer_off->setChecked(!timerFlag);
+        ui->B2_timer_on->setChecked(m_timerFlag);
+        ui->B2_timer_off->setChecked(!m_timerFlag);
         update_B2_timer_on();
     }else
     {
         update_B2_timer_off();
-        ui->B2_timer_on->setChecked(timerFlag);
-        ui->B2_timer_off->setChecked(!timerFlag);
+        ui->B2_timer_on->setChecked(m_timerFlag);
+        ui->B2_timer_off->setChecked(!m_timerFlag);
     }
     ui->B2_timer_add->setEnabled(true);
     ui->B2_timer_sub->setEnabled(true);
@@ -32,23 +48,23 @@ changevalue::changevalue(QWidget *parent)
     ui->B2_off_time_sub->setEnabled(false);
     ui->L2_on_pulse_show->hide();
     ui->L2_off_pulse_show->hide();
-    ui->B2_pulsemode->setChecked(pulseMode);
+    ui->B2_pulsemode->setChecked(m_pulseMode);
 
-    ui->B2_audioalarm->setChecked(audioMode);
+    ui->B2_audioalarm->setChecked(m_audioMode);
 
-    ui->B2_sec_alarm->setChecked((alarmSeconds > 0) && audioMode);
-    ui->B2_joule_alarm->setChecked((alarmJoules > 0) && audioMode);
+    ui->B2_sec_alarm->setChecked((m_alarmSeconds > 0) && m_audioMode);
+    ui->B2_joule_alarm->setChecked((m_alarmJoules > 0) && m_audioMode);
 
-    ui->B2_sec_alarm->setEnabled(audioMode);
-    ui->B2_joule_alarm->setEnabled(audioMode);
+    ui->B2_sec_alarm->setEnabled(m_audioMode);
+    ui->B2_joule_alarm->setEnabled(m_audioMode);
 
-    ui->L2_alarm_sec_show->setVisible((alarmSeconds > 0) && audioMode);
-    ui->B2_alarm_sec_add->setEnabled((alarmSeconds > 0) && audioMode);
-    ui->B2_alarm_sec_sub->setEnabled((alarmSeconds > 0) && audioMode);
+    ui->L2_alarm_sec_show->setVisible((m_alarmSeconds > 0) && m_audioMode);
+    ui->B2_alarm_sec_add->setEnabled((m_alarmSeconds > 0) && m_audioMode);
+    ui->B2_alarm_sec_sub->setEnabled((m_alarmSeconds > 0) && m_audioMode);
 
-    ui->L2_alarm_joule_show->setVisible((alarmJoules > 0) && audioMode);
-    ui->B2_alarm_joule_add->setEnabled((alarmJoules > 0) && audioMode);
-    ui->B2_alarm_joule_sub->setEnabled((alarmJoules > 0) && audioMode);
+    ui->L2_alarm_joule_show->setVisible((m_alarmJoules > 0) && m_audioMode);
+    ui->B2_alarm_joule_add->setEnabled((m_alarmJoules > 0) && m_audioMode);
+    ui->B2_alarm_joule_sub->setEnabled((m_alarmJoules > 0) && m_audioMode);
 
 
 
@@ -56,7 +72,7 @@ changevalue::changevalue(QWidget *parent)
     updatePower1470Label();
     updateTimerLabel();
     updateJouleLabel();
-    updatePulseLabels(pulseMode);
+    updatePulseLabels(m_pulseMode);
     updateAlarmSecLabel();
     updateAlarmJouleLabel();
 
@@ -101,7 +117,7 @@ changevalue::changevalue(QWidget *parent)
 
     // qDebug() << "Timer reset value:" << timer_reset;
 
-    setTimerResetState(timer_reset);
+    setTimerResetState(m_timerReset);
 }
 
 changevalue::~changevalue()
@@ -113,21 +129,21 @@ changevalue::~changevalue()
 void changevalue::on_B2_980sub_clicked()
 {
     double step;
-    if (power980 <= 1.0)
+    if (m_power980 <= 1.0)
         step = 0.1;
-    else if (power980 <= 3.0)
+    else if (m_power980 <= 3.0)
         step = 0.2;
     else
         step = 0.5;
 
-    power980 -= step;
+    m_power980 -= step;
 
-    if (power980 < 0.0) {
-        power980 = 0.0;
+    if (m_power980 < 0.0) {
+        m_power980 = 0.0;
         WARNING_BEEP();
     }
 
-    power980 = std::round(power980 * 10.0) / 10.0;
+    m_power980 = std::round(m_power980 * 10.0) / 10.0;
 
     updatePower980Label();
     updateJouleLabel();
@@ -138,23 +154,23 @@ void changevalue::on_B2_980sub_clicked()
 void changevalue::on_B2_980add_clicked()
 {
     double step;
-    if (power980 < 1.0)
+    if (m_power980 < 1.0)
         step = 0.1;
-    else if (power980 < 3.0)
+    else if (m_power980 < 3.0)
         step = 0.2;
-    else if (power980 < 15.0)
+    else if (m_power980 < 15.0)
         step = 0.5;
     else
         step = 0.0;
 
-    power980 += step;
+    m_power980 += step;
 
-    if (power980 >= 15.0) {
-        power980 = 15.0;
+    if (m_power980 >= 15.0) {
+        m_power980 = 15.0;
         WARNING_BEEP();
     }
 
-    power980 = std::round(power980 * 10.0) / 10.0;
+    m_power980 = std::round(m_power980 * 10.0) / 10.0;
 
     updatePower980Label();
     updateJouleLabel();
@@ -166,21 +182,21 @@ void changevalue::on_B2_980add_clicked()
 void changevalue::on_B2_1470sub_clicked()
 {
     double step;
-    if (power1470 <= 1.0)
+    if (m_power1470 <= 1.0)
         step = 0.1;
-    else if (power1470 <= 3.0)
+    else if (m_power1470 <= 3.0)
         step = 0.2;
     else
         step = 0.5;
 
-    power1470 -= step;
+    m_power1470 -= step;
 
-    if (power1470 < 0.0) {
-        power1470 = 0.0;
+    if (m_power1470 < 0.0) {
+        m_power1470 = 0.0;
         WARNING_BEEP();
     }
 
-    power1470 = std::round(power1470 * 10.0) / 10.0;
+    m_power1470 = std::round(m_power1470 * 10.0) / 10.0;
 
     updatePower1470Label();
     updateJouleLabel();
@@ -190,23 +206,23 @@ void changevalue::on_B2_1470sub_clicked()
 void changevalue::on_B2_1470add_clicked()
 {
     double step;
-    if (power1470 < 1.0)
+    if (m_power1470 < 1.0)
         step = 0.1;
-    else if (power1470 < 3.0)
+    else if (m_power1470 < 3.0)
         step = 0.2;
-    else if (power1470 < 15.0)
+    else if (m_power1470 < 15.0)
         step = 0.5;
     else
         step = 0.0;
 
-    power1470 += step;
+    m_power1470 += step;
 
-    if (power1470 >= 15.0) {
-        power1470 = 15.0;
+    if (m_power1470 >= 15.0) {
+        m_power1470 = 15.0;
         WARNING_BEEP();
     }
 
-    power1470 = std::round(power1470 * 10.0) / 10.0;
+    m_power1470 = std::round(m_power1470 * 10.0) / 10.0;
 
     updatePower1470Label();
     updateJouleLabel();
@@ -225,8 +241,8 @@ void changevalue::on_B2_timer_off_clicked()
 
 void changevalue::update_B2_timer_off()
 {
-    timerFlag = false;
-    TimerSec = 0;
+    m_timerFlag = false;
+    m_timerSec = 0;
     ui->L2_timer_show->hide();
     ui->B2_timer_add->setEnabled(false);
     ui->B2_timer_sub->setEnabled(false);
@@ -261,7 +277,7 @@ void changevalue::on_B2_timer_on_clicked()
 
 void changevalue::update_B2_timer_on()
 {
-    timerFlag = true;
+    m_timerFlag = true;
     ui->L2_timer_show->show();
     ui->B2_timer_add->setEnabled(true);
     ui->B2_timer_sub->setEnabled(true);
@@ -288,8 +304,8 @@ void changevalue::update_B2_timer_on()
 void changevalue::on_B2_timer_sub_clicked()
 {
     if (ui->B2_timer_on->isChecked()) {
-        if (TimerSec > 1) {
-            TimerSec--;
+        if (m_timerSec > 1) {
+            m_timerSec--;
         }
         else {
             WARNING_BEEP();
@@ -305,7 +321,7 @@ void changevalue::on_B2_timer_sub_clicked()
 void changevalue::on_B2_timer_add_clicked()
 {
     if (ui->B2_timer_on->isChecked()) {
-        if (TimerSec < 120) TimerSec++;
+        if (m_timerSec < 120) m_timerSec++;
         else WARNING_BEEP();
         updateTimerLabel();
         updateJouleLabel();
@@ -316,18 +332,18 @@ void changevalue::on_B2_timer_add_clicked()
 
 void changevalue::on_B2_timer_reset_clicked()
 {
-    timer_reset = 1;
+    m_timerReset = 1;
     new2_totalEnergyDelivered += new_totalEnergyDelivered;
     energyDelivered = new_totalEnergyDelivered + new2_totalEnergyDelivered - totalEnergyDelivered;
-    setTimerResetState(timer_reset);
+    setTimerResetState(m_timerReset);
     TOUCH_BEEP();
 }
 
 void changevalue::on_B2_timer_noreset_clicked()
 {
     last_energyPerPedal = energyAtRelease;
-    timer_reset = 0;
-    setTimerResetState(timer_reset);
+    m_timerReset = 0;
+    setTimerResetState(m_timerReset);
     TOUCH_BEEP();
 }
 
@@ -375,7 +391,7 @@ void changevalue::on_B2_pulsemode_stateChanged(int arg1)
 {
     bool enabled = (arg1 == Qt::Checked);
 
-    pulseMode = enabled;
+    m_pulseMode = enabled;
 
     ui->B2_on_time_add->setEnabled(enabled);
     ui->B2_on_time_sub->setEnabled(enabled);
@@ -385,47 +401,47 @@ void changevalue::on_B2_pulsemode_stateChanged(int arg1)
     ui->L2_on_pulse_show->setVisible(enabled);
     ui->L2_off_pulse_show->setVisible(enabled);
 
-    updatePulseLabels(pulseMode);
+    updatePulseLabels(m_pulseMode);
     TOUCH_BEEP();
 }
 
 
 void changevalue::on_B2_on_time_sub_clicked()
 {
-    pulseOnTime = decrementPulseValue(pulseOnTime);
+    m_pulseOnTime = decrementPulseValue(m_pulseOnTime);
 
-    updatePulseLabels(pulseMode);
+    updatePulseLabels(m_pulseMode);
     TOUCH_BEEP();
 }
 
 void changevalue::on_B2_on_time_add_clicked()
 {
-    pulseOnTime = incrementPulseValue(pulseOnTime);
+    m_pulseOnTime = incrementPulseValue(m_pulseOnTime);
 
-    updatePulseLabels(pulseMode);
+    updatePulseLabels(m_pulseMode);
     TOUCH_BEEP();
 }
 
 
 void changevalue::on_B2_off_time_sub_clicked()
 {
-    pulseOffTime = decrementPulseValue(pulseOffTime);
+    m_pulseOffTime = decrementPulseValue(m_pulseOffTime);
 
-    updatePulseLabels(pulseMode);
+    updatePulseLabels(m_pulseMode);
     TOUCH_BEEP();
 }
 
 void changevalue::on_B2_off_time_add_clicked()
 {
-    pulseOffTime = incrementPulseValue(pulseOffTime);
+    m_pulseOffTime = incrementPulseValue(m_pulseOffTime);
 
-    updatePulseLabels(pulseMode);
+    updatePulseLabels(m_pulseMode);
     TOUCH_BEEP();
 }
 
 void changevalue::alarm_button_control()
 {
-    if(audioMode && alarmSeconds)
+    if(m_audioMode && m_alarmSeconds)
     {
         if(dark)
         {
@@ -466,7 +482,7 @@ void changevalue::alarm_button_control()
         }
     }
 
-    if(audioMode && alarmJoules)
+    if(m_audioMode && m_alarmJoules)
     {
         if(dark)
         {
@@ -516,16 +532,16 @@ void changevalue::on_B2_audioalarm_stateChanged(int arg1)
 
     if (enabled)
     {
-        ui->B2_sec_alarm->setChecked(alarmSeconds > 0);
-        ui->B2_joule_alarm->setChecked(alarmJoules > 0);
+        ui->B2_sec_alarm->setChecked(m_alarmSeconds > 0);
+        ui->B2_joule_alarm->setChecked(m_alarmJoules > 0);
 
-        ui->L2_alarm_sec_show->setVisible(alarmSeconds > 0);
-        ui->B2_alarm_sec_add->setEnabled(alarmSeconds > 0);
-        ui->B2_alarm_sec_sub->setEnabled(alarmSeconds > 0);
+        ui->L2_alarm_sec_show->setVisible(m_alarmSeconds > 0);
+        ui->B2_alarm_sec_add->setEnabled(m_alarmSeconds > 0);
+        ui->B2_alarm_sec_sub->setEnabled(m_alarmSeconds > 0);
 
-        ui->L2_alarm_joule_show->setVisible(alarmJoules > 0);
-        ui->B2_alarm_joule_add->setEnabled(alarmJoules > 0);
-        ui->B2_alarm_joule_sub->setEnabled(alarmJoules > 0);
+        ui->L2_alarm_joule_show->setVisible(m_alarmJoules > 0);
+        ui->B2_alarm_joule_add->setEnabled(m_alarmJoules > 0);
+        ui->B2_alarm_joule_sub->setEnabled(m_alarmJoules > 0);
     }else
     {
         ui->B2_sec_alarm->setChecked(false);
@@ -539,7 +555,7 @@ void changevalue::on_B2_audioalarm_stateChanged(int arg1)
         ui->B2_alarm_joule_sub->setEnabled(false);
     }
 
-    audioMode = enabled;
+    m_audioMode = enabled;
 
     alarm_button_control();
 
@@ -570,11 +586,11 @@ void changevalue::on_B2_sec_alarm_clicked()
     ui->B2_joule_alarm->setChecked(false);
 
     // Reset joules
-    alarmJoules = 0;
+    m_alarmJoules = 0;
 
     // Start seconds from minimum limit
-    if (alarmSeconds <= 0)
-        alarmSeconds = 1;
+    if (m_alarmSeconds <= 0)
+        m_alarmSeconds = 1;
 
 
     updateAlarmSecLabel();
@@ -601,11 +617,11 @@ void changevalue::on_B2_joule_alarm_clicked()
     ui->B2_sec_alarm->setChecked(false);
 
     // Reset seconds
-    alarmSeconds = 0;
+    m_alarmSeconds = 0;
 
     // Start joules from minimum limit
-    if (alarmJoules <= 0)
-        alarmJoules = 10;
+    if (m_alarmJoules <= 0)
+        m_alarmJoules = 10;
 
     updateAlarmSecLabel();
     updateAlarmJouleLabel();
@@ -617,8 +633,8 @@ void changevalue::on_B2_alarm_sec_sub_clicked()
 {
     const int minAlarmSeconds = 0;
 
-    if (alarmSeconds > minAlarmSeconds)
-        alarmSeconds -= 1;
+    if (m_alarmSeconds > minAlarmSeconds)
+        m_alarmSeconds -= 1;
 
     updateAlarmSecLabel();
 
@@ -629,8 +645,8 @@ void changevalue::on_B2_alarm_sec_add_clicked()
 {
     const int maxAlarmSeconds = 20;
 
-    if (alarmSeconds < maxAlarmSeconds)
-        alarmSeconds += 1;
+    if (m_alarmSeconds < maxAlarmSeconds)
+        m_alarmSeconds += 1;
 
     updateAlarmSecLabel();
 
@@ -644,9 +660,9 @@ void changevalue::on_B2_alarm_joule_sub_clicked()
 
     for (int i = steps.size() - 1; i >= 0; --i)
     {
-        if (alarmJoules > steps[i])
+        if (m_alarmJoules > steps[i])
         {
-            alarmJoules = steps[i];
+            m_alarmJoules = steps[i];
             break;
         }
     }
@@ -662,9 +678,9 @@ void changevalue::on_B2_alarm_joule_add_clicked()
 
     for (int i = 0; i < steps.size(); ++i)
     {
-        if (alarmJoules < steps[i])
+        if (m_alarmJoules < steps[i])
         {
-            alarmJoules = steps[i];
+            m_alarmJoules = steps[i];
             break;
         }
     }
@@ -676,28 +692,28 @@ void changevalue::on_B2_alarm_joule_add_clicked()
 
 void changevalue::updatePower980Label()
 {
-    ui->L2_980_show->setText(QString::number(power980, 'f', 1));
+    ui->L2_980_show->setText(QString::number(m_power980, 'f', 1));
 }
 
 void changevalue::updatePower1470Label()
 {
-    ui->L2_1470_show->setText(QString::number(power1470, 'f', 1));
+    ui->L2_1470_show->setText(QString::number(m_power1470, 'f', 1));
 }
 
 void changevalue::updateTimerLabel()
 {
-    ui->L2_timer_show->setText(QString::number(TimerSec));
+    ui->L2_timer_show->setText(QString::number(m_timerSec));
 }
 
 void changevalue::updateJouleLabel()
 {
     //    currentJoule= TimerSec * (power980+power1470);
 
-    if(pulseMode)
+    if(m_pulseMode)
     {
         //        currentAvgPower = (static_cast<double>(pulseOnTime) / (pulseOnTime + pulseOffTime)) * (power980 + power1470);
 
-        int total = pulseOnTime + pulseOffTime;
+        int total = m_pulseOnTime + m_pulseOffTime;
 
         if(total == 0)
         {
@@ -706,14 +722,14 @@ void changevalue::updateJouleLabel()
         else
         {
             currentJoule =
-                    ((double)pulseOnTime / total) *
-                    (power980 + power1470) * TimerSec;
+                    ((double)m_pulseOnTime / total) *
+                    (m_power980 + m_power1470) * m_timerSec;
         }
 
     }
     else
     {
-        currentJoule= TimerSec * (power980+power1470);
+        currentJoule= m_timerSec * (m_power980+m_power1470);
     }
 }
 
@@ -786,30 +802,30 @@ void changevalue::updatePulseLabels(bool enabled)
 
     // ON time
     ui->L2_on_pulse_show->setText(
-                formatPulseTime(pulseOnTime));
+                formatPulseTime(m_pulseOnTime));
 
     ui->L2_on_pulse_unit->setText(
-                getPulseUnit(pulseOnTime));
+                getPulseUnit(m_pulseOnTime));
 
     // OFF time
     ui->L2_off_pulse_show->setText(
-                formatPulseTime(pulseOffTime));
+                formatPulseTime(m_pulseOffTime));
 
     ui->L2_off_pulse_unit->setText(
-                getPulseUnit(pulseOffTime));
+                getPulseUnit(m_pulseOffTime));
 }
 
 void changevalue::updateAlarmSecLabel()
 {
 
     alarm_button_control();
-    ui->L2_alarm_sec_show->setText(QString::number(alarmSeconds));
+    ui->L2_alarm_sec_show->setText(QString::number(m_alarmSeconds));
 }
 
 void changevalue::updateAlarmJouleLabel()
 {
     alarm_button_control();
-    ui->L2_alarm_joule_show->setText(QString::number(alarmJoules));
+    ui->L2_alarm_joule_show->setText(QString::number(m_alarmJoules));
 }
 
 void changevalue::setupHoldButton(QPushButton *button, QTimer *&timer, const std::function<void()> &slotFunc)
@@ -972,3 +988,36 @@ QString changevalue::getPulseUnit(int valueUs)
 
     return "s";
 }
+
+void changevalue::on_B4_save_clicked()
+{
+    power980      = m_power980;
+    power1470     = m_power1470;
+
+    TimerSec      = m_timerSec;
+    timerFlag     = m_timerFlag;
+    timer_reset   = m_timerReset;
+
+    pulseMode     = m_pulseMode;
+    pulseOnTime   = m_pulseOnTime;
+    pulseOffTime  = m_pulseOffTime;
+
+    audioMode     = m_audioMode;
+    alarmSeconds  = m_alarmSeconds;
+    alarmJoules   = m_alarmJoules;
+
+    QDialog *dlg = qobject_cast<QDialog*>(parentWidget());
+
+        if(dlg)
+            dlg->accept();
+}
+
+
+void changevalue::on_B4_cancel_clicked()
+{
+    QDialog *dlg = qobject_cast<QDialog*>(parentWidget());
+
+        if(dlg)
+            dlg->reject();
+}
+

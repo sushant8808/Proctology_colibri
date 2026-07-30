@@ -32,7 +32,7 @@ Surgery_data::Surgery_data(QWidget *parent, Home *home)
     this->setWindowFlags(Qt::FramelessWindowHint);
 
     // Optional: lock editing
-    ui->LD4_surgery_name->setReadOnly(true);
+    ui->LD4_surgery_name->setReadOnly(false);
 
     popup = new error_popup(this);
 
@@ -49,6 +49,7 @@ Surgery_data::Surgery_data(QWidget *parent, Home *home)
     ui->LD4_patient_ID->installEventFilter(this);
     ui->LD4_patient_name->installEventFilter(this);
     ui->LD4_patient_age->installEventFilter(this);
+    ui->LD4_surgery_name->installEventFilter(this);
 
     if (ui->LD4_surgeon_name->lineEdit()) {
         ui->LD4_surgeon_name->lineEdit()->installEventFilter(this);
@@ -109,7 +110,7 @@ void Surgery_data::on_B4_save_clicked()
     query.addBindValue(patientName);
     query.addBindValue(patientAge.toInt());
     query.addBindValue(genderStr);
-    query.addBindValue(protocolName);
+    query.addBindValue(surgeryName);
 
     if (!query.exec()) {
         QMessageBox::critical(this, "Database Error",
@@ -123,6 +124,8 @@ void Surgery_data::on_B4_save_clicked()
 void Surgery_data::on_B4_skip_clicked()
 {
     startNewSurgery();
+
+    surgeryName = ui->LD4_surgery_name->text().trimmed();
 
     QSqlQuery query(UserDatabaseManager::instance().db());
 
@@ -138,7 +141,7 @@ void Surgery_data::on_B4_skip_clicked()
     query.addBindValue("Skip");         // patient_name
     query.addBindValue(QVariant::fromValue(nullptr));     // age NULL
     query.addBindValue("Skip");         // gender
-    query.addBindValue(protocolName);
+    query.addBindValue(surgeryName);
 
     if (!query.exec()) {
         QMessageBox::critical(this, "Database Error",
@@ -208,7 +211,16 @@ void Surgery_data::refreshPage()
     loadSurgeonNames();
 
     // ===== Refresh surgery/protocol name =====
-    ui->LD4_surgery_name->setText(protocolName);
+    surgeryName = protocolName;
+
+    if (surgeryName.endsWith('*'))
+    {
+        surgeryName.chop(1);   // Remove only the last '*'
+    }
+
+    ui->LD4_surgery_name->setText(surgeryName);
+
+//    ui->LD4_surgery_name->setText(protocolName);
 
     // ===== Clear input fields =====
     ui->LD4_patient_name->clear();
@@ -249,13 +261,18 @@ bool Surgery_data::eventFilter(QObject *watched, QEvent *event)
         else if (watched == ui->LD4_patient_name) {
             targetLineEdit = ui->LD4_patient_name;
         }
+        else if (watched == ui->LD4_surgery_name) {
+            targetLineEdit = ui->LD4_surgery_name;
+        }
         else if (watched == ui->LD4_patient_age) {
             targetLineEdit = ui->LD4_patient_age;
             keyboardMode = CustomKeyboard::NumericOnly; // 💡 Enforce numeric layout for age
         }
-        else if (ui->LD4_surgeon_name->lineEdit() && watched == ui->LD4_surgeon_name->lineEdit()) {
+        else if (ui->LD4_surgeon_name->lineEdit() &&
+                 watched == ui->LD4_surgeon_name->lineEdit()) {
             targetLineEdit = ui->LD4_surgeon_name->lineEdit();
         }
+
 
         if (targetLineEdit)
         {
