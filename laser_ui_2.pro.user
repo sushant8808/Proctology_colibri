@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.15.1, 2026-07-30T14:54:12. -->
+<!-- Written by QtCreator 4.15.1, 2026-08-12T20:08:14. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -259,11 +259,11 @@
        <value type="QString">/yocto/Colibri-imx6ull/tdx-5.7.0-sdk/sysroots/armv7at2hf-neon-tdx-linux-gnueabi</value>
       </valuelist>
       <valuelist type="QVariantList" key="RemoteLinux.LastDeployedLocalTimes">
-       <value type="QDateTime">2026-07-30T13:36:55.847</value>
+       <value type="QDateTime">2026-08-12T19:49:57.820</value>
        <value type="QDateTime">2026-06-26T15:42:57.259</value>
       </valuelist>
       <valuelist type="QVariantList" key="RemoteLinux.LastDeployedRemoteTimes">
-       <value type="QDateTime">2026-07-30T13:37:47.000</value>
+       <value type="QDateTime">2026-08-12T19:50:46.000</value>
        <value type="QDateTime">2026-06-26T15:43:49.000</value>
       </valuelist>
      </valuemap>

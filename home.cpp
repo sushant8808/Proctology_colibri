@@ -425,7 +425,7 @@ void Home::updateJouleLabel()
     QString formattedJoule = QString::number(currentJoule, 'f', 1);
 
     ui->L2_energy_show->setText(
-                QString("<span style='font-size: 48pt; color: #00FF00;'>%1</span>"
+                QString("<span style='font-size: 48pt; color: #00C800;'>%1</span>"
                 "<span style='font-size: 20pt; color: #FFFFFF;'> J</span>")
                 .arg(formattedJoule)
                 );
@@ -1243,7 +1243,7 @@ void Home::on_B2_ready_for_surgery_clicked()
 {
     TOUCH_BEEP();
     updatedatabase();
-    if(patient_data)
+    if(!patient_data)
     {
         MainWindow::instance->switchPage(PAGE_READYFORSURGERY);
     }else
@@ -1306,7 +1306,7 @@ void Home::updateAvgEnergyLabel()
 
     // 2. Combine it into the HTML string with different sizes
     ui->L2_avg_power_show->setText(
-                QString("<span style='font-size: 48pt; color: #00FF00;'>%1</span>"
+                QString("<span style='font-size: 48pt; color: #00C800;'>%1</span>"
                 "<span style='font-size: 20pt; color: #FFFFFF;'> W</span>")
                 .arg(formattedAvgJoule)
                 );

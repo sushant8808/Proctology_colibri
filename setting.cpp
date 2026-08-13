@@ -19,6 +19,10 @@
 #include <QDir>
 #include "mainwindow.h"
 #include "pageindex.h"
+#include <QSqlError>
+#include <QProgressDialog>
+#include <QTimer>
+#include <QApplication>
 
 
 Setting::Setting(QWidget *parent, Home *home)
@@ -35,15 +39,24 @@ Setting::Setting(QWidget *parent, Home *home)
     connect(popup, &error_popup::yesClicked,
             this, [this]() {
         TOUCH_BEEP();
-        clear_data_form_userdb();
-        qDebug() << "Yes";
+
+        if(clear_data)
+        {
+            clear_data_form_userdb();
+        }
+        else if(interlock_confirm)
+        {
+            toggle_interlockkey_enable();
+            interlock_confirm = false;
+        }
     });
 
     connect(popup, &error_popup::noClicked,
             this, [this]() {
         TOUCH_BEEP();
+
         clear_data = 0;
-        qDebug() << "No";
+        interlock_confirm = false;
     });
 
 
@@ -204,7 +217,18 @@ void Setting::on_B3_pass_change_clicked()
 
 void Setting::on_B3_interlockkey_enable_clicked()
 {
-    toggle_interlockkey_enable();
+    interlock_confirm = true;
+
+    popup->showMessage(
+                "INTERLOCK KEY",
+                interlock_key
+                ? "Are you sure you want to disable the interlock key?"
+            : "Are you sure you want to enable the interlock key?",
+                error_popup::Confirmation,
+                true
+                );
+
+    TOUCH_BEEP();
 }
 
 void Setting::toggle_interlockkey_enable(void)
@@ -229,7 +253,7 @@ void Setting::toggle_interlockkey_enable(void)
 
 void Setting::on_B3_dark_light_clicked()
 {
-//    TOUCH_BEEP();
+    //    TOUCH_BEEP();
 
     Adv_Sim_fromSetting = 1;
     qDebug()<<dark;
@@ -287,14 +311,14 @@ void Setting::clear_data_form_userdb()
 {
     if(clear_data == 1)
     {
-//        UserDatabaseInitializer user_db;
-//        user_db.deleteAllUserData();
+        //        UserDatabaseInitializer user_db;
+        //        user_db.deleteAllUserData();
 
         user_admin_mode = 0;
 
         MainWindow::instance->switchPage(PAGE_LOGIN);
 
-//        clear_data = 0;
+        //        clear_data = 0;
     }
 }
 
@@ -325,27 +349,65 @@ void Setting::toggle_patientdata_enable()
 
 void Setting::on_B3_patientdata_export_clicked()
 {
-    bool ok1 = exportPatientDataToCSV();
-    qDebug() << "exportPatientDataToCSV =" << ok1;
+    extern QString g_usbPath;
 
-    bool ok2 = exportPatientWiseCSV();
-    qDebug() << "exportPatientWiseCSV =" << ok2;
-
-    if (ok1 && ok2) {
+    if (g_usbPath.isEmpty())
+    {
         popup->showMessage(
-                    "Export Complete",
-                    "All CSV files exported successfully.",
-                    error_popup::Success,
-                    true
-                    );
-    } else {
-        popup->showMessage(
-                    "Export Warning",
-                    "Some files could not be exported.",
+                    "USB NOT DETECTED",
+                    "Please connect a USB storage device and try again.",
                     error_popup::Warning,
-                    true
-                    );
+                    true);
+        TOUCH_BEEP();
+        return;
     }
+
+
+    QString exportFolder =
+            g_usbPath + "/Patient_Export_" +
+            QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss");
+
+
+    QDir dir;
+
+    if (!dir.mkpath(exportFolder))
+    {
+        popup->showMessage(
+                    "EXPORT FAILED",
+                    "Unable to create export folder on USB.",
+                    error_popup::Warning,
+                    true);
+        return;
+    }
+
+
+    // Export first
+    bool ok1 = exportPatientDataToCSV(exportFolder);
+    bool ok2 = exportPatientWiseCSV(exportFolder);
+
+
+    if(ok1 && ok2)
+    {
+        // Start progress only after export completed
+
+        popup->showMessage(
+                    "EXPORT COMPLETE",
+                    "All patient data has been exported successfully.",
+                    error_popup::Success,
+                    true);
+
+    }
+    else
+    {
+        popup->showMessage(
+                    "EXPORT FAILED",
+                    "An error occurred while exporting patient data.\n"
+                    "Please check the USB drive and try again.",
+                    error_popup::Warning,
+                    true);
+    }
+
+
     TOUCH_BEEP();
 }
 
@@ -373,11 +435,11 @@ void Setting::export_status(int ex_st)
     msgBox.exec();
 }
 
-bool Setting::exportPatientDataToCSV()
+bool Setting::exportPatientDataToCSV(const QString &exportFolder)
 {
     // 1️⃣ Fixed base path (YOUR PATH)
-//    QString baseDir =
-//            "D:/OneDrive - Udyamlabs LLP/Qt projects/laser_ui_2/Patient_Export";
+    //    QString baseDir =
+    //            "D:/OneDrive - Udyamlabs LLP/Qt projects/laser_ui_2/Patient_Export";
 
     extern QString g_usbPath;
 
@@ -403,20 +465,22 @@ bool Setting::exportPatientDataToCSV()
         qDebug() << "Reason =" << testFile.errorString();
     }
 
-    QString baseDir = g_usbPath + "/Patient_Export";
+    //    QString baseDir = g_usbPath + "/Patient_Export";
 
-    // 2️⃣ Create directory if it does not exist
-    QDir dir(baseDir);
-    if (!dir.exists())
-    {
-        qDebug() << "Creating directory:" << baseDir;
+    //    // 2️⃣ Create directory if it does not exist
+    //    QDir dir(baseDir);
+    //    if (!dir.exists())
+    //    {
+    //        qDebug() << "Creating directory:" << baseDir;
 
-        if (!dir.mkpath("."))
-        {
-            qDebug() << "❌ Failed to create export directory";
-            return false;
-        }
-    }
+    //        if (!dir.mkpath("."))
+    //        {
+    //            qDebug() << "❌ Failed to create export directory";
+    //            return false;
+    //        }
+    //    }
+
+    QString baseDir = exportFolder;
 
     // 3️⃣ Create CSV file with timestamp
     QString filePath = baseDir + "/Patient_Data_"
@@ -450,34 +514,45 @@ bool Setting::exportPatientDataToCSV()
 
     // 5️⃣ Fetch patient-wise data
     QSqlQuery query(UserDatabaseManager::instance().db());
-    query.exec(R"(
-        SELECT
-            d.surgery_id,
-            d.surgeon_name,
-            d.patient_name,
-            d.patient_age,
-            d.gender,
-            d.surgery_name,
-            l.protocol_name,
-            l.power_980,
-            l.power_1470,
-            l.power_650,
-            l.energy_per_pedal,
-            l.total_energy,
-            l.stored_energy_1,
-            l.stored_energy_2,
-            l.stored_energy_3,
-            l.stored_energy_4,
-            l.stored_energy_5,
-            l.stored_energy_6,
-            l.stored_energy_7,
-            l.stored_energy_8,
-            l.created_at
-        FROM surgery_details d
-        JOIN surgery_log_by_id l
-        ON d.surgery_id = l.surgery_id
-        ORDER BY d.surgery_id, l.created_at
-    )");
+    if (!query.exec(R"(
+                    SELECT
+                    d.surgery_id,
+                    d.surgeon_name,
+                    d.patient_name,
+                    d.patient_age,
+                    d.gender,
+                    d.surgery_name,
+                    l.protocol_name,
+                    l.power_980,
+                    l.power_1470,
+                    l.power_650,
+                    l.energy_per_pedal,
+                    l.total_energy,
+                    l.stored_energy_1,
+                    l.stored_energy_2,
+                    l.stored_energy_3,
+                    l.stored_energy_4,
+                    l.stored_energy_5,
+                    l.stored_energy_6,
+                    l.stored_energy_7,
+                    l.stored_energy_8,
+                    l.created_at
+                    FROM surgery_details d
+                    JOIN surgery_log_by_id l
+                    ON d.surgery_id = l.surgery_id
+                    ORDER BY d.surgery_id, l.created_at
+                    )"))
+    {
+        qDebug() << "SQL Error:" << query.lastError().text();
+
+        popup->showMessage(
+                    "Export Failed",
+                    "Unable to read patient data from the database.",
+                    error_popup::Warning,
+                    true
+                    );
+        return false;
+    }
 
     // 6️⃣ Write rows
     while (query.next()) {
@@ -491,16 +566,31 @@ bool Setting::exportPatientDataToCSV()
 
     file.close();
 
+    QFileInfo info(filePath);
+
+    if (!info.exists() || info.size() == 0)
+    {
+        qDebug() << "CSV file was not created correctly.";
+
+        popup->showMessage(
+                    "Export Failed",
+                    "Failed to create the CSV file.",
+                    error_popup::Warning,
+                    true
+                    );
+        return false;
+    }
+
     qDebug() << "✅ Patient data exported successfully to:";
     qDebug() << filePath;
 
     return true;
 }
 
-bool Setting::exportPatientWiseCSV()
+bool Setting::exportPatientWiseCSV(const QString &exportFolder)
 {
-//    QString baseDir =
-//            "D:/OneDrive - Udyamlabs LLP/Qt projects/laser_ui_2/Patient_Export";
+    //    QString baseDir =
+    //            "D:/OneDrive - Udyamlabs LLP/Qt projects/laser_ui_2/Patient_Export";
 
     extern QString g_usbPath;
 
@@ -510,43 +600,55 @@ bool Setting::exportPatientWiseCSV()
         return false;
     }
 
-    QString baseDir = g_usbPath + "/Patient_Export";
+    //    QString baseDir = g_usbPath + "/Patient_Export";
 
-    QDir dir(baseDir);
-    if (!dir.exists() && !dir.mkpath(".")) {
-        qDebug() << "Failed to create directory";
-        return false;
-    }
+    //    QDir dir(baseDir);
+    //    if (!dir.exists() && !dir.mkpath(".")) {
+    //        qDebug() << "Failed to create directory";
+    //        return false;
+    //    }
+    QString baseDir = exportFolder;
 
     QSqlQuery query(UserDatabaseManager::instance().db());
-    query.exec(R"(
-        SELECT
-            d.surgery_id,
-            d.patient_name,
-            d.patient_age,
-            d.gender,
-            d.surgeon_name,
-            d.surgery_name,
-            l.protocol_name,
-            l.power_980,
-            l.power_1470,
-            l.power_650,
-            l.energy_per_pedal,
-            l.total_energy,
-            l.stored_energy_1,
-            l.stored_energy_2,
-            l.stored_energy_3,
-            l.stored_energy_4,
-            l.stored_energy_5,
-            l.stored_energy_6,
-            l.stored_energy_7,
-            l.stored_energy_8,
-            l.created_at
-        FROM surgery_details d
-        JOIN surgery_log_by_id l
-        ON d.surgery_id = l.surgery_id
-        ORDER BY d.surgery_id, l.created_at
-    )");
+    if (!query.exec(R"(
+                    SELECT
+                    d.surgery_id,
+                    d.patient_name,
+                    d.patient_age,
+                    d.gender,
+                    d.surgeon_name,
+                    d.surgery_name,
+                    l.protocol_name,
+                    l.power_980,
+                    l.power_1470,
+                    l.power_650,
+                    l.energy_per_pedal,
+                    l.total_energy,
+                    l.stored_energy_1,
+                    l.stored_energy_2,
+                    l.stored_energy_3,
+                    l.stored_energy_4,
+                    l.stored_energy_5,
+                    l.stored_energy_6,
+                    l.stored_energy_7,
+                    l.stored_energy_8,
+                    l.created_at
+                    FROM surgery_details d
+                    JOIN surgery_log_by_id l
+                    ON d.surgery_id = l.surgery_id
+                    ORDER BY d.surgery_id, l.created_at
+                    )"))
+    {
+        qDebug() << "SQL Error:" << query.lastError().text();
+
+        popup->showMessage(
+                    "Export Failed",
+                    "Unable to read patient data from the database.",
+                    error_popup::Warning,
+                    true
+                    );
+        return false;
+    }
 
     QFile file;
     QTextStream out;
@@ -604,6 +706,7 @@ bool Setting::exportPatientWiseCSV()
 
     if (file.isOpen())
         file.close();
+
 
     return true;
 }

@@ -30,7 +30,8 @@ inline int freqToPeriodNs(int freq)
 }
 int volume[]={10, 20, 40, 60, 80 };
 int BrightnessLevel[] = {6,5,4,3,1};
-int AimingBeamLevel[] = {3700, 3900, 4000, 4100, 4200};
+//int AimingBeamLevel[] = {3700, 3900, 4000, 4100, 4200};
+int AimingBeamLevel[] = {500, 900, 1200, 1500, 1700};
 #define AIMING_BEAM_PERIOD  10000
 
 const QString brightnessPath = "/sys/class/backlight/backlight/brightness";
@@ -185,7 +186,7 @@ void HardwareManager::demoAimingBeam(int level, bool timeout)
     setPwmSafe(pwm, AimingBeamLevel[level-1] , AIMING_BEAM_PERIOD);
 
     if(timeout){
-        QTimer::singleShot(2000, this, [this]() {
+        QTimer::singleShot(4000, this, [this]() {
             writeSysfs(m_pwms['E'].pwmPath + "/enable", "0");
         });
     }

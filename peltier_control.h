@@ -7,6 +7,7 @@
 #include "hardwaremanager.h"
 #include "hardwaremanagerprovider.h"
 #include "colibri_adc.h"
+#include "global.h"
 
 class peltier_control : public QObject
 {

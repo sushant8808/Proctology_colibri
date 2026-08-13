@@ -7,7 +7,10 @@
 #include "newcustomprotocol.h"
 #include "changepassword.h"
 #include "error_popup.h"
-
+#include <QProgressDialog>
+#include <QTimer>
+#include <QApplication>
+#include <functional>
 
 
 namespace Ui {
@@ -74,11 +77,12 @@ private slots:
 
     void export_status(int ex_st);
 
-    bool exportPatientDataToCSV();
+    bool exportPatientDataToCSV(const QString &exportFolder);
 
-    bool exportPatientWiseCSV();
+    bool exportPatientWiseCSV(const QString &exportFolder);
 
     void toggle_patientdata_enable();
+
 
 private:
     Ui::Setting *ui;
@@ -86,7 +90,6 @@ private:
     Home *home;
 
     error_popup *popup;
-
 };
 
 #endif // SETTING_H

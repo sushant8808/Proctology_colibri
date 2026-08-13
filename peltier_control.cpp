@@ -6,7 +6,7 @@
 #define ADC_CH2             2
 
 #define ADC_MAX             4095.0f
-#define ADC_REF             1.8f
+#define ADC_REF             3.3f
 
 #define NTC_R0              10000.0f
 #define NTC_BETA            3950.0f
@@ -23,9 +23,9 @@ peltier_control::peltier_control(QObject *parent)
 
     m_setTemp = 23.0f;
 
-    pid.kp = 5.0f;
-    pid.ki = 0.00f;
-    pid.kd = 2.0f;
+    pid.kp = 8.0f;
+    pid.ki = 0.05f;
+    pid.kd = 3.0f;
 
     pid.integral = 0;
     pid.previousError = 0;
@@ -38,7 +38,11 @@ peltier_control::peltier_control(QObject *parent)
 
 void peltier_control::start()
 {
-    m_timer.start(100);     // 100ms
+    if (!m_timer.isActive())
+    {
+        qDebug() << "Peltier control started";
+        m_timer.start(100);
+    }
 }
 
 void peltier_control::stop()
@@ -53,30 +57,26 @@ void peltier_control::setTemperature(float temp)
 
 float peltier_control::adcToTemperature(uint16_t adcValue)
 {
-    float voltage =
-            ((float)adcValue * ADC_REF) / ADC_MAX;
+    /*
+     * ADC calibration points:
+     *
+     * ADC = 2650 -> 10.0 °C
+     * ADC = 2950 -> 35.0 °C
+     */
 
-    if(voltage < 0.01f)
-        voltage = 0.01f;
+    const float ADC_LOW  = 2650.0f;
+    const float TEMP_LOW = 10.0f;
 
-    if(voltage > 3.29f)
-        voltage = 3.29f;
+    const float ADC_HIGH  = 2950.0f;
+    const float TEMP_HIGH = 40.0f;
 
-    float resistance =
-            (SERIES_RESISTOR * voltage) /
-            (ADC_REF - voltage);
+    float temperature =
+        TEMP_LOW +
+        ((float)adcValue - ADC_LOW) *
+        (TEMP_HIGH - TEMP_LOW) /
+        (ADC_HIGH - ADC_LOW);
 
-    float tempK =
-            1.0f /
-            (
-                (1.0f / NTC_T0)
-                +
-                (1.0f / NTC_BETA)
-                *
-                log(resistance / NTC_R0)
-            );
-
-    return tempK - 273.15f;
+    return temperature;
 }
 
 void peltier_control::controlLoop()
@@ -86,6 +86,8 @@ void peltier_control::controlLoop()
 
     float currentTemp =
             adcToTemperature(adcRaw);
+
+    g_diode_temp = currentTemp;
 
     // Cooling required only when temperature is above setpoint
     if(currentTemp <= m_setTemp)
@@ -98,11 +100,11 @@ void peltier_control::controlLoop()
                     0,
                     PWM_PERIOD_NS);
 
-//        qDebug()
-//                << "ADC =" << adcRaw
-//                << "Temp =" << currentTemp
-//                << "Set =" << m_setTemp
-//                << "PWM = 0 (Cooling OFF)";
+        qDebug()
+                << "ADC =" << adcRaw
+                << "Temp =" << currentTemp
+                << "Set =" << m_setTemp
+                << "PWM = 0 (Cooling OFF)";
 
         return;
     }
@@ -140,9 +142,9 @@ void peltier_control::controlLoop()
                 dutyNs,
                 PWM_PERIOD_NS);
 
-//    qDebug()
-//            << "ADC =" << adcRaw
-//            << "Temp =" << currentTemp
-//            << "Set =" << m_setTemp
-//            << "PWM =" << output;
+    qDebug()
+            << "ADC =" << adcRaw
+            << "Temp =" << currentTemp
+            << "Set =" << m_setTemp
+            << "PWM =" << output;
 }

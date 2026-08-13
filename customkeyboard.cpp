@@ -84,13 +84,34 @@ void CustomKeyboard::createKeyboard()
     mainLayout->setSpacing(5);
     mainLayout->setContentsMargins(8,8,8,8);
 
+
+//    display = new QLineEdit;
+//    display->setReadOnly(false);
+//    display->setFocus();
+
+//    display->setObjectName("KeyboardDisplay");
+
+//    mainLayout->addWidget(display);
+
+    QHBoxLayout *topRow = new QHBoxLayout;
+
     display = new QLineEdit;
     display->setReadOnly(false);
     display->setFocus();
-
     display->setObjectName("KeyboardDisplay");
 
-    mainLayout->addWidget(display);
+    QPushButton *closeBtn = new QPushButton("X");
+    closeBtn->setFixedSize(40, 40);
+    closeBtn->setProperty("keyboardSpecial", true);
+    closeBtn->setFocusPolicy(Qt::NoFocus);
+
+    connect(closeBtn, &QPushButton::clicked,
+            this, &QDialog::reject);
+
+    topRow->addWidget(display, 1);      // takes all remaining space
+    topRow->addWidget(closeBtn);        // fixed size at right
+
+    mainLayout->addLayout(topRow);
 
     if (currentMode == NumericOnly)
     {

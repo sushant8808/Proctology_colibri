@@ -17,17 +17,17 @@ Calibration_screen::Calibration_screen(QWidget *parent, Home *home)
     this->setWindowFlags(Qt::FramelessWindowHint);
 
     setupHoldButton(ui->DAC_sub_1470, timer_DAC_add, [this]() { dacAValue -= 10;
-    ui->DAC_change_1470->setText(QString::number(dacAValue)); });
+        ui->DAC_change_1470->setText(QString::number(dacAValue)); });
 
     setupHoldButton(ui->DAC_add_1470, timer_DAC_add, [this]() { dacAValue += 10;
-    ui->DAC_change_1470->setText(QString::number(dacAValue)); });
+        ui->DAC_change_1470->setText(QString::number(dacAValue)); });
 
 
     setupHoldButton(ui->DAC_sub_980, timer_DAC_add, [this]() {     dacBValue -= 10;
-    ui->DAC_change_980->setText(QString::number(dacBValue)); });
+        ui->DAC_change_980->setText(QString::number(dacBValue)); });
 
     setupHoldButton(ui->DAC_add_980, timer_DAC_add, [this]() {     dacBValue += 10;
-    ui->DAC_change_980->setText(QString::number(dacBValue)); });
+        ui->DAC_change_980->setText(QString::number(dacBValue)); });
 }
 
 Calibration_screen::~Calibration_screen()
@@ -226,17 +226,6 @@ void Calibration_screen::on_back_to_service_engineer_area_clicked()
 }
 
 
-void Calibration_screen::on_test_1470_clicked()
-{
-    TOUCH_BEEP();
-}
-
-
-void Calibration_screen::on_test_980_clicked()
-{
-    TOUCH_BEEP();
-}
-
 void Calibration_screen::switchToHome()
 {
     MainWindow::instance->switchPage(PAGE_HOME);
@@ -258,21 +247,21 @@ void Calibration_screen::refreshPage()
 
     // Refresh 1470 section
     ui->power_change_1470->setText(
-        QString::number(power_1470, 'f', 1));
+                QString::number(power_1470, 'f', 1));
 
     db.fetchDACByPower(power_1470, 1470);
 
     ui->DAC_change_1470->setText(
-        QString::number(dacAValue));
+                QString::number(dacAValue));
 
     // Refresh 980 section
     ui->power_change_980->setText(
-        QString::number(power_980, 'f', 1));
+                QString::number(power_980, 'f', 1));
 
     db.fetchDACByPower(power_980, 980);
 
     ui->DAC_change_980->setText(
-        QString::number(dacBValue));
+                QString::number(dacBValue));
 }
 
 void Calibration_screen::showEvent(QShowEvent *event)
@@ -280,5 +269,35 @@ void Calibration_screen::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
 
     refreshPage();
+}
+
+
+void Calibration_screen::on_test_1470_pressed()
+{
+    m_dac.setDac(0, dacAValue);
+    qDebug()<<"1470 pressed";
+    TOUCH_BEEP();
+}
+
+
+void Calibration_screen::on_test_1470_released()
+{
+    m_dac.setDac(0, 0);
+    qDebug()<<"1470 released";
+}
+
+
+void Calibration_screen::on_test_980_pressed()
+{
+    m_dac.setDac(1, dacBValue);
+    qDebug()<<"980 pressed";
+    TOUCH_BEEP();
+}
+
+
+void Calibration_screen::on_test_980_released()
+{
+    m_dac.setDac(1, 0);
+    qDebug()<<"980 released";
 }
 

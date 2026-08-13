@@ -10,6 +10,8 @@ RuntimeManager* g_runtimeManager = nullptr;
 
 QString g_usbPath;
 
+float g_diode_temp = 0;
+
 bool surgery_pause = 0;
 
 QString loginpass = "";
@@ -91,6 +93,7 @@ int user_admin_mode = 0;
 bool clear_data = 0 ;
 bool clear_page = 0;
 bool custom_modify = 0;
+bool interlock_confirm = 0;
 
 int pulsemode_step1 = 50;
 int pulsemode_step2 = 50;
@@ -102,6 +105,8 @@ Range range3 = {1500, 3000, 50};
 
 int pulseMinLimit = 50;          // 50us
 int pulseMaxLimit = 12000000;    // 12s
+
+bool diode_temp_alarm_active = false;
 
 
 

@@ -29,7 +29,7 @@ MainWindow::MainWindow(QWidget *parent, QLabel *statusLabel, QProgressBar *progr
 
     m_peltierControl = new peltier_control(this);
 
-    m_peltierControl->setTemperature(23.0f);
+    m_peltierControl->setTemperature(24.0f);
 
     m_peltierControl->start();
 
@@ -198,7 +198,7 @@ void MainWindow::switchPage(int index)
 
     if (index < 0 || index >= stackedWidget->count())
         return;
-
+    g_stackIndex = index;
     stackedWidget->setCurrentIndex(index);
 }
 

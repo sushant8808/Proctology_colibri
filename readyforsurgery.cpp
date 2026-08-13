@@ -21,7 +21,7 @@
 #include "hardwaremanager.h"
 #include "hardwaremanagerprovider.h"
 
-#define ADC_CH0 1
+#define ADC_CH0 2
 
 bool writeSysfsValue(const QString &path, const QString &value)
 {
@@ -61,6 +61,14 @@ ReadyForSurgery::ReadyForSurgery(QWidget *parent, Home *home)
 
     g_runtimeManager->setSurgeryActive(true);
 
+    diodeTempTimer = new QTimer(this);
+    diodeTempTimer->setInterval(1000);   // 1 second
+
+    connect(diodeTempTimer, &QTimer::timeout,
+            this, &ReadyForSurgery::update_diode_temp);
+
+    diodeTempTimer->start();
+
     auto setupOverlay = [](QPushButton* button, CircularOverlay*& overlay) {
         overlay = new CircularOverlay(button->parentWidget());
         overlay->setGeometry(button->geometry());
@@ -94,167 +102,6 @@ ReadyForSurgery::ReadyForSurgery(QWidget *parent, Home *home)
     connect(&pulseOnTimer, &QTimer::timeout, this, &ReadyForSurgery::handlePulseOnTimeout);
     connect(&pulseOffTimer, &QTimer::timeout, this, &ReadyForSurgery::handlePulseOffTimeout);
 
-    connect(ui->pushButton, &QPushButton::pressed, this, [=]() {
-        if(surgery_pause == 1)
-        {
-            popup->hidePopup();
-            surgery_pause = 0;
-        }
-        else{
-            if(power1470)
-                g_runtimeManager->set1470Active(true);
-            if(power980)
-                g_runtimeManager->set980Active(true);
-
-            timerRing->startTimerAnimation();
-            energyUpdateTimer->start();
-
-            if (timer_reset == 1)
-            {
-                energyAtPress = new2_totalEnergyDelivered;
-            }
-            else
-            {
-                energyAtPress = new_totalEnergyDelivered;
-            }
-
-            ui->pushButton->setText("Laser\nON");
-            ui->pushButton->setStyleSheet(
-                        "background-color: red; color: white; font: 12pt \"Roboto\";");
-
-            qDebug()<<"1470 DAC: "<<dacAValue<<"980 DAC: "<<dacBValue;
-        }
-    });
-
-
-
-    connect(ui->pushButton, &QPushButton::released, this, [=]() {
-        g_runtimeManager->set980Active(false);
-        g_runtimeManager->set1470Active(false);
-
-        timerRing->stopTimerAnimation();
-        energyUpdateTimer->stop();
-
-        if (timer_reset == 1) {
-            timerRing->resetTimer();
-            energyDelivered = new_totalEnergyDelivered + new2_totalEnergyDelivered - totalEnergyDelivered;
-            new2_totalEnergyDelivered = new_totalEnergyDelivered + new2_totalEnergyDelivered;
-        } else {
-            if (timerRing->getCurrentValue() <= 0.0f )
-            {
-                if(timerFlag == 1)
-                {
-                    new2_totalEnergyDelivered += new_totalEnergyDelivered;
-                    timerRing->resetTimer();
-                }
-            }
-            energyDelivered = new_totalEnergyDelivered + new2_totalEnergyDelivered - totalEnergyDelivered;
-        }
-
-        ui->pushButton->setText("Laser\nOFF");
-        ui->pushButton->setStyleSheet("background-color: gray; color: black; font: 12pt \"Roboto\";");
-
-        updateEnergy();
-
-        energyAtRelease = new_totalEnergyDelivered + new2_totalEnergyDelivered;
-
-        if((timerFlag == 0) && (timer_reset == 0))
-        {
-            //            qDebug() << "| energyAtPress1:" << energyAtPress
-            //                     << "| energyAtRelease:" << energyAtRelease
-            //                     << "| last_energyPerPedal:" << last_energyPerPedal;
-            energyPerPedal = energyAtRelease - last_energyPerPedal;
-            last_energyPerPedal = energyAtRelease;
-        }else if((timerFlag == 1) && (timer_reset == 0))
-        {
-            //            qDebug() << "| energyAtPress2:" << energyAtPress
-            //                     << "| energyAtRelease:" << energyAtRelease
-            //                     << "| last_energyPerPedal:" << last_energyPerPedal;
-            energyPerPedal = energyAtRelease - last_energyPerPedal;
-            last_energyPerPedal = energyAtRelease;
-        }
-        else
-        {
-            //            qDebug() << "| energyAtPress3:" << energyAtPress
-            //                     << "| energyAtRelease:" << energyAtRelease
-            //                     << "| last_energyPerPedal:" << last_energyPerPedal;
-            energyPerPedal = energyAtRelease - energyAtPress;
-        }
-
-        if (energyPerPedal < 0)
-            energyPerPedal = 0;
-
-        //        qDebug() << "| Name:" << protocolName
-        //                 << "| 980_power:" << power980
-        //                 << "| 1470_power:" << power1470
-        //                 << "| 650_power level:" << aimingbeamIntensity
-        //                 << "| Max timer per pedal:" << TimerSec
-        //                 << "| Timer Reset:" << timer_reset
-        //                 << "| Timer Flag:" << timerFlag
-        //                 << "| Pulse ON(ms):" << pulseOnTime
-        //                 << "| Pulse OFF(ms):" << pulseOffTime
-        //                 << "| Pulse Mode:" << pulseMode
-        //                 << "| Total Energy:" << new_totalEnergyDelivered + new2_totalEnergyDelivered
-        //                 << "| per pedal energy deliverd:" << energyPerPedal;
-
-        //        for(int i = 0; i<8;i++)
-        //            qDebug()<< " | Stored energy value:" << storedEnergy[i];
-
-        // ===== Store in SQLite =====
-        QSqlQuery query(UserDatabaseManager::instance().db());
-        query.prepare(R"(
-        INSERT INTO surgery_log_by_id (
-            surgery_id,
-            protocol_name,
-            power_980,
-            power_1470,
-            power_650,
-            max_pedal_timer_sec,
-            timer_reset,
-            timer_flag,
-            pulse_on_time_ms,
-            pulse_off_time_ms,
-            pulse_mode,
-            energy_per_pedal,
-            total_energy,
-            stored_energy_1,
-            stored_energy_2,
-            stored_energy_3,
-            stored_energy_4,
-            stored_energy_5,
-            stored_energy_6,
-            stored_energy_7,
-            stored_energy_8
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    )");
-
-        query.addBindValue(g_surgeryId);
-        query.addBindValue(protocolName);
-        query.addBindValue(power980);
-        query.addBindValue(power1470);
-        query.addBindValue(aimingbeamIntensity);
-        query.addBindValue(TimerSec);
-        query.addBindValue(timer_reset);
-        query.addBindValue(timerFlag);
-        query.addBindValue(pulseOnTime);
-        query.addBindValue(pulseOffTime);
-        query.addBindValue(pulseMode);
-        query.addBindValue(energyPerPedal);
-        query.addBindValue(new_totalEnergyDelivered + new2_totalEnergyDelivered);
-        query.addBindValue(storedEnergy[0]);
-        query.addBindValue(storedEnergy[1]);
-        query.addBindValue(storedEnergy[2]);
-        query.addBindValue(storedEnergy[3]);
-        query.addBindValue(storedEnergy[4]);
-        query.addBindValue(storedEnergy[5]);
-        query.addBindValue(storedEnergy[6]);
-        query.addBindValue(storedEnergy[7]);
-
-        if (!query.exec()) {
-            qDebug() << "Failed to insert surgery log:" << query.lastError().text();
-        }
-    });
-
     popup = new error_popup(this);
 
     connect(popup, &error_popup::yesClicked, this, [this]() {
@@ -270,6 +117,8 @@ ReadyForSurgery::ReadyForSurgery(QWidget *parent, Home *home)
 
     connect(popup, &error_popup::acknowledged,
             this,[this](){
+        HardwareManagerProvider::instance()->setAimingBeam(true);
+
         TOUCH_BEEP();
         if(surgery_pause)
             surgery_pause = 0;
@@ -394,6 +243,7 @@ void ReadyForSurgery::updateJouleLabel()
     }
 
     ui->L5_energy->setText(QString::number(currentJoule, 'f', 1));
+
 }
 
 void ReadyForSurgery::on_B5_aimingbeam_clicked()
@@ -422,20 +272,22 @@ void ReadyForSurgery::on_B5_aimingbeam_clicked()
     overlay->hide();
     overlay->deleteLater();
 
-    switch(aimingbeamIntensity){
-    case 1: setPwmDutyCycle(4,0,3600);
-        break;
-    case 2: setPwmDutyCycle(4,0,3800);
-        break;
-    case 3: setPwmDutyCycle(4,0,3900);
-        break;
-    case 4: setPwmDutyCycle(4,0,4000);
-        break;
-    case 5: setPwmDutyCycle(4,0,4100);
-        break;
-    default:
-        break;
-    }
+
+
+//    switch(aimingbeamIntensity){
+//    case 1: setPwmDutyCycle(4,0,3600);
+//        break;
+//    case 2: setPwmDutyCycle(4,0,3800);
+//        break;
+//    case 3: setPwmDutyCycle(4,0,3900);
+//        break;
+//    case 4: setPwmDutyCycle(4,0,4000);
+//        break;
+//    case 5: setPwmDutyCycle(4,0,4100);
+//        break;
+//    default:
+//        break;
+//    }
     TOUCH_BEEP();
 
     dbinit.updateSingleColumn("device_setting","aiming_beam_intensity",aimingbeamIntensity,1);
@@ -581,7 +433,7 @@ void ReadyForSurgery::on_B5_change_clicked()
 
 void ReadyForSurgery::on_B5_reset_clicked()
 {
-    float adcValue = m_adc.readVoltage(ADC_CH0);
+    float adcValue = m_adc.readRaw(ADC_CH0);
 
     qDebug()<<"adcvalue"<<adcValue;
 
@@ -606,7 +458,15 @@ void ReadyForSurgery::on_B5_reset_clicked()
     }
 
     energyDelivered = 0;
-    ui->L5_energy_deliverd->setText(QString::number(energyDelivered, 'f', 0));
+    //    ui->L5_energy_deliverd->setText(QString::number(energyDelivered, 'f', 0));
+
+    QString formattedJouledeliverd = QString::number(energyDelivered, 'f', 0);
+
+    ui->L5_energy_deliverd->setText(
+                QString("<span style='font-size: 24pt; color: #3299ff;'>%1</span>"
+                "<span style='font-size: 14pt; color: #FFFFFF;'> J</span>")
+                .arg(formattedJouledeliverd)
+                );
 
     TOUCH_BEEP();
 }
@@ -633,12 +493,12 @@ void ReadyForSurgery::updateEnergy()
             timerRing->resetTimer();
         }
 
-        ui->pushButton->setText("Laser OFF");
-        ui->pushButton->setStyleSheet("background-color: gray; color: black; font: 12pt \"Roboto\";");
 
         // Finalize calculations and log to DB once on completion
         energyAtRelease = new_totalEnergyDelivered + new2_totalEnergyDelivered;
         logEnergyValues();
+
+        SUCCESS_BEEP();
         return;
     }
 
@@ -661,11 +521,27 @@ void ReadyForSurgery::updateEnergy()
 
     new_totalEnergyDelivered = liveTime * avgPower;
 
-    ui->L5_energy_deliverd->setText(QString::number(
-                                        new_totalEnergyDelivered + new2_totalEnergyDelivered - totalEnergyDelivered, 'f', 0));
+    //    ui->L5_energy_deliverd->setText(QString::number(
+    //                                        new_totalEnergyDelivered + new2_totalEnergyDelivered - totalEnergyDelivered, 'f', 0));
 
-    ui->L5_total_energy->setText(QString::number(
-                                     new_totalEnergyDelivered + new2_totalEnergyDelivered, 'f', 0));
+    QString formattedJouledeliverd = QString::number(new_totalEnergyDelivered + new2_totalEnergyDelivered - totalEnergyDelivered, 'f', 0);
+
+    ui->L5_energy_deliverd->setText(
+                QString("<span style='font-size: 24pt; color: #3299ff;'>%1</span>"
+                "<span style='font-size: 14pt; color: #FFFFFF;'> J</span>")
+                .arg(formattedJouledeliverd)
+                );
+
+    //    ui->L5_total_energy->setText(QString::number(
+    //                                     new_totalEnergyDelivered + new2_totalEnergyDelivered, 'f', 0));
+
+    QString formattedtotalJoule = QString::number(new_totalEnergyDelivered + new2_totalEnergyDelivered, 'f', 0);
+
+    ui->L5_total_energy->setText(
+                QString("<span style='font-size: 40pt; color: #3299ff;'>%1</span>"
+                "<span style='font-size: 20pt; color: #FFFFFF;'> J</span>")
+                .arg(formattedtotalJoule)
+                );
 
     double totalEnergy = new_totalEnergyDelivered + new2_totalEnergyDelivered;
     int currentLevel = static_cast<int>(totalEnergy);
@@ -737,6 +613,7 @@ void ReadyForSurgery::playNextAudio()
 
 void ReadyForSurgery::on_B5_pause_clicked()
 {
+    HardwareManagerProvider::instance()->setAimingBeam(false);
     surgery_pause_popup();
     TOUCH_BEEP();
 }
@@ -750,7 +627,7 @@ void ReadyForSurgery::surgery_pause_popup()
                 "SURGERY PAUSED",
                 "Press RESUME to continue the surgery. \n"
         "OR\n"
-        "Press foot peddel to resume.",
+        "Press foot pedal to resume.",
                 error_popup::Info,
                 true
                 );
@@ -761,6 +638,7 @@ void ReadyForSurgery::surgery_pause_popup()
 void ReadyForSurgery::end_surgery(void)
 {
     qDebug() << "Surgery end";
+    HardwareManagerProvider::instance()->setAimingBeam(false);
 
     int surgery_min = (g_surgery_ms/1000);
     int diode_avg_ms = 0;
@@ -840,17 +718,35 @@ void ReadyForSurgery::resetSurgerySession()
         storedEnergy[i] = 0;
     }
 
-    ui->L5_store_1->setText("0");
-    ui->L5_store_2->setText("0");
-    ui->L5_store_3->setText("0");
-    ui->L5_store_4->setText("0");
-    ui->L5_store_5->setText("0");
-    ui->L5_store_6->setText("0");
-    ui->L5_store_7->setText("0");
-    ui->L5_store_8->setText("0");
+    ui->L5_store_1->clear();
+    ui->L5_store_2->clear();
+    ui->L5_store_3->clear();
+    ui->L5_store_4->clear();
+    ui->L5_store_5->clear();
+    ui->L5_store_6->clear();
+    ui->L5_store_7->clear();
+    ui->L5_store_8->clear();
 
-    ui->L5_energy_deliverd->setText("0");
-    ui->L5_total_energy->setText("0");
+    //    ui->L5_energy_deliverd->setText("0");
+
+    QString formattedJoule = QString::number(energyDelivered, 'f', 0);
+
+    ui->L5_energy_deliverd->setText(
+                QString("<span style='font-size: 24pt; color: #3299ff;'>%1</span>"
+                "<span style='font-size: 14pt; color: #FFFFFF;'> J</span>")
+                .arg(formattedJoule)
+                );
+
+
+    //    ui->L5_total_energy->setText("0");
+
+    QString formattedtotalJoule = QString::number(totalEnergyDelivered, 'f', 0);
+
+    ui->L5_total_energy->setText(
+                QString("<span style='font-size: 40pt; color: #3299ff;'>%1</span>"
+                "<span style='font-size: 20pt; color: #FFFFFF;'> J</span>")
+                .arg(formattedJoule)
+                );
 
     audioQueue.clear();
     isPlaying = false;
@@ -883,6 +779,7 @@ void ReadyForSurgery::showEvent(QShowEvent *event)
 
 void ReadyForSurgery::refreshPage()
 {
+    HardwareManagerProvider::instance()->setAimingBeam(true);
 
     float adcValue = m_adc.readVoltage(ADC_CH0);
 
@@ -925,11 +822,6 @@ void ReadyForSurgery::refreshPage()
     dbinit.fetchDACByPower(power980,980);
     dbinit.fetchDACByPower(power1470,1470);
 
-    ui->pushButton->setText("Laser\nOFF");
-    ui->pushButton->setStyleSheet(
-                "background-color: gray; "
-        "color: black; "
-        "font: 12pt \"Roboto\";");
 
     surgery_pause = 0;
     ui->B5_pause->setText("Pause Surgery");
@@ -940,6 +832,7 @@ void ReadyForSurgery::refreshPage()
 
     if(energyUpdateTimer)
         energyUpdateTimer->stop();
+
 }
 
 void ReadyForSurgery::handleFootPedal(bool value)
@@ -1010,9 +903,6 @@ void ReadyForSurgery::laserON()
         energyAtPress = new_totalEnergyDelivered;
     }
 
-    // 3. UI Presentation Layer
-    ui->pushButton->setText("Laser\nON");
-    ui->pushButton->setStyleSheet("background-color: red; color: white; font: 12pt \"Roboto\";");
 
     // 4. Trace Output & Setup Next Tick Window
     if (pulseMode) {
@@ -1052,8 +942,6 @@ void ReadyForSurgery::laserOFF()
         energyAtRelease = new_totalEnergyDelivered + new2_totalEnergyDelivered;
 
         // Restore UI safely
-        ui->pushButton->setText("Laser\nOFF");
-        ui->pushButton->setStyleSheet("background-color: gray; color: black; font: 12pt \"Roboto\";");
 
         logEnergyValues();
     }
@@ -1110,6 +998,7 @@ void ReadyForSurgery::timerRingHandler()
         }
         energyDelivered = new_totalEnergyDelivered + new2_totalEnergyDelivered - totalEnergyDelivered;
     }
+
 }
 
 void ReadyForSurgery::logEnergyValues()
@@ -1208,6 +1097,51 @@ void ReadyForSurgery::logEnergyValues()
 
     if (!query.exec()) {
         qDebug() << "Failed to insert surgery log:" << query.lastError().text();
+    }
+}
+
+
+void ReadyForSurgery::on_diode_temp_linkActivated(const QString &link)
+{
+
+}
+
+void ReadyForSurgery::update_diode_temp(void)
+{
+    QString formatdiodetemp = QString::number(g_diode_temp, 'f', 0);
+
+    ui->diode_temp->setText(
+                QString("<span style='font-size: 14pt; color: #00C800;'>%1</span>"
+                "<span style='font-size: 14pt; color: #00C800;'> °C</span>")
+                .arg(formatdiodetemp)
+                );
+
+    // Trigger alarm at 35°C
+    qDebug()<<Q_FUNC_INFO<<g_diode_temp;
+    if (g_diode_temp >= 35.0f && !diode_temp_alarm_active)
+    {
+        diode_temp_alarm_active = true;
+        laserOFF();
+        HardwareManagerProvider::instance()->setAimingBeam(false);
+        WARNING_BEEP();
+        popup->showMessage(
+                    "OVER TEMPERATURE",
+                    "Laser diode temperature reached 35°C. \n"
+            "\n"
+            "Please wait till diode cools down.",
+                    error_popup::Critical,
+                    false
+                    );
+    }
+
+    // Reset alarm when temperature reaches 28°C
+    if (g_diode_temp <= 28.0f && diode_temp_alarm_active)
+    {
+        diode_temp_alarm_active = false;
+        HardwareManagerProvider::instance()->setAimingBeam(true);
+        SUCCESS_BEEP();
+        // Close/hide popup
+        popup->hide();
     }
 }
 

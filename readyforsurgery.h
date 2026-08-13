@@ -35,6 +35,8 @@ public:
     Colibri_ADC m_adc;
     uint8_t mqsVolume;
 
+    void update_diode_temp(void);
+
 protected:
     QStackedWidget* stack;
     void showEvent(QShowEvent *event) override;
@@ -89,6 +91,8 @@ private slots:
 
     void handlePulseOffTimeout();
 
+    void on_diode_temp_linkActivated(const QString &link);
+
 private:
     Ui::ReadyForSurgery *ui;
     Home *home;
@@ -115,6 +119,7 @@ private:
     QTimer *energyUpdateTimer = nullptr;
     QTimer pulseOnTimer;
     QTimer pulseOffTimer;
+    QTimer *diodeTempTimer;
     bool m_fp_pressed;
 
     void updateEnergy();

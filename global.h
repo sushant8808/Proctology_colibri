@@ -11,6 +11,8 @@ extern RuntimeManager* g_runtimeManager;
 
 extern QString g_usbPath;
 
+extern float g_diode_temp;
+
 extern QString version;
 extern QString model;
 extern QString serial_no;
@@ -100,6 +102,7 @@ extern int user_admin_mode;
 extern bool clear_data;
 extern bool clear_page;
 extern bool custom_modify;
+extern bool interlock_confirm;
 
 extern int pulsemode_step1;
 extern int pulsemode_step2;
@@ -117,6 +120,8 @@ extern Range range3;
 
 extern int pulseMinLimit;
 extern int pulseMaxLimit;
+
+extern bool diode_temp_alarm_active;
 
 
 #endif // GLOBAL_H

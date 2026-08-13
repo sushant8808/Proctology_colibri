@@ -949,6 +949,11 @@ void ThemeManager::applyLightTheme()
                       " color: white;"
                       "}"
 
+                      "QPushButton[keyboardButton=\"true\"][flash=\"true\"] {"
+                      "background-color: rgb(255,97,34);"
+                      "color: white;"
+                      "}"
+
                       "QPushButton[keyboardSpecial=\"true\"] {"
                       " background-color: rgb(200,200,200);"
                       " color: black;"
@@ -963,6 +968,12 @@ void ThemeManager::applyLightTheme()
                       " background-color: rgb(255,97,34);"
                       " color: white;"
                       "}"
+
+                      "QPushButton[keyboardSpecial=\"true\"][flash=\"true\"] {"
+                      "background-color: rgb(255,97,34);"
+                      "color: white;"
+                      "}"
+
 
                       "QPushButton[keyboardEnter=\"true\"] {"
                       " background-color: rgb(255,97,34);"

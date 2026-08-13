@@ -3,6 +3,9 @@
 
 #include <QWidget>
 #include "databaseinitializer.h"
+#include "dac8552.h"
+#include "hardwaremanager.h"
+#include "hardwaremanagerprovider.h"
 #include "setting.h"
 #include "home.h"
 
@@ -47,13 +50,17 @@ private slots:
 
     void switchToServiceEngArea();
 
-    void on_test_1470_clicked();
-
-    void on_test_980_clicked();
-
     void on_back_to_home_clicked();
 
     void switchToHome();
+
+    void on_test_1470_pressed();
+
+    void on_test_1470_released();
+
+    void on_test_980_pressed();
+
+    void on_test_980_released();
 
 private:
     Ui::Calibration_screen *ui;
@@ -65,6 +72,8 @@ private:
     double power_980 = 0.0;
 
     QTimer *timer_DAC_add;
+
+    DAC8552 m_dac;
 
     void refreshPage();
 
