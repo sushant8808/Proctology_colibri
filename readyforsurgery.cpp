@@ -883,6 +883,7 @@ void ReadyForSurgery::laserON()
     if (surgery_pause == 1) {
         popup->hidePopup();
         surgery_pause = 0;
+        HardwareManagerProvider::instance()->setAimingBeam(true);
         return;
     }
 
