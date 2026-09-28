@@ -7,6 +7,8 @@
 #define WARNING_BEEP() HardwareManagerProvider::instance()->beep(HardwareManager::WarningBeep);
 #define ERROR_BEEP() HardwareManagerProvider::instance()->beep(HardwareManager::ErrorBeep);
 #define SUCCESS_BEEP() HardwareManagerProvider::instance()->beep(HardwareManager::SuccessBeep);
+#define BUZZER_ON()     HardwareManagerProvider::instance()->buzzerOn()
+#define BUZZER_OFF()    HardwareManagerProvider::instance()->buzzerOff()
 class HardwareManager;
 
 /*

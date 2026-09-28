@@ -252,6 +252,8 @@ bool Surgery_data::eventFilter(QObject *watched, QEvent *event)
 {
     if (event->type() == QEvent::MouseButtonPress)
     {
+        TOUCH_BEEP();
+
         QLineEdit *targetLineEdit = nullptr;
         CustomKeyboard::KeyboardMode keyboardMode = CustomKeyboard::FullLayout; // Default layout
 

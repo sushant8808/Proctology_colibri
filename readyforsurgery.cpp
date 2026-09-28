@@ -274,20 +274,20 @@ void ReadyForSurgery::on_B5_aimingbeam_clicked()
 
 
 
-//    switch(aimingbeamIntensity){
-//    case 1: setPwmDutyCycle(4,0,3600);
-//        break;
-//    case 2: setPwmDutyCycle(4,0,3800);
-//        break;
-//    case 3: setPwmDutyCycle(4,0,3900);
-//        break;
-//    case 4: setPwmDutyCycle(4,0,4000);
-//        break;
-//    case 5: setPwmDutyCycle(4,0,4100);
-//        break;
-//    default:
-//        break;
-//    }
+    //    switch(aimingbeamIntensity){
+    //    case 1: setPwmDutyCycle(4,0,3600);
+    //        break;
+    //    case 2: setPwmDutyCycle(4,0,3800);
+    //        break;
+    //    case 3: setPwmDutyCycle(4,0,3900);
+    //        break;
+    //    case 4: setPwmDutyCycle(4,0,4000);
+    //        break;
+    //    case 5: setPwmDutyCycle(4,0,4100);
+    //        break;
+    //    default:
+    //        break;
+    //    }
     TOUCH_BEEP();
 
     dbinit.updateSingleColumn("device_setting","aiming_beam_intensity",aimingbeamIntensity,1);
@@ -504,12 +504,20 @@ void ReadyForSurgery::updateEnergy()
 
     if (timerFlag == 1) {
         liveTime = TimerSec - timerRing->getCurrentValue();
-        if (liveTime < 0) liveTime = 0;
+
+        if (liveTime < 0)
+            liveTime = 0;
+
+        if (liveTime > MAX_ALLOWED_TIME)
+            liveTime = MAX_ALLOWED_TIME;
     } else {
         liveTime = timerRing->getElapsedValue();
     }
 
-    if (liveTime > MAX_ALLOWED_TIME) liveTime = MAX_ALLOWED_TIME;
+    //    if (liveTime > MAX_ALLOWED_TIME) liveTime = MAX_ALLOWED_TIME;
+
+    if (timerFlag == 1 && liveTime > MAX_ALLOWED_TIME)
+        liveTime = MAX_ALLOWED_TIME;
 
     if(pulseMode)
     {
@@ -546,47 +554,85 @@ void ReadyForSurgery::updateEnergy()
     double totalEnergy = new_totalEnergyDelivered + new2_totalEnergyDelivered;
     int currentLevel = static_cast<int>(totalEnergy);
 
-    if (alarmJoules > 0)
+    if(audioMode)
     {
-        int currentMultiple = currentLevel / alarmJoules;
-        int lastMultiple    = lastAnnouncedEnergy / alarmJoules;
 
-        if (currentMultiple > lastMultiple)
+        if (alarmJoules > 0)
         {
-            int announcedValue = currentMultiple * alarmJoules;
-            //            audioQueue.clear();
+            int currentMultiple = currentLevel / alarmJoules;
+            int lastMultiple    = lastAnnouncedEnergy / alarmJoules;
 
-            QString filePath = QString("/home/root/laserAudio/%1.wav")
-                    .arg(announcedValue, 4, 10, QChar('0'));
-            //            audioQueue.enqueue(filePath);
+            if (currentMultiple > lastMultiple)
+            {
+                int announcedValue = currentMultiple * alarmJoules;
+                //            audioQueue.clear();
 
-            m_mqs.playWav(filePath);
+                QString filePath = QString("/home/root/laserAudio/%1.wav")
+                        .arg(announcedValue, 4, 10, QChar('0'));
+                //            audioQueue.enqueue(filePath);
 
-            qDebug()<<filePath;
+                m_mqs.playWav(filePath);
 
-            //            if (!isPlaying)
-            //                playNextAudio();
+                qDebug()<<filePath;
 
-            lastAnnouncedEnergy = announcedValue;
-        }
-    }else if (alarmSeconds > 0)
-    {
-        double diode1470Sec = g_diode1470Ms_persurgery / 1000.0;
-        double diode980Sec  = g_diode980Ms_persurgery / 1000.0;
-        double currentSec = qMax(diode1470Sec, diode980Sec);
+                //            if (!isPlaying)
+                //                playNextAudio();
 
-        int currentMultiple = static_cast<int>(currentSec) / alarmSeconds;
-        int lastMultiple    = lastAnnouncedSeconds / alarmSeconds;
-
-        if (currentMultiple > lastMultiple)
+                lastAnnouncedEnergy = announcedValue;
+            }
+        }else if (alarmSeconds > 0)
         {
-            audioQueue.clear();
-            audioQueue.enqueue("/home/root/laserAudio/0001.mp3");
+            double diode1470Sec = g_diode1470Ms_persurgery / 1000.0;
+            double diode980Sec  = g_diode980Ms_persurgery / 1000.0;
 
-            if (!isPlaying)
-                playNextAudio();
+            int currentSec = static_cast<int>(qMax(diode1470Sec, diode980Sec));
 
-            lastAnnouncedSeconds = currentMultiple * alarmSeconds;
+            int announcedValue = 0;
+
+            // 1 to 100 : +1
+            if (currentSec >= 1 && currentSec <= 100)
+            {
+                announcedValue = currentSec;
+            }
+            // 100 to 200 : +5
+            else if (currentSec <= 200)
+            {
+                announcedValue = 100 + ((currentSec - 100) / 5) * 5;
+            }
+            // 200 to 300 : +10
+            else if (currentSec <= 300)
+            {
+                announcedValue = 200 + ((currentSec - 200) / 10) * 10;
+            }
+            // 300 to 1000 : +50
+            else if (currentSec <= 1000)
+            {
+                announcedValue = 300 + ((currentSec - 300) / 50) * 50;
+            }
+            // 1000 to 1500 : +100
+            else if (currentSec <= 1500)
+            {
+                announcedValue = 1000 + ((currentSec - 1000) / 100) * 100;
+            }
+
+            if (announcedValue > 0 && announcedValue > lastAnnouncedSeconds)
+            {
+                QString filePath = QString("/home/root/laserAudio/%1.wav")
+                        .arg(announcedValue, 4, 10, QChar('0'));
+
+                audioQueue.clear();
+                audioQueue.enqueue(filePath);
+
+                if (!isPlaying)
+                    playNextAudio();
+
+                lastAnnouncedSeconds = announcedValue;
+
+                qDebug() << "SECONDS AUDIO:"
+                         << "currentSec =" << currentSec
+                         << "announcedValue =" << announcedValue
+                         << "file =" << filePath;
+            }
         }
     }
 }
@@ -769,6 +815,8 @@ void ReadyForSurgery::resetSurgerySession()
     g_diode1470Ms_persurgery = 0;
     g_diode980Ms_persurgery = 0;
     Fiber_disconnection_count = 0;
+
+    timerRingStarted = false;
 }
 
 void ReadyForSurgery::showEvent(QShowEvent *event)
@@ -844,6 +892,7 @@ void ReadyForSurgery::handleFootPedal(bool value)
     }
 
     if (value) { // Pedal Pressed
+        BUZZER_ON();
         m_fp_pressed = true;
         //        qDebug() << "--------------------------------------------------";
         //        qDebug() << "📢 [PEDAL ACTION] -> Pedal Physically Pressed";
@@ -865,6 +914,7 @@ void ReadyForSurgery::handleFootPedal(bool value)
             laserON();
         }
     } else { // Pedal Released
+        BUZZER_OFF();
         m_fp_pressed = false;
         //        qDebug() << "📢 [PEDAL ACTION] -> Pedal Physically Released";
         //        qDebug() << "--------------------------------------------------";
@@ -895,8 +945,16 @@ void ReadyForSurgery::laserON()
     if (power980)  g_runtimeManager->set980Active(true);
 
     // 2. Drive Software Tracking Timers
-    timerRing->startTimerAnimation();
-    energyUpdateTimer->start();
+    //    timerRing->startTimerAnimation();
+    //    energyUpdateTimer->start();
+
+    if (!timerRingStarted)
+    {
+        timerRing->startTimerAnimation();
+        energyUpdateTimer->start();
+
+        timerRingStarted = true;
+    }
 
     if (timer_reset == 1) {
         energyAtPress = new2_totalEnergyDelivered;
@@ -919,6 +977,7 @@ void ReadyForSurgery::laserON()
 
 void ReadyForSurgery::laserOFF()
 {
+
     // Safety drop physical outputs to zero immediately
     m_dac.setDac(0, 0);
     m_dac.setDac(1, 0);
@@ -941,6 +1000,8 @@ void ReadyForSurgery::laserOFF()
         updateEnergy();
 
         energyAtRelease = new_totalEnergyDelivered + new2_totalEnergyDelivered;
+
+        timerRingStarted = false;
 
         // Restore UI safely
 
@@ -1118,7 +1179,7 @@ void ReadyForSurgery::update_diode_temp(void)
                 );
 
     // Trigger alarm at 35°C
-    qDebug()<<Q_FUNC_INFO<<g_diode_temp;
+    //    qDebug()<<Q_FUNC_INFO<<g_diode_temp;
     if (g_diode_temp >= 35.0f && !diode_temp_alarm_active)
     {
         diode_temp_alarm_active = true;

@@ -1,6 +1,7 @@
 #include "protocolitemwidget.h"
 #include <QMouseEvent>
 #include "global.h"
+#include "hardwaremanagerprovider.h"
 
 ProtocolItemWidget::ProtocolItemWidget(int id,
                                        int its_dummy,
@@ -79,6 +80,7 @@ void ProtocolItemWidget::mousePressEvent(QMouseEvent *event)
 {
     if (starLabel->geometry().contains(event->pos()))
     {
+        TOUCH_BEEP();
         isFavourite = !isFavourite;
         updateStar();
         emit favouriteToggled(protocolId, isFavourite);

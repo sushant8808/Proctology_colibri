@@ -143,8 +143,7 @@ private slots:
 
     void on_B2_joule_alarm_clicked();
 
-
-
+    void on_T2_home_currentChanged(int index);
 
 protected:
     void showEvent(QShowEvent *event) override;

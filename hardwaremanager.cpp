@@ -362,3 +362,18 @@ void HardwareManager::beep(BuzzerType type)
         delay += t.durationMs + 20; // small gap between tones
     }
 }
+
+void  HardwareManager::buzzerOn()
+{
+    const auto &pwm = m_pwms['C'];
+
+    int periodNs = freqToPeriodNs(2400);
+    int dutyNs = volumeToDutyNs(periodNs, volume[beepIntensity - 1]);
+
+    setPwmSafe(pwm, dutyNs, periodNs);
+}
+
+void  HardwareManager::buzzerOff()
+{
+    writeSysfs(m_pwms['C'].pwmPath + "/enable", "0");
+}

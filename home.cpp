@@ -1758,3 +1758,10 @@ void Home::updateUSBicon(bool status)
     }
 }
 
+
+void Home::on_T2_home_currentChanged(int index)
+{
+    TOUCH_BEEP();
+}
+
+

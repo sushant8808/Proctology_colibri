@@ -168,6 +168,7 @@ MainWindow::MainWindow(QWidget *parent, QLabel *statusLabel, QProgressBar *progr
 
         if(override_popup == 1) {
             override_popup = 2;
+            homePage->updateInterlockUi(0);
             popup1->hidePopup();
             qDebug() << "override_popup"<<override_popup;
         }
@@ -235,9 +236,8 @@ void MainWindow::interlock_popup(bool status)
     else // Interlock Key is SAFELY CONNECTED
     {
         // Only completely reset the state when the physical key returns!
-        override_popup = 0;
+//        override_popup = 0;
         popup1->hidePopup();
         qDebug() << "🔒 Interlock loop physically closed. Resetting override status.";
     }
-
 }

@@ -106,6 +106,8 @@ protocolselect::~protocolselect()
 // Setup main tabs: Favourite, Preset, Custom
 void protocolselect::setupTabs()
 {
+    qDebug()<<"in setupTabs";
+
     // Preset sub-tabs mapping
     struct PresetTab {
         QString tableName;
@@ -293,6 +295,7 @@ void protocolselect::loadProtocols(const QString &tableName, QWidget *tabWidget)
         connect(item, &ProtocolItemWidget::favouriteToggled,
                 this, [=](int id, bool fav)
         {
+
             DatabaseInitializer db;
 
             db.updateSingleColumn(sourceTable,
@@ -431,6 +434,7 @@ void protocolselect::loadProtocols(const QString &tableName, QWidget *tabWidget)
 
 void protocolselect::switchTonewprotocol()
 {
+    TOUCH_BEEP();
     MainWindow::instance->switchPage(PAGE_NEWCUSTOMPROTOCOL);
 }
 
@@ -444,6 +448,7 @@ void protocolselect::loadHomeFromGlobals()
 
 void protocolselect::on_B3_back_to_home_clicked()
 {
+    TOUCH_BEEP();
     MainWindow::instance->switchPage(PAGE_HOME);
 }
 
@@ -455,6 +460,8 @@ void protocolselect::showEvent(QShowEvent *event)
 }
 void protocolselect::refreshPage()
 {
+    TOUCH_BEEP();
+
     qDebug() << "Refreshing Protocol Select Page";
 
     // Reset selection state
@@ -475,3 +482,15 @@ void protocolselect::refreshPage()
 
     qDebug() << "Protocol Select Refresh Complete";
 }
+
+void protocolselect::on_Main_Tab_currentChanged(int index)
+{
+    TOUCH_BEEP();
+}
+
+
+void protocolselect::on_Sub_Tab_currentChanged(int index)
+{
+    TOUCH_BEEP();
+}
+

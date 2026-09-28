@@ -991,6 +991,8 @@ QString changevalue::getPulseUnit(int valueUs)
 
 void changevalue::on_B4_save_clicked()
 {
+    TOUCH_BEEP();
+
     power980      = m_power980;
     power1470     = m_power1470;
 
@@ -1015,6 +1017,8 @@ void changevalue::on_B4_save_clicked()
 
 void changevalue::on_B4_cancel_clicked()
 {
+    TOUCH_BEEP();
+
     QDialog *dlg = qobject_cast<QDialog*>(parentWidget());
 
         if(dlg)

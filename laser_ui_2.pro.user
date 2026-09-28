@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.15.1, 2026-09-25T16:48:50. -->
+<!-- Written by QtCreator 4.15.1, 2026-09-26T19:03:19. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -250,8 +250,8 @@
        <value type="QString">/yocto/rnd-projects/build-laser_ui_2-Colibri_6ull-Debug/laser_ui_2</value>
       </valuelist>
       <valuelist type="QVariantList" key="ProjectExplorer.RunConfiguration.LastDeployedHosts">
-       <value type="QString">192.168.50.201</value>
        <value type="QString">192.168.50.202</value>
+       <value type="QString">192.168.50.201</value>
       </valuelist>
       <valuelist type="QVariantList" key="ProjectExplorer.RunConfiguration.LastDeployedRemotePaths">
        <value type="QString">/opt/laser_ui_2/bin</value>
@@ -262,12 +262,12 @@
        <value type="QString">/yocto/Colibri-imx6ull/tdx-5.7.0-sdk/sysroots/armv7at2hf-neon-tdx-linux-gnueabi</value>
       </valuelist>
       <valuelist type="QVariantList" key="RemoteLinux.LastDeployedLocalTimes">
+       <value type="QDateTime">2026-09-26T18:54:29.893</value>
        <value type="QDateTime">2026-08-13T16:59:35.975</value>
-       <value type="QDateTime">2026-06-26T15:42:57.259</value>
       </valuelist>
       <valuelist type="QVariantList" key="RemoteLinux.LastDeployedRemoteTimes">
+       <value type="QDateTime">2026-09-26T18:55:17.000</value>
        <value type="QDateTime">2026-08-13T17:00:25.000</value>
-       <value type="QDateTime">2026-06-26T15:43:49.000</value>
       </valuelist>
      </valuemap>
      <value type="int" key="ProjectExplorer.BuildStepList.StepsCount">3</value>

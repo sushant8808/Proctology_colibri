@@ -198,6 +198,7 @@ public:
     bool savePulseRanges();
 
     bool fetchPulseRanges();
+    bool resetAllPresetProtocols();
 
 
 

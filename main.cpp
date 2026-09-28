@@ -25,19 +25,19 @@ int main(int argc, char *argv[])
 
     auto *hw = new HardwareManager(&a);
 
-            if (!hw->initGPIO()) {
-                qCritical("Failed to initialize GPIO");
-            }
+    if (!hw->initGPIO()) {
+        qCritical("Failed to initialize GPIO");
+    }
 
-            if (!hw->initPWM()) {
-                qCritical("Failed to initialize PWM");
-            }
+    if (!hw->initPWM()) {
+        qCritical("Failed to initialize PWM");
+    }
 
-            /*
+    /*
              * Expose hardware manager via QApplication
              */
-            a.setProperty(HW_PROPERTY,
-                            QVariant::fromValue(static_cast<QObject *>(hw)));
+    a.setProperty(HW_PROPERTY,
+                  QVariant::fromValue(static_cast<QObject *>(hw)));
 
 
 
@@ -122,9 +122,9 @@ int main(int argc, char *argv[])
     g_runtimeManager = new RuntimeManager();
     g_runtimeManager->start();
 
-//    systemInit.clearPasswordTable();
+    //    systemInit.clearPasswordTable();
 
-//    systemInit.insertPassword("1100","4321", "1234");
+    //    systemInit.insertPassword("1100","4321", "1234");
 
     // dbinit.insertHomeData(
     //     10.0,                 // 980 nm power
@@ -150,307 +150,7 @@ int main(int argc, char *argv[])
     //     "Default"                // name
     //     );
 
-    // // Insert
-    // dbinit.insertPresetProtocol(
-    //     "preset_protocol_general",
-    //     "Hemorrhoids Grade 2",
-    //     10,
-    //     10,
-    //     6,
-    //     true,
-    //     false,
-    //     100,
-    //     200,
-    //     true,
-    //     0
-    //     );
-    // dbinit.insertPresetProtocol(
-    //     "preset_protocol_general",
-    //     "Hemorrhoids Grade 3",
-    //     10,
-    //     10,
-    //     6,
-    //     true,
-    //     false,
-    //     100,
-    //     200,
-    //     true,
-    //     0
-    //     );
-    // dbinit.insertPresetProtocol(
-    //     "preset_protocol_general",
-    //     "Hemorrhoids Grade 4",
-    //     10,
-    //     10,
-    //     6,
-    //     true,
-    //     false,
-    //     100,
-    //     200,
-    //     true,
-    //     0
-    //     );
-    // dbinit.insertPresetProtocol(
-    //     "preset_protocol_general",
-    //     "Anal Fistula",
-    //     10,
-    //     10,
-    //     60,
-    //     true,
-    //     false,
-    //     100,
-    //     200,
-    //     true,
-    //     0
-    //     );
-    // dbinit.insertPresetProtocol(
-    //     "preset_protocol_general",
-    //     "Anal Fissure",
-    //     10,
-    //     10,
-    //     60,
-    //     true,
-    //     false,
-    //     100,
-    //     200,
-    //     true,
-    //     0
-    //     );
-    // dbinit.insertPresetProtocol(
-    //     "preset_protocol_general",
-    //     "Pilonidal Sinus",
-    //     10,
-    //     10,
-    //     60,
-    //     true,
-    //     false,
-    //     100,
-    //     200,
-    //     true,
-    //     0
-    //     );
-    // dbinit.insertPresetProtocol(
-    //     "preset_protocol_general",
-    //     "External Polyp",
-    //     10,
-    //     10,
-    //     60,
-    //     true,
-    //     false,
-    //     100,
-    //     200,
-    //     true,
-    //     0
-    //     );
-    // dbinit.insertPresetProtocol(
-    //     "preset_protocol_general",
-    //     "Corn Excision",
-    //     10,
-    //     10,
-    //     60,
-    //     true,
-    //     false,
-    //     100,
-    //     200,
-    //     true,
-    //     0
-    //     );
-
-    // dbinit.insertPresetProtocol(
-    //     "preset_protocol_ent",
-    //     "Tonsillectomy",
-    //     10,
-    //     10,
-    //     60,
-    //     true,
-    //     false,
-    //     100,
-    //     200,
-    //     true,
-    //     0
-    //     );
-    // dbinit.insertPresetProtocol(
-    //     "preset_protocol_ent",
-    //     "Cysts",
-    //     10,
-    //     10,
-    //     60,
-    //     true,
-    //     false,
-    //     100,
-    //     200,
-    //     true,
-    //     0
-    //     );
-    // dbinit.insertPresetProtocol(
-    //     "preset_protocol_ent",
-    //     "Nasal Polyp",
-    //     10,
-    //     10,
-    //     60,
-    //     true,
-    //     false,
-    //     100,
-    //     200,
-    //     true,
-    //     0
-    //     );
-    // dbinit.insertPresetProtocol(
-    //     "preset_protocol_ent",
-    //     "Tumors Excision",
-    //     10,
-    //     10,
-    //     60,
-    //     true,
-    //     false,
-    //     100,
-    //     200,
-    //     true,
-    //     0
-    //     );
-    // dbinit.insertPresetProtocol(
-    //     "preset_protocol_gynaecology",
-    //     "LVR",
-    //     10,
-    //     10,
-    //     60,
-    //     true,
-    //     false,
-    //     100,
-    //     200,
-    //     true,
-    //     0
-    //     );
-    // dbinit.insertPresetProtocol(
-    //     "preset_protocol_gynaecology",
-    //     "Vaginal Wart",
-    //     10,
-    //     10,
-    //     60,
-    //     true,
-    //     false,
-    //     100,
-    //     200,
-    //     true,
-    //     0
-    //     );
-    // dbinit.insertPresetProtocol(
-    //     "preset_protocol_neurology",
-    //     "PLDD",
-    //     10,
-    //     10,
-    //     60,
-    //     true,
-    //     false,
-    //     100,
-    //     200,
-    //     true,
-    //     0
-    //     );
-    // dbinit.insertPresetProtocol(
-    //     "preset_protocol_therapy",
-    //     "Wound Healing",
-    //     10,
-    //     10,
-    //     60,
-    //     true,
-    //     false,
-    //     100,
-    //     200,
-    //     true,
-    //     0
-    //     );
-    // dbinit.insertPresetProtocol(
-    //     "preset_protocol_therapy",
-    //     "Diabetic Ulcer",
-    //     10,
-    //     10,
-    //     60,
-    //     true,
-    //     false,
-    //     100,
-    //     200,
-    //     true,
-    //     0
-    //     );
-    // dbinit.insertPresetProtocol(
-    //     "preset_protocol_therapy",
-    //     "Post Operative Pain",
-    //     10,
-    //     10,
-    //     60,
-    //     true,
-    //     false,
-    //     100,
-    //     200,
-    //     true,
-    //     0
-    //     );
-    // dbinit.insertPresetProtocol(
-    //     "preset_protocol_therapy",
-    //     "Diabetic Foot",
-    //     10,
-    //     10,
-    //     60,
-    //     true,
-    //     false,
-    //     100,
-    //     200,
-    //     true,
-    //     0
-    //     );
-    // dbinit.insertPresetProtocol(
-    //     "preset_protocol_urology",
-    //     "Circumcision",
-    //     10,
-    //     10,
-    //     60,
-    //     true,
-    //     false,
-    //     100,
-    //     200,
-    //     true,
-    //     0
-    //     );
-    // dbinit.insertPresetProtocol(
-    //     "preset_protocol_vascular",
-    //     "EVLT (Above the knees)",
-    //     10,
-    //     10,
-    //     60,
-    //     true,
-    //     false,
-    //     100,
-    //     200,
-    //     true,
-    //     0
-    //     );
-    // // dbinit.insertPresetProtocol(
-    // //     "protocol_custom",
-    // //     "ENT Protocol 1",
-    // //     10,
-    // //     10,
-    // //     60,
-    // //     true,
-    // //     false,
-    // //     100,
-    // //     200,
-    // //     true,
-    // //     0
-    // //     );
-    // // dbinit.insertPresetProtocol(
-    // //     "protocol_favourites",
-    // //     "ENT Protocol 1",
-    // //     10,
-    // //     10,
-    // //     60,
-    // //     true,
-    // //     false,
-    // //     100,
-    // //     200,
-    // //     true,
-    // //     0
-    // //     );
+    systemInit.resetAllPresetProtocols();
 
     // Fetch
     // fetchPresetProtocolById("preset_protocol_ent", 1);

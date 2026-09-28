@@ -61,6 +61,8 @@ private slots:
     void switchTonewprotocol();
 
 
+    void on_Main_Tab_currentChanged(int index);
+    void on_Sub_Tab_currentChanged(int index);
 };
 
 #endif // PROTOCOLSELECT_H

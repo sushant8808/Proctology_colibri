@@ -1546,3 +1546,726 @@ bool DatabaseInitializer::fetchPulseRanges()
     return true;
 }
 
+bool DatabaseInitializer::resetAllPresetProtocols()
+{
+    QSqlDatabase db = DatabaseManager::instance().db();
+
+    if (!db.isOpen()) {
+        return false;
+    }
+
+    if (!db.transaction()) {
+        return false;
+    }
+
+    QSqlQuery query(db);
+
+    // =========================================================
+    // CLEAR ALL PRESET TABLES
+    // =========================================================
+
+    const QStringList tables = {
+        "preset_protocol_general",
+        "preset_protocol_ent",
+        "preset_protocol_gynaecology",
+        "preset_protocol_neurology",
+        "preset_protocol_therapy",
+        "preset_protocol_urology",
+        "preset_protocol_vascular"
+    };
+
+    for (const QString& table : tables) {
+
+        if (!query.exec(QString("DELETE FROM %1").arg(table))) {
+            db.rollback();
+            return false;
+        }
+    }
+
+
+    // =========================================================
+    // GENERAL - 10 PROTOCOLS
+    // =========================================================
+
+    if (!insertPresetProtocol(
+            "preset_protocol_general",
+            1,
+            "Mucopexy",
+            0,
+            6,
+            15,
+            false,
+            true,
+            0,
+            0,
+            false,
+            0))
+        goto rollback;
+
+
+    if (!insertPresetProtocol(
+            "preset_protocol_general",
+            2,
+            "Incision",
+            0,
+            7,
+            60,
+            false,
+            true,
+            200,
+            100,
+            true,
+            0))
+        goto rollback;
+
+
+    if (!insertPresetProtocol(
+            "preset_protocol_general",
+            3,
+            "Hemorrhoids Grade 2",
+            0,
+            7,
+            20,
+            false,
+            true,
+            0,
+            0,
+            false,
+            0))
+        goto rollback;
+
+
+    if (!insertPresetProtocol(
+            "preset_protocol_general",
+            4,
+            "Hemorrhoids Grade 3",
+            0,
+            7,
+            22,
+            false,
+            true,
+            0,
+            0,
+            false,
+            0))
+        goto rollback;
+
+
+    if (!insertPresetProtocol(
+            "preset_protocol_general",
+            5,
+            "Hemorrhoids Grade 4",
+            0,
+            8,
+            20,
+            false,
+            true,
+            0,
+            0,
+            false,
+            0))
+        goto rollback;
+
+
+    if (!insertPresetProtocol(
+            "preset_protocol_general",
+            6,
+            "Anal Fistula",
+            6,
+            6,
+            10,
+            false,
+            true,
+            400,
+            100,
+            true,
+            0))
+        goto rollback;
+
+
+    if (!insertPresetProtocol(
+            "preset_protocol_general",
+            7,
+            "Anal Fissure",
+            0,
+            8,
+            20,
+            false,
+            true,
+            400,
+            100,
+            true,
+            0))
+        goto rollback;
+
+
+    if (!insertPresetProtocol(
+            "preset_protocol_general",
+            8,
+            "Pilonidal Sinus",
+            6,
+            6,
+            12,
+            false,
+            true,
+            400,
+            100,
+            true,
+            0))
+        goto rollback;
+
+
+    if (!insertPresetProtocol(
+            "preset_protocol_general",
+            9,
+            "External Polyp",
+            0,
+            6,
+            0,
+            false,
+            false,
+            0,
+            0,
+            false,
+            0))
+        goto rollback;
+
+
+    if (!insertPresetProtocol(
+            "preset_protocol_general",
+            10,
+            "Corn Excision",
+            5,
+            0,
+            0,
+            false,
+            false,
+            0,
+            0,
+            false,
+            0))
+        goto rollback;
+
+
+    // =========================================================
+    // ENT - 20 PROTOCOLS
+    // =========================================================
+
+    if (!insertPresetProtocol(
+            "preset_protocol_ent",
+            1,
+            "Cysts",
+            7.5,
+            0,
+            180,
+            false,
+            true,
+            200,
+            50,
+            true,
+            0))
+        goto rollback;
+
+
+    if (!insertPresetProtocol(
+            "preset_protocol_ent",
+            2,
+            "Accessory Auricle",
+            6,
+            0,
+            120,
+            false,
+            true,
+            100,
+            50,
+            true,
+            0))
+        goto rollback;
+
+
+    if (!insertPresetProtocol(
+            "preset_protocol_ent",
+            3,
+            "Tumors Excision",
+            0,
+            8,
+            180,
+            false,
+            true,
+            200,
+            50,
+            true,
+            0))
+        goto rollback;
+
+
+    if (!insertPresetProtocol(
+            "preset_protocol_ent",
+            4,
+            "Hemangioma",
+            0,
+            8,
+            180,
+            false,
+            true,
+            0,
+            0,
+            false,
+            0))
+        goto rollback;
+
+
+    if (!insertPresetProtocol(
+            "preset_protocol_ent",
+            5,
+            "Myringotomy",
+            0,
+            6,
+            120,
+            false,
+            true,
+            200,
+            50,
+            true,
+            0))
+        goto rollback;
+
+
+    if (!insertPresetProtocol(
+            "preset_protocol_ent",
+            6,
+            "Cholesteatomea",
+            0,
+            8,
+            180,
+            false,
+            true,
+            100,
+            50,
+            true,
+            0))
+        goto rollback;
+
+
+    if (!insertPresetProtocol(
+            "preset_protocol_ent",
+            7,
+            "Nasal Polyp",
+            0,
+            6.5,
+            180,
+            false,
+            true,
+            0,
+            0,
+            false,
+            0))
+        goto rollback;
+
+
+    if (!insertPresetProtocol(
+            "preset_protocol_ent",
+            8,
+            "Turbinate Reduction",
+            0,
+            8,
+            180,
+            false,
+            true,
+            200,
+            50,
+            true,
+            0))
+        goto rollback;
+
+
+    if (!insertPresetProtocol(
+            "preset_protocol_ent",
+            9,
+            "Epistaxis",
+            0,
+            7,
+            180,
+            false,
+            true,
+            100,
+            50,
+            true,
+            0))
+        goto rollback;
+
+
+    if (!insertPresetProtocol(
+            "preset_protocol_ent",
+            10,
+            "Stenosis",
+            0,
+            8,
+            180,
+            false,
+            true,
+            100,
+            50,
+            true,
+            0))
+        goto rollback;
+
+
+    if (!insertPresetProtocol(
+            "preset_protocol_ent",
+            11,
+            "Synechia",
+            0,
+            8,
+            180,
+            false,
+            true,
+            200,
+            50,
+            true,
+            0))
+        goto rollback;
+
+
+    if (!insertPresetProtocol(
+            "preset_protocol_ent",
+            12,
+            "Sinus Surgery",
+            0,
+            8,
+            120,
+            false,
+            true,
+            200,
+            50,
+            true,
+            0))
+        goto rollback;
+
+
+    if (!insertPresetProtocol(
+            "preset_protocol_ent",
+            13,
+            "DCR",
+            0,
+            9,
+            180,
+            false,
+            true,
+            200,
+            50,
+            true,
+            0))
+        goto rollback;
+
+
+    if (!insertPresetProtocol(
+            "preset_protocol_ent",
+            14,
+            "LAUP",
+            0,
+            8,
+            240,
+            false,
+            true,
+            200,
+            50,
+            true,
+            0))
+        goto rollback;
+
+
+    if (!insertPresetProtocol(
+            "preset_protocol_ent",
+            15,
+            "Tonsillectomy",
+            0,
+            9,
+            300,
+            false,
+            true,
+            0,
+            0,
+            false,
+            0))
+        goto rollback;
+
+
+    if (!insertPresetProtocol(
+            "preset_protocol_ent",
+            16,
+            "Vocal Cord Polyp",
+            0,
+            7.5,
+            180,
+            false,
+            true,
+            200,
+            50,
+            true,
+            0))
+        goto rollback;
+
+
+    if (!insertPresetProtocol(
+            "preset_protocol_ent",
+            17,
+            "Vocal Cord Nodule",
+            0,
+            8,
+            180,
+            false,
+            true,
+            100,
+            50,
+            true,
+            0))
+        goto rollback;
+
+
+    if (!insertPresetProtocol(
+            "preset_protocol_ent",
+            18,
+            "Excision of Tumors",
+            0,
+            7,
+            180,
+            false,
+            true,
+            0,
+            0,
+            false,
+            0))
+        goto rollback;
+
+
+    if (!insertPresetProtocol(
+            "preset_protocol_ent",
+            19,
+            "Leukoplakia of Larynx",
+            0,
+            8,
+            180,
+            false,
+            true,
+            200,
+            50,
+            true,
+            0))
+        goto rollback;
+
+
+    if (!insertPresetProtocol(
+            "preset_protocol_ent",
+            20,
+            "Pappiloma",
+            0,
+            9,
+            180,
+            false,
+            true,
+            200,
+            50,
+            true,
+            0))
+        goto rollback;
+
+
+    // =========================================================
+    // GYNAECOLOGY - 2 PROTOCOLS
+    // =========================================================
+
+    if (!insertPresetProtocol(
+            "preset_protocol_gynaecology",
+            1,
+            "LVR",
+            0,
+            4,
+            20,
+            false,
+            true,
+            0,
+            0,
+            false,
+            0))
+        goto rollback;
+
+
+    if (!insertPresetProtocol(
+            "preset_protocol_gynaecology",
+            2,
+            "Vaginal Wart",
+            0,
+            3,
+            60,
+            false,
+            true,
+            0,
+            0,
+            false,
+            0))
+        goto rollback;
+
+
+    // =========================================================
+    // NEUROLOGY - 1 PROTOCOL
+    // =========================================================
+
+    if (!insertPresetProtocol(
+            "preset_protocol_neurology",
+            1,
+            "PLDD",
+            0,
+            8,
+            30,
+            false,
+            true,
+            0,
+            0,
+            false,
+            0))
+        goto rollback;
+
+
+    // =========================================================
+    // THERAPY - 4 PROTOCOLS
+    // =========================================================
+
+    if (!insertPresetProtocol(
+            "preset_protocol_therapy",
+            1,
+            "Wound Healing",
+            3,
+            0,
+            30,
+            false,
+            true,
+            0,
+            0,
+            false,
+            0))
+        goto rollback;
+
+
+    if (!insertPresetProtocol(
+            "preset_protocol_therapy",
+            2,
+            "Diabetic Ulcer",
+            5,
+            0,
+            30,
+            false,
+            true,
+            0,
+            0,
+            false,
+            0))
+        goto rollback;
+
+
+    if (!insertPresetProtocol(
+            "preset_protocol_therapy",
+            3,
+            "Post Operative Pain",
+            2,
+            0,
+            30,
+            false,
+            true,
+            0,
+            0,
+            false,
+            0))
+        goto rollback;
+
+
+    if (!insertPresetProtocol(
+            "preset_protocol_therapy",
+            4,
+            "Diabetic Foot",
+            4,
+            0,
+            60,
+            false,
+            true,
+            100,
+            50,
+            true,
+            0))
+        goto rollback;
+
+
+    // =========================================================
+    // UROLOGY - 1 PROTOCOL
+    // =========================================================
+
+    if (!insertPresetProtocol(
+            "preset_protocol_urology",
+            1,
+            "Circumcision",
+            0,
+            6,
+            120,
+            false,
+            true,
+            400,
+            100,
+            true,
+            0))
+        goto rollback;
+
+
+    // =========================================================
+    // VASCULAR - 2 PROTOCOLS
+    // =========================================================
+
+    if (!insertPresetProtocol(
+            "preset_protocol_vascular",
+            1,
+            "EVLT (Above the knees)",
+            0,
+            8,
+            10,
+            false,
+            true,
+            0,
+            0,
+            false,
+            0))
+        goto rollback;
+
+
+    if (!insertPresetProtocol(
+            "preset_protocol_vascular",
+            2,
+            "EVLT (Below the knees)",
+            0,
+            6,
+            10,
+            false,
+            true,
+            0,
+            0,
+            false,
+            0))
+        goto rollback;
+
+
+    // =========================================================
+    // COMMIT
+    // =========================================================
+
+    if (!db.commit()) {
+        return false;
+    }
+
+    return true;
+
+
+rollback:
+
+    db.rollback();
+    return false;
+}
+
+

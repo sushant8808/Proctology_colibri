@@ -100,11 +100,11 @@ void peltier_control::controlLoop()
                     0,
                     PWM_PERIOD_NS);
 
-        qDebug()
-                << "ADC =" << adcRaw
-                << "Temp =" << currentTemp
-                << "Set =" << m_setTemp
-                << "PWM = 0 (Cooling OFF)";
+//        qDebug()
+//                << "ADC =" << adcRaw
+//                << "Temp =" << currentTemp
+//                << "Set =" << m_setTemp
+//                << "PWM = 0 (Cooling OFF)";
 
         return;
     }

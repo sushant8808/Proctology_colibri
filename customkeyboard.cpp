@@ -4,6 +4,8 @@
 #include <QScreen>
 #include <QTimer>
 #include <QStyle>
+#include "hardwaremanager.h"
+#include "hardwaremanagerprovider.h"
 
 CustomKeyboard::CustomKeyboard(QWidget *parent, KeyboardMode mode)
     : QDialog(parent)
@@ -340,6 +342,9 @@ void CustomKeyboard::createKeyboard()
 
 void CustomKeyboard::handleKeyPress()
 {
+
+    TOUCH_BEEP();
+
     QPushButton *btn = qobject_cast<QPushButton*>(sender());
 
     if(!btn)
