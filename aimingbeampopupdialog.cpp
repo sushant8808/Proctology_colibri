@@ -22,7 +22,10 @@ AimingBeamPopupDialog::AimingBeamPopupDialog(QWidget *parent)
     slider->setRange(1, 5);
     slider->setTickInterval(1);
 
+    aimingBeamPopupTimer = new QTimer(this);
+    connect(aimingBeamPopupTimer, &QTimer::timeout, this, &QDialog::accept);
     connect(slider, &QSlider::valueChanged, this, &AimingBeamPopupDialog::onSliderValueChanged);
+
 
     slider->setValue(aimingbeamIntensity);
 
@@ -35,7 +38,9 @@ AimingBeamPopupDialog::AimingBeamPopupDialog(QWidget *parent)
     layout->setContentsMargins(20, 20, 20, 20);
     setLayout(layout);
 
-    QTimer::singleShot(4000, this, &QDialog::accept);
+    aimingBeamPopupTimer->setInterval(POPUP_TIMEOUT);
+    aimingBeamPopupTimer->start();
+//    QTimer::singleShot(4000, this, &QDialog::accept);
 
 }
 
@@ -44,5 +49,6 @@ void AimingBeamPopupDialog::onSliderValueChanged(int value)
     TOUCH_BEEP();
     aimingbeamIntensity = value;
     HardwareManagerProvider::instance()->demoAimingBeam(value, g_stackIndex != PAGE_READYFORSURGERY);
+    aimingBeamPopupTimer->start();
     //qDebug()<<aimingbeamIntensity;
 }

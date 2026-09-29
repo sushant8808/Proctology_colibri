@@ -5,6 +5,8 @@
 
 #include "runtime_manager.h"
 
+#define POPUP_TIMEOUT 4000
+
 class RuntimeManager;
 
 extern RuntimeManager* g_runtimeManager;
@@ -65,6 +67,8 @@ extern int storedCount;                      // Number of stored values
 extern float totalEnergyDelivered; // cumulative energy
 extern float new_totalEnergyDelivered; // cumulative energy
 extern float new2_totalEnergyDelivered; // cumulative energy
+extern float energydelivery_beforechange;
+extern float totalenergy_cal;
 extern float liveTime;
 extern bool Adv_Sim_fromSetting;
 extern bool surgery_pause_bt;

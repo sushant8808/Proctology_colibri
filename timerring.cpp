@@ -35,8 +35,8 @@ void TimerRing::setTargetValue(float value)
 {
     targetValue  = value;
     currentValue = targetValue;
-    elapsedValue = 0.0f;
-    accumulatedElapsed = 0.0f;
+//    elapsedValue = 0.0f;
+//    accumulatedElapsed = 0.0f;
     update();
 }
 
@@ -74,6 +74,12 @@ void TimerRing::resetTimer()
         elapsedValue = 0.0f;
     }
     update();
+}
+
+void TimerRing::timerToZero()
+{
+    accumulatedElapsed = 0.0f;
+    elapsedValue = 0.0f;
 }
 
 float TimerRing::getCurrentValue() const

@@ -84,6 +84,8 @@ private slots:
 
     void on_B4_cancel_clicked();
 
+    void on_T2_home_currentChanged(int index);
+
 private:
     Ui::changevalue *ui;
 

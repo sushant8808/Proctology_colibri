@@ -20,6 +20,7 @@ private slots:
 private:
     QSlider *slider;
     QLabel *label;
+    QTimer *aimingBeamPopupTimer;
 };
 
 #endif // AIMINGBEAMPOPUPDIALOG_H

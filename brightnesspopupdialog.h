@@ -20,6 +20,7 @@ private slots:
 private:
     QSlider *slider;
     QLabel *label;
+    QTimer *screenbrightnessPopupTimer;
 };
 
 #endif // BRIGHTNESSPOPUPDIALOG_H

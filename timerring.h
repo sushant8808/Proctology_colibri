@@ -15,6 +15,7 @@ public:
     void startTimerAnimation();
     void stopTimerAnimation();
     void resetTimer();
+    void timerToZero();
 
     float getCurrentValue() const;
     float getElapsedValue() const;

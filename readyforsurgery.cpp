@@ -378,6 +378,11 @@ void ReadyForSurgery::on_B5_change_clicked()
 {
     TOUCH_BEEP();
 
+    energydelivery_beforechange = new_totalEnergyDelivered + new2_totalEnergyDelivered;
+    qDebug()<<"energydelivery_beforechange--"<<energydelivery_beforechange;
+    qDebug()<<"new_totalEnergyDelivered--"<<new_totalEnergyDelivered;
+    qDebug()<<"new2_totalEnergyDelivered--"<<new2_totalEnergyDelivered;
+
     QWidget *overlay = new QWidget(this);
     overlay->setGeometry(0, 0, width(), height());
     overlay->setStyleSheet("background-color: rgba(0, 0, 0, 150);");
@@ -423,6 +428,15 @@ void ReadyForSurgery::on_B5_change_clicked()
         updateJouleLabel();
 
         timerRing->setTargetValue(TimerSec);
+
+        new2_totalEnergyDelivered = energydelivery_beforechange;
+        new_totalEnergyDelivered = energydelivery_beforechange;
+
+        qDebug()<<"energydelivery_beforechange--"<<energydelivery_beforechange;
+        qDebug()<<"new_totalEnergyDelivered--"<<new_totalEnergyDelivered;
+        qDebug()<<"new2_totalEnergyDelivered--"<<new2_totalEnergyDelivered;
+
+
 
         DatabaseInitializer dbinit;
         dbinit.fetchDACByPower(power980,980);
@@ -527,7 +541,7 @@ void ReadyForSurgery::updateEnergy()
         avgPower = (power980 + power1470);
     }
 
-    new_totalEnergyDelivered = liveTime * avgPower;
+    new_totalEnergyDelivered = (liveTime * avgPower);
 
     //    ui->L5_energy_deliverd->setText(QString::number(
     //                                        new_totalEnergyDelivered + new2_totalEnergyDelivered - totalEnergyDelivered, 'f', 0));
@@ -550,6 +564,8 @@ void ReadyForSurgery::updateEnergy()
                 "<span style='font-size: 20pt; color: #FFFFFF;'> J</span>")
                 .arg(formattedtotalJoule)
                 );
+
+    totalenergy_cal = new_totalEnergyDelivered + new2_totalEnergyDelivered;
 
     double totalEnergy = new_totalEnergyDelivered + new2_totalEnergyDelivered;
     int currentLevel = static_cast<int>(totalEnergy);
@@ -618,7 +634,7 @@ void ReadyForSurgery::updateEnergy()
             if (announcedValue > 0 && announcedValue > lastAnnouncedSeconds)
             {
                 QString filePath = QString("/home/root/laserAudio/%1.wav")
-                        .arg(announcedValue, 4, 10, QChar('0'));
+                                       .arg(announcedValue, 4, 10, QChar('0'));
 
                 audioQueue.clear();
                 audioQueue.enqueue(filePath);
@@ -827,6 +843,8 @@ void ReadyForSurgery::showEvent(QShowEvent *event)
 
 void ReadyForSurgery::refreshPage()
 {
+    HardwareManagerProvider::instance()->demoAimingBeam(aimingbeamIntensity, g_stackIndex != PAGE_READYFORSURGERY);
+
     HardwareManagerProvider::instance()->setAimingBeam(true);
 
     float adcValue = m_adc.readVoltage(ADC_CH0);
@@ -865,6 +883,7 @@ void ReadyForSurgery::refreshPage()
         timerRing->resetTimer();
         timerRing->setTargetValue(TimerSec);
     }
+    timerRing->timerToZero();
 
     DatabaseInitializer dbinit;
     dbinit.fetchDACByPower(power980,980);
@@ -930,6 +949,7 @@ void ReadyForSurgery::handleFootPedal(bool value)
 
 void ReadyForSurgery::laserON()
 {
+
     if (surgery_pause == 1) {
         popup->hidePopup();
         surgery_pause = 0;
@@ -1179,7 +1199,7 @@ void ReadyForSurgery::update_diode_temp(void)
                 );
 
     // Trigger alarm at 35°C
-    //    qDebug()<<Q_FUNC_INFO<<g_diode_temp;
+//    qDebug()<<Q_FUNC_INFO<<g_diode_temp;
     if (g_diode_temp >= 35.0f && !diode_temp_alarm_active)
     {
         diode_temp_alarm_active = true;

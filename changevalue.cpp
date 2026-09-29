@@ -1014,14 +1014,21 @@ void changevalue::on_B4_save_clicked()
             dlg->accept();
 }
 
-
 void changevalue::on_B4_cancel_clicked()
 {
     TOUCH_BEEP();
+
+    energydelivery_beforechange = 0;
 
     QDialog *dlg = qobject_cast<QDialog*>(parentWidget());
 
         if(dlg)
             dlg->reject();
+}
+
+
+void changevalue::on_T2_home_currentChanged(int index)
+{
+    TOUCH_BEEP();
 }
 

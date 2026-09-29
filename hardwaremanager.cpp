@@ -194,6 +194,7 @@ void HardwareManager::demoAimingBeam(int level, bool timeout)
 
 void HardwareManager::setAimingBeam(bool val)
 {
+    qDebug()<<Q_FUNC_INFO<<"set beam"<<val;
     writeSysfs(m_pwms['E'].pwmPath + "/enable", val ? "1" : "0");
 }
 

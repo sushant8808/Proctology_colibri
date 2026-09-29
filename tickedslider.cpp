@@ -27,10 +27,10 @@ void TickedSlider::paintEvent(QPaintEvent *event)
 
     for (int i = minimum(); i <= maximum(); ++i) {
         double normVal = double(i - minimum()) / range;
-        int x = sliderMin + int(normVal * (sliderMax - sliderMin)) - 2;
+        int x = sliderMin + int(normVal * (sliderMax - sliderMin)) - 5;
         int y = height() / 2;
 
-        painter.drawEllipse(QPoint(x, y), 5, 5);
+        painter.drawEllipse(QPoint(x, y), 10, 10);
     }
 
     QSlider::paintEvent(event);

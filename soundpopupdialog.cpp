@@ -23,6 +23,8 @@ SoundPopupDialog::SoundPopupDialog(QWidget *parent)
     slider->setTickInterval(1);
     slider->setValue(soundIntensity);
 
+    soundPopupTimer = new QTimer(this);
+    connect(soundPopupTimer, &QTimer::timeout, this, &QDialog::accept);
     connect(slider, &QSlider::valueChanged,
             this, &SoundPopupDialog::onSliderValueChanged);
 
@@ -59,7 +61,9 @@ SoundPopupDialog::SoundPopupDialog(QWidget *parent)
 
     setLayout(layout);
 
-    QTimer::singleShot(4000, this, &QDialog::accept);
+    soundPopupTimer->setInterval(POPUP_TIMEOUT);
+    soundPopupTimer->start();
+//    QTimer::singleShot(4000, this, &QDialog::accept);
 }
 
 // ---- First Slider Handler ----
@@ -67,6 +71,7 @@ void SoundPopupDialog::onSliderValueChanged(int value)
 {
     TOUCH_BEEP();
     soundIntensity = value;
+    soundPopupTimer->start();
 }
 
 // ---- Second Slider Handler ----
@@ -74,4 +79,5 @@ void SoundPopupDialog::onSlider2ValueChanged(int value)
 {
     TOUCH_BEEP();
     beepIntensity = value;
+    soundPopupTimer->start();
 }

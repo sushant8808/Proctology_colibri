@@ -21,6 +21,8 @@ BrightnessPopupDialog::BrightnessPopupDialog(QWidget *parent)
     slider->setRange(1, 5);
     slider->setTickInterval(1);
 
+    screenbrightnessPopupTimer = new QTimer(this);
+    connect(screenbrightnessPopupTimer, &QTimer::timeout, this, &QDialog::accept);
     connect(slider, &QSlider::valueChanged, this, &BrightnessPopupDialog::onSliderValueChanged);
 
     slider->setValue(brightnessIntensity);
@@ -34,7 +36,9 @@ BrightnessPopupDialog::BrightnessPopupDialog(QWidget *parent)
     layout->setContentsMargins(20, 20, 20, 20);
     setLayout(layout);
 
-    QTimer::singleShot(4000, this, &QDialog::accept);
+    screenbrightnessPopupTimer->setInterval(POPUP_TIMEOUT);
+    screenbrightnessPopupTimer->start();
+//    QTimer::singleShot(4000, this, &QDialog::accept);
 
 }
 
@@ -43,5 +47,6 @@ void BrightnessPopupDialog::onSliderValueChanged(int value)
     TOUCH_BEEP();
     brightnessIntensity = value;
     HardwareManagerProvider::instance()->setBrightness(value);
+    screenbrightnessPopupTimer->start();
     //qDebug()<<brightnessIntensity;
 }

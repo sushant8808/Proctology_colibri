@@ -24,6 +24,7 @@ private:
 
     QLabel *label2;
     QSlider *slider2;
+    QTimer *soundPopupTimer;
 
 
 };

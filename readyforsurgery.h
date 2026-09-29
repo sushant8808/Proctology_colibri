@@ -111,7 +111,6 @@ private:
     int lastAnnouncedEnergy = 0;
     int lastAnnouncedSeconds = 0;
     bool isPlaying = false;
-    double energyBeforeChange = 0.0;
 
     void playNextAudio();
 
