@@ -150,7 +150,7 @@ int main(int argc, char *argv[])
     //     "Default"                // name
     //     );
 
-//    systemInit.resetAllPresetProtocols();
+//    systemInit.resetAllPresetProtocols();  //to regenerate preset protocol data
 
     // Fetch
     // fetchPresetProtocolById("preset_protocol_ent", 1);

@@ -21,8 +21,6 @@
 #include "hardwaremanager.h"
 #include "hardwaremanagerprovider.h"
 
-#define ADC_CH0 2
-
 bool writeSysfsValue(const QString &path, const QString &value)
 {
     QFile file(path);
@@ -441,17 +439,15 @@ void ReadyForSurgery::on_B5_change_clicked()
         DatabaseInitializer dbinit;
         dbinit.fetchDACByPower(power980,980);
         dbinit.fetchDACByPower(power1470,1470);
+
+//        qDebug()<<"980"<<power980;
+//        qDebug()<<"1470"<<power1470;
     }
 }
 
 
 void ReadyForSurgery::on_B5_reset_clicked()
 {
-    float adcValue = m_adc.readRaw(ADC_CH0);
-
-    qDebug()<<"adcvalue"<<adcValue;
-
-
     if (storedCount < 8) {
         storedEnergy[storedCount] = energyDelivered;
 
@@ -847,10 +843,6 @@ void ReadyForSurgery::refreshPage()
 
     HardwareManagerProvider::instance()->setAimingBeam(true);
 
-    float adcValue = m_adc.readVoltage(ADC_CH0);
-
-    qDebug()<<"adcvalue"<<adcValue;
-
     updatePower980Label();
     updatePower1470Label();
     updateTimerSecLabel();
@@ -888,6 +880,9 @@ void ReadyForSurgery::refreshPage()
     DatabaseInitializer dbinit;
     dbinit.fetchDACByPower(power980,980);
     dbinit.fetchDACByPower(power1470,1470);
+
+//    qDebug()<<"980"<<power980;
+//    qDebug()<<"1470"<<power1470;
 
 
     surgery_pause = 0;
@@ -960,6 +955,9 @@ void ReadyForSurgery::laserON()
     // 1. Fire Hardware DAC Ports
     m_dac.setDac(1, dacBValue); // 980nm
     m_dac.setDac(0, dacAValue);  // 1470nm
+
+    qDebug()<<"980 dac"<<dacBValue;
+    qDebug()<<"1470 dac"<<dacAValue;
 
     if (power1470) g_runtimeManager->set1470Active(true);
     if (power980)  g_runtimeManager->set980Active(true);

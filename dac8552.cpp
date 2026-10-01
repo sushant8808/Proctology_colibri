@@ -43,7 +43,7 @@ int DAC8552::setDac(short ch, int powerwatt)
             return 1;
         }
 
-//        qDebug()<<Q_FUNC_INFO<<"Wrote channel" <<ch<<code;
+        qDebug()<<Q_FUNC_INFO<<"Wrote channel" <<ch<<code;
         close(fd);
         return 0;
     }

@@ -1245,29 +1245,92 @@ bool DatabaseInitializer::fetchPowerVsDACById(int id)
 
     return true;
 }
+
+//bool DatabaseInitializer::fetchDACByPower(double power, int diode)
+//{
+//    QSqlQuery query(DatabaseManager::instance().db());
+
+//    // Fetch the row for the given power
+//    query.prepare(R"(
+//        SELECT DAC_A, DAC_B
+//        FROM Power_Vs_DAC_Table
+//        WHERE power = :power
+//    )");
+
+//    query.bindValue(":power", power);
+
+//    qDebug()<<diode<<" "<<power;
+
+
+//    if (!query.exec() || !query.next())
+//        return false;
+
+//    // Only update the DAC value for the requested diode
+//    if(diode == 1470)
+//    {
+//        dacAValue = query.value("DAC_A").toInt();  // 1470 nm
+//        qDebug()<<diode<<" "<<power<<" "<<dacAValue;
+//    }
+//    else if(diode == 980)
+//    {
+//        dacBValue = query.value("DAC_B").toInt();  // 980 nm
+//        qDebug()<<diode<<" "<<power<<" "<<dacBValue;
+//    }
+//    else
+//    {
+//        return false;  // unknown diode
+//    }
+
+//    return true;
+//}
+
 bool DatabaseInitializer::fetchDACByPower(double power, int diode)
 {
     QSqlQuery query(DatabaseManager::instance().db());
 
-    // Fetch the row for the given power
     query.prepare(R"(
         SELECT DAC_A, DAC_B
         FROM Power_Vs_DAC_Table
-        WHERE power = :power
+        WHERE ABS(power - :power) < 0.0001
     )");
+
+    qDebug().noquote()
+        << "power =" << QString::number(power, 'f', 17);
 
     query.bindValue(":power", power);
 
-    if (!query.exec() || !query.next())
-        return false;
+    //WHERE ABS(power - :power) < 0.0001
 
-    // Only update the DAC value for the requested diode
-    if(diode == 1470)
-        dacAValue = query.value("DAC_A").toInt();  // 1470 nm
-    else if(diode == 980)
-        dacBValue = query.value("DAC_B").toInt();  // 980 nm
+    qDebug() << "diode =" << diode << "power =" << power;
+
+    if (!query.exec())
+    {
+        qDebug() << "Query failed:" << query.lastError().text();
+        return false;
+    }
+
+    if (!query.next())
+    {
+        qDebug() << "No row found for power:" << power;
+        return false;
+    }
+
+    if (diode == 1470)
+    {
+        dacAValue = query.value("DAC_A").toInt();
+
+        qDebug() << diode << power << dacAValue;
+    }
+    else if (diode == 980)
+    {
+        dacBValue = query.value("DAC_B").toInt();
+
+        qDebug() << diode << power << dacBValue;
+    }
     else
-        return false;  // unknown diode
+    {
+        return false;
+    }
 
     return true;
 }

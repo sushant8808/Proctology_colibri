@@ -46,6 +46,7 @@ private:
     float m_setTemp;
 
     Colibri_ADC m_adc;
+    Colibri_ADC m_adc1;
 };
 
 #endif

@@ -4,6 +4,7 @@
 #include <math.h>
 
 #define ADC_CH2             2
+#define ADC_CH0             0
 
 #define ADC_MAX             4095.0f
 #define ADC_REF             3.3f
@@ -84,6 +85,10 @@ void peltier_control::controlLoop()
     uint16_t adcRaw =
             (uint16_t)m_adc.readRaw(ADC_CH2);
 
+    uint16_t adcRaw_0 = (uint16_t)m_adc1.readRaw(ADC_CH0);
+
+//    qDebug()<<"adc 0 or sma value - "<<adcRaw_0;
+
     float currentTemp =
             adcToTemperature(adcRaw);
 
@@ -142,9 +147,9 @@ void peltier_control::controlLoop()
                 dutyNs,
                 PWM_PERIOD_NS);
 
-    qDebug()
-            << "ADC =" << adcRaw
-            << "Temp =" << currentTemp
-            << "Set =" << m_setTemp
-            << "PWM =" << output;
+//    qDebug()
+//            << "ADC =" << adcRaw
+//            << "Temp =" << currentTemp
+//            << "Set =" << m_setTemp
+//            << "PWM =" << output;
 }
