@@ -1,3 +1,6 @@
+//arm-tdx-linux-gnueabi-strip --strip-unneeded laser_ui_2
+
+
 #include "mainwindow.h"
 #include "thememanager.h"
 #include "databasemanager.h"

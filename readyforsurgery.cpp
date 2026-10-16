@@ -20,6 +20,9 @@
 #include <cmath>
 #include "hardwaremanager.h"
 #include "hardwaremanagerprovider.h"
+#include "colibri_adc.h"
+
+#define ADC_CH0             0
 
 bool writeSysfsValue(const QString &path, const QString &value)
 {
@@ -52,6 +55,19 @@ ReadyForSurgery::ReadyForSurgery(QWidget *parent, Home *home)
     , home(home)
 {
     ui->setupUi(this);
+
+    // ============================================
+    // SMA CONNECTOR ADC MONITOR
+    // ============================================
+
+    smaAdcTimer = new QTimer(this);
+    smaAdcTimer->setInterval(100);
+
+    connect(smaAdcTimer, &QTimer::timeout,
+            this, &ReadyForSurgery::monitorSmaConnector);
+
+    // Start monitoring immediately
+    smaAdcTimer->start();
 
     stack = static_cast<QStackedWidget*>(parent);
 
@@ -100,20 +116,23 @@ ReadyForSurgery::ReadyForSurgery(QWidget *parent, Home *home)
     connect(&pulseOnTimer, &QTimer::timeout, this, &ReadyForSurgery::handlePulseOnTimeout);
     connect(&pulseOffTimer, &QTimer::timeout, this, &ReadyForSurgery::handlePulseOffTimeout);
 
-    popup = new error_popup(this);
+    smaPopup = new error_popup(this);
+    temperaturePopup = new error_popup(this);
+    surgeryPausePopup = new error_popup(this);
+    endSurgeryPopup = new error_popup(this);
 
-    connect(popup, &error_popup::yesClicked, this, [this]() {
+    connect(endSurgeryPopup, &error_popup::yesClicked, this, [this]() {
         end_surgery();
         TOUCH_BEEP();
         qDebug() << "Yes";
     });
 
-    connect(popup, &error_popup::noClicked, this, [this]() {
+    connect(endSurgeryPopup, &error_popup::noClicked, this, [this]() {
         TOUCH_BEEP();
         qDebug() << "No";
     });
 
-    connect(popup, &error_popup::acknowledged,
+    connect(temperaturePopup, &error_popup::acknowledged,
             this,[this](){
         HardwareManagerProvider::instance()->setAimingBeam(true);
 
@@ -361,7 +380,7 @@ void ReadyForSurgery::on_B5_brightness_clicked()
 
 void ReadyForSurgery::on_B5_to_standby_clicked()
 {
-    popup->showMessage(
+    endSurgeryPopup->showMessage(
                 "END SURGERY",
                 "Are you sure you want to end the surgery?\n"
         "",
@@ -440,8 +459,8 @@ void ReadyForSurgery::on_B5_change_clicked()
         dbinit.fetchDACByPower(power980,980);
         dbinit.fetchDACByPower(power1470,1470);
 
-//        qDebug()<<"980"<<power980;
-//        qDebug()<<"1470"<<power1470;
+        //        qDebug()<<"980"<<power980;
+        //        qDebug()<<"1470"<<power1470;
     }
 }
 
@@ -630,7 +649,7 @@ void ReadyForSurgery::updateEnergy()
             if (announcedValue > 0 && announcedValue > lastAnnouncedSeconds)
             {
                 QString filePath = QString("/home/root/laserAudio/%1.wav")
-                                       .arg(announcedValue, 4, 10, QChar('0'));
+                        .arg(announcedValue, 4, 10, QChar('0'));
 
                 audioQueue.clear();
                 audioQueue.enqueue(filePath);
@@ -681,7 +700,7 @@ void ReadyForSurgery::surgery_pause_popup()
     //    laserOFF();
     surgery_pause_bt = 1;
 
-    popup->showMessage(
+    surgeryPausePopup->showMessage(
                 "SURGERY PAUSED",
                 "Press RESUME to continue the surgery. \n"
         "OR\n"
@@ -834,14 +853,33 @@ void ReadyForSurgery::resetSurgerySession()
 void ReadyForSurgery::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
+
     refreshPage();
+
+    // Check SMA fault when ReadyForSurgery becomes visible
+    if (smaFaultActive || !smaConnectorPresent)
+    {
+        if (stack &&
+                stack->currentIndex() == PAGE_READYFORSURGERY &&
+                !smaPopup->isVisible())
+        {
+            showSmaFaultPopup();
+        }
+    }
 }
 
 void ReadyForSurgery::refreshPage()
 {
     HardwareManagerProvider::instance()->demoAimingBeam(aimingbeamIntensity, g_stackIndex != PAGE_READYFORSURGERY);
 
-    HardwareManagerProvider::instance()->setAimingBeam(true);
+    if (!smaFaultActive && smaConnectorPresent)
+    {
+        HardwareManagerProvider::instance()->setAimingBeam(true);
+    }
+    else
+    {
+        HardwareManagerProvider::instance()->setAimingBeam(false);
+    }
 
     updatePower980Label();
     updatePower1470Label();
@@ -881,8 +919,8 @@ void ReadyForSurgery::refreshPage()
     dbinit.fetchDACByPower(power980,980);
     dbinit.fetchDACByPower(power1470,1470);
 
-//    qDebug()<<"980"<<power980;
-//    qDebug()<<"1470"<<power1470;
+    //    qDebug()<<"980"<<power980;
+    //    qDebug()<<"1470"<<power1470;
 
 
     surgery_pause = 0;
@@ -899,6 +937,49 @@ void ReadyForSurgery::refreshPage()
 
 void ReadyForSurgery::handleFootPedal(bool value)
 {
+    // Block laser operation while the SMA connector is missing
+    if (smaFaultActive || !smaConnectorPresent)
+    {
+        if (value)
+        {
+            m_fp_pressed = false;
+
+            pulseOnTimer.stop();
+            pulseOffTimer.stop();
+
+            m_dac.setDac(0, 0);
+            m_dac.setDac(1, 0);
+
+            g_runtimeManager->set980Active(false);
+            g_runtimeManager->set1470Active(false);
+
+            WARNING_BEEP();
+
+            qDebug() << "[SMA INTERLOCK]"
+                       << "Foot pedal ignored"
+                        <<value;
+        }
+        else
+        {
+            m_fp_pressed = false;
+
+            pulseOnTimer.stop();
+            pulseOffTimer.stop();
+
+            m_dac.setDac(0, 0);
+            m_dac.setDac(1, 0);
+
+            g_runtimeManager->set980Active(false);
+            g_runtimeManager->set1470Active(false);
+
+            qDebug() << "[SMA INTERLOCK]"
+                       << "Foot pedal ignored"
+                        <<value;
+        }
+
+        return;
+    }
+
     if (stack->currentIndex() != PAGE_READYFORSURGERY) {
         //        qDebug() << Q_FUNC_INFO << "Pedal ignored";
         WARNING_BEEP();
@@ -946,9 +1027,28 @@ void ReadyForSurgery::laserON()
 {
 
     if (surgery_pause == 1) {
-        popup->hidePopup();
+        surgeryPausePopup->hide();
         surgery_pause = 0;
         HardwareManagerProvider::instance()->setAimingBeam(true);
+        return;
+    }
+
+    // ============================================
+    // SMA CONNECTOR SAFETY INTERLOCK
+    // ============================================
+
+    if (smaFaultActive || !smaConnectorPresent)
+    {
+        // Force both diode outputs off
+        m_dac.setDac(0, 0);
+        m_dac.setDac(1, 0);
+
+        g_runtimeManager->set980Active(false);
+        g_runtimeManager->set1470Active(false);
+
+        qDebug() << "[SMA INTERLOCK]"
+                   << "Laser start blocked";
+
         return;
     }
 
@@ -1197,14 +1297,14 @@ void ReadyForSurgery::update_diode_temp(void)
                 );
 
     // Trigger alarm at 35°C
-//    qDebug()<<Q_FUNC_INFO<<g_diode_temp;
+    //    qDebug()<<Q_FUNC_INFO<<g_diode_temp;
     if (g_diode_temp >= 35.0f && !diode_temp_alarm_active)
     {
         diode_temp_alarm_active = true;
         laserOFF();
         HardwareManagerProvider::instance()->setAimingBeam(false);
         WARNING_BEEP();
-        popup->showMessage(
+        temperaturePopup->showMessage(
                     "OVER TEMPERATURE",
                     "Laser diode temperature reached 35°C. \n"
             "\n"
@@ -1221,7 +1321,121 @@ void ReadyForSurgery::update_diode_temp(void)
         HardwareManagerProvider::instance()->setAimingBeam(true);
         SUCCESS_BEEP();
         // Close/hide popup
-        popup->hide();
+        temperaturePopup->hide();
     }
+}
+
+void ReadyForSurgery::monitorSmaConnector()
+{
+    // Read the current SMA connector ADC value
+    smaAdcRaw =
+            static_cast<uint16_t>(m_adc0.readRaw(ADC_CH0));
+
+    // ADC > threshold means SMA connector is present
+    // Keep this condition identical to the acknowledgement handler
+    smaConnectorPresent = (smaAdcRaw < SMA_ADC_THRESHOLD);
+
+    //    qDebug() << "[SMA DEBUG]"
+    //             << "ADC =" << smaAdcRaw
+    //             << "Threshold =" << SMA_ADC_THRESHOLD
+    //             << "ConnectorPresent =" << smaConnectorPresent
+    //             << "FaultActive =" << smaFaultActive;
+
+    // SMA connector is missing
+    if (!smaConnectorPresent)
+    {
+        // Latch the fault and stop laser output immediately
+        if (!smaFaultActive)
+        {
+            smaFaultActive = true;
+
+            stopLaserForSmaFault();
+        }
+
+        // Show the SMA popup only on the ReadyForSurgery page
+        if (stack &&
+                stack->currentIndex() == PAGE_READYFORSURGERY &&
+                !smaPopup->isVisible())
+        {
+            surgery_pause_popup();
+            showSmaFaultPopup();
+        }
+
+        return;
+    }
+    else
+    {
+        smaFaultActive = false;
+    }
+
+    // Connector is detected, but the fault remains latched
+    // until the operator acknowledges it.
+    //
+    // Do not hide the popup while the fault is active.
+    if (smaConnectorPresent && !smaFaultActive)
+    {
+        if (smaPopup->isVisible())
+        {
+            smaPopup->hide();
+
+            qDebug() << "[SMA MONITOR]"
+                     << "SMA present and fault cleared.";
+        }
+    }
+}
+
+
+void ReadyForSurgery::stopLaserForSmaFault()
+{
+
+
+    // Stop pulse timers
+    pulseOnTimer.stop();
+    pulseOffTimer.stop();
+
+    // Prevent foot-pedal pulse cycling
+    m_fp_pressed = false;
+
+    // Immediately set both diode DAC outputs to zero
+    m_dac.setDac(0, 0);
+    m_dac.setDac(1, 0);
+
+    // Update runtime state
+    g_runtimeManager->set980Active(false);
+    g_runtimeManager->set1470Active(false);
+
+    // Disable aiming beam
+    HardwareManagerProvider::instance()->setAimingBeam(false);
+
+    // Stop timer animation and energy updates
+    if (energyUpdateTimer)
+        energyUpdateTimer->stop();
+
+    if (timerRing)
+        timerRing->stopTimerAnimation();
+
+    // Record the current energy delivery
+    energyAtRelease =
+            new_totalEnergyDelivered + new2_totalEnergyDelivered;
+
+    timerRingStarted = false;
+
+    // Enter the paused state
+    surgery_pause = 1;
+    surgery_pause_bt = 1;
+
+    qWarning() << "[SMA FAULT] Laser outputs disabled";
+}
+
+void ReadyForSurgery::showSmaFaultPopup()
+{
+    smaPopup->showMessage(
+                "SMA CONNECTOR ERROR",
+                "Please connect the SMA connector.",
+                error_popup::Critical,
+                false
+                );
+
+    WARNING_BEEP();
 }
 

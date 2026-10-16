@@ -65,17 +65,19 @@ float peltier_control::adcToTemperature(uint16_t adcValue)
      * ADC = 2950 -> 35.0 °C
      */
 
-    const float ADC_LOW  = 2650.0f;
+//    const float ADC_LOW  = 2650.0f;
+    const float ADC_LOW  = 2280.0f;
     const float TEMP_LOW = 10.0f;
 
-    const float ADC_HIGH  = 2950.0f;
+//    const float ADC_HIGH  = 2950.0f;
+    const float ADC_HIGH  = 3680.0f;
     const float TEMP_HIGH = 40.0f;
 
     float temperature =
-        TEMP_LOW +
-        ((float)adcValue - ADC_LOW) *
-        (TEMP_HIGH - TEMP_LOW) /
-        (ADC_HIGH - ADC_LOW);
+            TEMP_LOW +
+            ((float)adcValue - ADC_LOW) *
+            (TEMP_HIGH - TEMP_LOW) /
+            (ADC_HIGH - ADC_LOW);
 
     return temperature;
 }
@@ -84,10 +86,6 @@ void peltier_control::controlLoop()
 {
     uint16_t adcRaw =
             (uint16_t)m_adc.readRaw(ADC_CH2);
-
-    uint16_t adcRaw_0 = (uint16_t)m_adc1.readRaw(ADC_CH0);
-
-//    qDebug()<<"adc 0 or sma value - "<<adcRaw_0;
 
     float currentTemp =
             adcToTemperature(adcRaw);
@@ -102,8 +100,8 @@ void peltier_control::controlLoop()
 
         m_hw->setPwm(
                     m_hw->m_pwms['D'],
-                    0,
-                    PWM_PERIOD_NS);
+                0,
+                PWM_PERIOD_NS);
 
 //        qDebug()
 //                << "ADC =" << adcRaw
@@ -144,8 +142,8 @@ void peltier_control::controlLoop()
 
     m_hw->setPwm(
                 m_hw->m_pwms['D'],
-                dutyNs,
-                PWM_PERIOD_NS);
+            dutyNs,
+            PWM_PERIOD_NS);
 
 //    qDebug()
 //            << "ADC =" << adcRaw

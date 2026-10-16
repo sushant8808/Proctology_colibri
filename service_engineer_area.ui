@@ -29,7 +29,7 @@
     <property name="geometry">
      <rect>
       <x>485</x>
-      <y>63</y>
+      <y>40</y>
       <width>220</width>
       <height>50</height>
      </rect>
@@ -175,7 +175,7 @@ border-radius: 25px;</string>
     <property name="geometry">
      <rect>
       <x>485</x>
-      <y>175</y>
+      <y>130</y>
       <width>220</width>
       <height>50</height>
      </rect>
@@ -193,7 +193,7 @@ border-radius: 25px;</string>
     <property name="geometry">
      <rect>
       <x>485</x>
-      <y>287</y>
+      <y>220</y>
       <width>220</width>
       <height>50</height>
      </rect>
@@ -205,6 +205,24 @@ border-radius: 25px;</string>
     </property>
     <property name="text">
      <string>System Usage</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="update">
+    <property name="geometry">
+     <rect>
+      <x>485</x>
+      <y>310</y>
+      <width>220</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font-size: 14pt;
+border: 1px solid rgb(255, 97, 34);
+border-radius: 25px;</string>
+    </property>
+    <property name="text">
+     <string>Update</string>
     </property>
    </widget>
   </widget>

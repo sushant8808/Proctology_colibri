@@ -34,6 +34,8 @@ private slots:
 
     void on_system_usage_clicked();
 
+    void on_update_clicked();
+
 private:
     Ui::service_engineer_area *ui;
     Home *home;

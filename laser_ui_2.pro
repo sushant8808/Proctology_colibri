@@ -5,6 +5,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 LIBS += -lgpiod
 CONFIG += release
 QMAKE_CXXFLAGS_RELEASE += -g
+QMAKE_CXXFLAGS_RELEASE += -Os -ffunction-sections -fdata-sections
+QMAKE_LFLAGS += -Wl,--gc-sections
 
 CONFIG += c++17
 
@@ -102,6 +104,7 @@ HEADERS += \
     tickedslider.h \
     timerring.h \
     usage_area.h \
+    usbupdater.h \
     userdatabaseinitializer.h \
     userdatabasemanager.h \
     userlogin.h

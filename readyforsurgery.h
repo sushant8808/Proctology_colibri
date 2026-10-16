@@ -17,8 +17,8 @@
 #include "hardwaremanagerprovider.h"
 #include "mqs_audio.h"
 #include "colibri_adc.h"
-
-
+#include <QTimer>
+#include <cstdint>
 
 namespace Ui {
 class ReadyForSurgery;
@@ -104,7 +104,12 @@ private:
 
     QQueue<QString> audioQueue;
 
-    error_popup *popup;
+//    error_popup *popup;
+
+    error_popup *smaPopup;
+    error_popup *temperaturePopup;
+    error_popup *surgeryPausePopup;
+    error_popup *endSurgeryPopup;
 
     DAC8552 m_dac;
 
@@ -132,6 +137,23 @@ private:
 
     QString formatPulseTime(int valueUs);
     QString getPulseUnit(int valueUs);
+
+    Colibri_ADC m_adc0;
+
+    // SMA connector monitoring
+    QTimer *smaAdcTimer = nullptr;
+
+    static constexpr uint16_t SMA_ADC_THRESHOLD = 1000;
+
+    uint16_t smaAdcRaw = 0;
+
+    bool smaConnectorPresent = false;
+    bool smaFaultActive = false;
+
+    // SMA monitoring functions
+    void monitorSmaConnector();
+    void stopLaserForSmaFault();
+    void showSmaFaultPopup();
 
 };
 

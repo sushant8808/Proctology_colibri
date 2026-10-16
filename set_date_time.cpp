@@ -9,6 +9,11 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QDateTime>
+#include <QProcess>
+#include <QMessageBox>
+#include <QDate>
+#include <QTime>
+#include <QDateTime>
 
 Set_date_time::Set_date_time(QWidget *parent, Home *home)
     : QWidget(parent)
@@ -95,16 +100,78 @@ Set_date_time::Set_date_time(QWidget *parent, Home *home)
     applyBtn->setObjectName("applyButton");
     mainLayout->addWidget(applyBtn);
 
-    connect(applyBtn, &QPushButton::clicked, this, [=]() {
+    connect(applyBtn, &QPushButton::clicked, this, [this]()
+    {
         TOUCH_BEEP();
+
         QDate selectedDate(m_year, m_month, m_day);
         QTime selectedTime(m_hour, m_minute, 0);
-        if (selectedDate.isValid()) {
-            QDateTime newDateTime(selectedDate, selectedTime);
-            DateTimeManager::instance()->setDateTime(newDateTime);
-        }
-        switchToServiceEngArea();
 
+        if (!selectedDate.isValid() || !selectedTime.isValid())
+        {
+            QMessageBox::warning(
+                this,
+                "Invalid Date/Time",
+                "Please select a valid date and time."
+            );
+            return;
+        }
+
+        QDateTime newDateTime(selectedDate, selectedTime);
+
+        // Convert the selected date/time to a string.
+        QString dateTimeString =
+            newDateTime.toString("yyyy-MM-dd HH:mm:ss");
+
+        // Update the Linux system clock.
+        QProcess dateProcess;
+
+        dateProcess.start(
+            "/bin/date",
+            QStringList() << "-s" << dateTimeString
+        );
+
+        if (!dateProcess.waitForStarted() ||
+            !dateProcess.waitForFinished(3000) ||
+            dateProcess.exitStatus() != QProcess::NormalExit ||
+            dateProcess.exitCode() != 0)
+        {
+            QMessageBox::critical(
+                this,
+                "Error",
+                "Failed to update Linux system time."
+            );
+            return;
+        }
+
+        // Update the hardware RTC.
+        QProcess rtcProcess;
+
+        rtcProcess.start(
+            "hwclock",
+            QStringList() << "-w"
+        );
+
+        if (!rtcProcess.waitForStarted() ||
+            !rtcProcess.waitForFinished(3000) ||
+            rtcProcess.exitStatus() != QProcess::NormalExit ||
+            rtcProcess.exitCode() != 0)
+        {
+            QMessageBox::warning(
+                this,
+                "RTC Error",
+                "System time updated, but hardware RTC update failed."
+            );
+            return;
+        }
+
+        // Update the application date/time manager.
+        DateTimeManager::instance()->setDateTime(
+            QDateTime::currentDateTime()
+        );
+
+        // Return to the service engineer area.
+        switchToServiceEngArea();
     });
 }
 

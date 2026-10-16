@@ -5,6 +5,7 @@
 #include "set_date_time.h"
 #include "mainwindow.h"
 #include "pageindex.h"
+#include "usbupdater.h"
 
 service_engineer_area::service_engineer_area(QWidget *parent, Home *home)
     : QWidget(parent)
@@ -14,6 +15,13 @@ service_engineer_area::service_engineer_area(QWidget *parent, Home *home)
     ui->setupUi(this);
 
     this->setWindowFlags(Qt::FramelessWindowHint);
+       auto *usb = new UsbUpdater(this);
+       ui->update->setEnabled(usb->updateAvailable());
+
+       connect(usb, &UsbUpdater::updateAvailableChanged, this,
+               [=] { ui->update->setEnabled(usb->updateAvailable()); });
+
+       connect(ui->update, &QPushButton::clicked, usb, &UsbUpdater::startUpdate);
 
 }
 
@@ -68,5 +76,11 @@ void service_engineer_area::refreshPage()
     ui->L_model->setText(model);
 
     ui->L_serial_no->setText(serial_no);
+}
+
+
+void service_engineer_area::on_update_clicked()
+{
+
 }
 
