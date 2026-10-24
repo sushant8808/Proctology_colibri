@@ -14,6 +14,7 @@ Calibration_screen::Calibration_screen(QWidget *parent, Home *home)
 {
     ui->setupUi(this);
 
+
     this->setWindowFlags(Qt::FramelessWindowHint);
 
     setupHoldButton(ui->DAC_sub_1470, timer_DAC_add, [this]() { dacAValue -= 10;
@@ -200,6 +201,8 @@ void Calibration_screen::on_DAC_add_980_clicked()
 void Calibration_screen::on_save_1470_clicked()
 {
     db.updateDACByPowerAndDiode(power_1470,1470,dacAValue);
+
+    qDebug()<<power_1470<<"  "<<dacAValue;
 
     SUCCESS_BEEP();
 }

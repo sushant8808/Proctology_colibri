@@ -69,6 +69,15 @@ ReadyForSurgery::ReadyForSurgery(QWidget *parent, Home *home)
     // Start monitoring immediately
     smaAdcTimer->start();
 
+    tempTimer = new QTimer(this);
+    tempTimer->setInterval(100);
+
+    connect(tempTimer, &QTimer::timeout,
+            this, &ReadyForSurgery::update_diode_temp);
+
+    // Start monitoring immediately
+    tempTimer->start();
+
     stack = static_cast<QStackedWidget*>(parent);
 
     this->setWindowFlags(Qt::FramelessWindowHint);
@@ -1026,6 +1035,11 @@ void ReadyForSurgery::handleFootPedal(bool value)
 void ReadyForSurgery::laserON()
 {
 
+    if (stack->currentIndex() != PAGE_READYFORSURGERY) {
+//        WARNING_BEEP();
+        return;
+    }
+
     if (surgery_pause == 1) {
         surgeryPausePopup->hide();
         surgery_pause = 0;
@@ -1056,8 +1070,8 @@ void ReadyForSurgery::laserON()
     m_dac.setDac(1, dacBValue); // 980nm
     m_dac.setDac(0, dacAValue);  // 1470nm
 
-    qDebug()<<"980 dac"<<dacBValue;
-    qDebug()<<"1470 dac"<<dacAValue;
+    qDebug()<<Q_FUNC_INFO<<"980 dac"<<dacBValue;
+    qDebug()<<Q_FUNC_INFO<<"1470 dac"<<dacAValue;
 
     if (power1470) g_runtimeManager->set1470Active(true);
     if (power980)  g_runtimeManager->set980Active(true);
@@ -1291,37 +1305,92 @@ void ReadyForSurgery::update_diode_temp(void)
     QString formatdiodetemp = QString::number(g_diode_temp, 'f', 0);
 
     ui->diode_temp->setText(
-                QString("<span style='font-size: 14pt; color: #00C800;'>%1</span>"
+        QString("<span style='font-size: 14pt; color: #00C800;'>%1</span>"
                 "<span style='font-size: 14pt; color: #00C800;'> °C</span>")
-                .arg(formatdiodetemp)
-                );
+            .arg(formatdiodetemp)
+    );
 
-    // Trigger alarm at 35°C
-    //    qDebug()<<Q_FUNC_INFO<<g_diode_temp;
-    if (g_diode_temp >= 35.0f && !diode_temp_alarm_active)
+    // ============================================
+    // OVER-TEMPERATURE ALARM: 35°C
+    // ============================================
+    if (g_diode_temp >= 35.0f)
     {
-        diode_temp_alarm_active = true;
-        laserOFF();
-        HardwareManagerProvider::instance()->setAimingBeam(false);
-        WARNING_BEEP();
-        temperaturePopup->showMessage(
+        // Trigger the alarm only once when entering the fault state
+        if (!diode_temp_alarm_active)
+        {
+            diode_temp_alarm_active = true;
+
+            // Stop laser emission immediately
+            pulseOnTimer.stop();
+            pulseOffTimer.stop();
+
+            m_fp_pressed = false;
+
+            m_dac.setDac(0, 0);
+            m_dac.setDac(1, 0);
+
+            g_runtimeManager->set980Active(false);
+            g_runtimeManager->set1470Active(false);
+
+            timerRingStarted = false;
+
+            if (energyUpdateTimer)
+                energyUpdateTimer->stop();
+
+            if (timerRing)
+                timerRing->stopTimerAnimation();
+
+            HardwareManagerProvider::instance()->setAimingBeam(false);
+
+            WARNING_BEEP();
+
+            qWarning() << "[TEMPERATURE ALARM] Diode temperature:"
+                       << g_diode_temp << "°C";
+        }
+
+        // Keep the popup visible while the temperature remains high.
+        // Show it only when ReadyForSurgery is the active page.
+        if (stack &&
+            stack->currentIndex() == PAGE_READYFORSURGERY)
+        {
+            if (!temperaturePopup->isVisible())
+            {
+                temperaturePopup->showMessage(
                     "OVER TEMPERATURE",
-                    "Laser diode temperature reached 35°C. \n"
-            "\n"
-            "Please wait till diode cools down.",
+                    "Laser diode temperature reached 35°C.\n\n"
+                    "Please wait till diode cools down.",
                     error_popup::Critical,
                     false
-                    );
+                );
+
+                qWarning() << "[TEMPERATURE ALARM] Popup displayed";
+            }
+            else
+            {
+                temperaturePopup->raise();
+            }
+        }
+
+        refreshPage();
+
+        // Do not execute the recovery section while temperature is high
+        return;
     }
 
-    // Reset alarm when temperature reaches 28°C
+    // ============================================
+    // RECOVERY: TEMPERATURE <= 28°C
+    // ============================================
     if (g_diode_temp <= 28.0f && diode_temp_alarm_active)
     {
         diode_temp_alarm_active = false;
-        HardwareManagerProvider::instance()->setAimingBeam(true);
-        SUCCESS_BEEP();
-        // Close/hide popup
+
+        // Hide the popup only after the temperature has recovered
         temperaturePopup->hide();
+
+        SUCCESS_BEEP();
+
+        qDebug() << "[TEMPERATURE ALARM] Temperature recovered:"
+                 << g_diode_temp << "°C";
     }
 }
 

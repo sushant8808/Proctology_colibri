@@ -142,6 +142,7 @@ private:
 
     // SMA connector monitoring
     QTimer *smaAdcTimer = nullptr;
+    QTimer *tempTimer = nullptr;
 
     static constexpr uint16_t SMA_ADC_THRESHOLD = 1000;
 

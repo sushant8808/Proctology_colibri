@@ -4,6 +4,7 @@
 #include <QSqlError>
 #include <QDebug>
 #include "global.h"
+#include <cmath>
 
 bool DatabaseInitializer::initialize()
 {
@@ -1404,7 +1405,7 @@ bool DatabaseInitializer::updateDACByPowerAndDiode(
         sql = R"(
             UPDATE Power_Vs_DAC_Table
             SET DAC_A = :dacValue
-            WHERE power = :power
+            WHERE ABS(power - :power) < 0.0001
         )";
     }
     else if (diode == 980)
@@ -1412,7 +1413,7 @@ bool DatabaseInitializer::updateDACByPowerAndDiode(
         sql = R"(
             UPDATE Power_Vs_DAC_Table
             SET DAC_B = :dacValue
-            WHERE power = :power
+            WHERE ABS(power - :power) < 0.0001
         )";
     }
     else

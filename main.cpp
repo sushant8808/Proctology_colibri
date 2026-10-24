@@ -1,4 +1,7 @@
+//rnd-01@ul-linux:/yocto/rnd-projects/build-laser_ui_2-Colibri_6ull-Debug$
 //arm-tdx-linux-gnueabi-strip --strip-unneeded laser_ui_2
+
+// systemctl stop wayland-app-launch
 
 
 #include "mainwindow.h"

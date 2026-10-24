@@ -1,4 +1,6 @@
 #include "peltier_control.h"
+#include "readyforsurgery.h"
+#include "mainwindow.h"
 
 #include <QDebug>
 #include <math.h>
@@ -66,18 +68,23 @@ float peltier_control::adcToTemperature(uint16_t adcValue)
      */
 
 //    const float ADC_LOW  = 2650.0f;
-    const float ADC_LOW  = 2280.0f;
-    const float TEMP_LOW = 10.0f;
+    const float ADC_LOW  = 2920.0f;
+    const float TEMP_LOW = 25.0f;
 
 //    const float ADC_HIGH  = 2950.0f;
-    const float ADC_HIGH  = 3680.0f;
-    const float TEMP_HIGH = 40.0f;
+    const float ADC_HIGH  = 3755.0f;
+    const float TEMP_HIGH = 37.0f;
 
     float temperature =
             TEMP_LOW +
             ((float)adcValue - ADC_LOW) *
             (TEMP_HIGH - TEMP_LOW) /
             (ADC_HIGH - ADC_LOW);
+
+    if(temperature>=35.0f)
+    {
+
+    }
 
     return temperature;
 }
@@ -91,6 +98,8 @@ void peltier_control::controlLoop()
             adcToTemperature(adcRaw);
 
     g_diode_temp = currentTemp;
+
+
 
     // Cooling required only when temperature is above setpoint
     if(currentTemp <= m_setTemp)
