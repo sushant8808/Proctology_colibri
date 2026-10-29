@@ -62,6 +62,10 @@ private slots:
 
     void on_test_980_released();
 
+    void on_diode_temp_linkActivated(const QString &link);
+
+    void update_diode_temp(void);
+
 private:
     Ui::Calibration_screen *ui;
     Home *home;
@@ -72,6 +76,7 @@ private:
     double power_980 = 0.0;
 
     QTimer *timer_DAC_add;
+    QTimer *tempTimer = nullptr;
 
     DAC8552 m_dac;
 

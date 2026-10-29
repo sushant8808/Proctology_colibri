@@ -84,13 +84,13 @@ ReadyForSurgery::ReadyForSurgery(QWidget *parent, Home *home)
 
     g_runtimeManager->setSurgeryActive(true);
 
-    diodeTempTimer = new QTimer(this);
-    diodeTempTimer->setInterval(1000);   // 1 second
+//    diodeTempTimer = new QTimer(this);
+//    diodeTempTimer->setInterval(1000);   // 1 second
 
-    connect(diodeTempTimer, &QTimer::timeout,
-            this, &ReadyForSurgery::update_diode_temp);
+//    connect(diodeTempTimer, &QTimer::timeout,
+//            this, &ReadyForSurgery::update_diode_temp);
 
-    diodeTempTimer->start();
+//    diodeTempTimer->start();
 
     auto setupOverlay = [](QPushButton* button, CircularOverlay*& overlay) {
         overlay = new CircularOverlay(button->parentWidget());
@@ -141,7 +141,7 @@ ReadyForSurgery::ReadyForSurgery(QWidget *parent, Home *home)
         qDebug() << "No";
     });
 
-    connect(temperaturePopup, &error_popup::acknowledged,
+    connect(surgeryPausePopup, &error_popup::acknowledged,
             this,[this](){
         HardwareManagerProvider::instance()->setAimingBeam(true);
 
@@ -150,6 +150,16 @@ ReadyForSurgery::ReadyForSurgery(QWidget *parent, Home *home)
             surgery_pause = 0;
 
         surgery_pause_bt = 0;
+        qDebug() << "ok";
+    });
+
+    connect(smaPopup, &error_popup::acknowledged,
+            this,[this](){
+
+        TOUCH_BEEP();
+
+        MainWindow::instance->switchPage(PAGE_HOME);
+
         qDebug() << "ok";
     });
 }
@@ -1036,7 +1046,7 @@ void ReadyForSurgery::laserON()
 {
 
     if (stack->currentIndex() != PAGE_READYFORSURGERY) {
-//        WARNING_BEEP();
+        WARNING_BEEP();
         return;
     }
 
@@ -1400,6 +1410,8 @@ void ReadyForSurgery::monitorSmaConnector()
     smaAdcRaw =
             static_cast<uint16_t>(m_adc0.readRaw(ADC_CH0));
 
+//    smaAdcRaw =100;
+
     // ADC > threshold means SMA connector is present
     // Keep this condition identical to the acknowledgement handler
     smaConnectorPresent = (smaAdcRaw < SMA_ADC_THRESHOLD);
@@ -1491,7 +1503,7 @@ void ReadyForSurgery::stopLaserForSmaFault()
 
     // Enter the paused state
     surgery_pause = 1;
-    surgery_pause_bt = 1;
+//    surgery_pause_bt = 1;
 
     qWarning() << "[SMA FAULT] Laser outputs disabled";
 }
@@ -1500,9 +1512,11 @@ void ReadyForSurgery::showSmaFaultPopup()
 {
     smaPopup->showMessage(
                 "SMA CONNECTOR ERROR",
-                "Please connect the SMA connector.",
+                "Please connect the SMA connector\r\n"
+                "or\r\n"
+                "press OK for Home page.",
                 error_popup::Critical,
-                false
+                true
                 );
 
     WARNING_BEEP();

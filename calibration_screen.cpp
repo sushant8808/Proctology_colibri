@@ -17,6 +17,17 @@ Calibration_screen::Calibration_screen(QWidget *parent, Home *home)
 
     this->setWindowFlags(Qt::FramelessWindowHint);
 
+    tempTimer = new QTimer(this);
+    tempTimer->setInterval(500);
+
+    connect(tempTimer, &QTimer::timeout,
+            this, &Calibration_screen::update_diode_temp);
+
+    // Start monitoring immediately
+    tempTimer->start();
+
+    update_diode_temp();
+
     setupHoldButton(ui->DAC_sub_1470, timer_DAC_add, [this]() { dacAValue -= 10;
         ui->DAC_change_1470->setText(QString::number(dacAValue)); });
 
@@ -152,12 +163,12 @@ void Calibration_screen::on_pre_power_980_clicked()
 void Calibration_screen::on_next_power_980_clicked()
 {
     double step;
-    if (power_980 < 0.9)
-        step = 0.1000000;
-    else if (power_980 < 2.9)
-        step = 0.2000000;
+    if (power_980 < 1.0)
+        step = 0.1;
+    else if (power_980 < 3.0)
+        step = 0.2;
     else if (power_980 < 15.0)
-        step = 0.5000000;
+        step = 0.5;
     else
         step = 0.0;
 
@@ -168,7 +179,7 @@ void Calibration_screen::on_next_power_980_clicked()
     if (power_980 > 15.0)
         power_980 = 15.0;
 
-    // power_980 = std::round(power_980 * 10.0) / 10.0;
+    power_980 = std::round(power_980 * 10.0) / 10.0;
 
     ui->power_change_980->setText(QString::number(power_980, 'f', 1));
 
@@ -265,6 +276,9 @@ void Calibration_screen::refreshPage()
 
     ui->DAC_change_980->setText(
                 QString::number(dacBValue));
+
+    update_diode_temp();
+
 }
 
 void Calibration_screen::showEvent(QShowEvent *event)
@@ -302,5 +316,22 @@ void Calibration_screen::on_test_980_released()
 {
     m_dac.setDac(1, 0);
     qDebug()<<"980 released";
+}
+
+
+void Calibration_screen::on_diode_temp_linkActivated(const QString &link)
+{
+
+}
+
+void Calibration_screen::update_diode_temp(void)
+{
+    QString formatdiodetemp = QString::number(g_diode_temp, 'f', 0);
+
+    ui->diode_temp->setText(
+                QString("<span style='font-size: 14pt; color: #00C800;'>%1</span>"
+                "<span style='font-size: 14pt; color: #00C800;'> °C</span>")
+                .arg(formatdiodetemp)
+                );
 }
 
